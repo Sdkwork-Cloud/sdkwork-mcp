@@ -1,0 +1,20 @@
+[package]
+name = "sdkwork-mcp-standalone-gateway"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[lib]
+path = "src/lib.rs"
+
+[[bin]]
+name = "sdkwork-mcp-standalone-gateway"
+path = "src/bin/app_main.rs"
+
+[dependencies]
+sdkwork_mcp_gateway_assembly = { package = "sdkwork-mcp-gateway-assembly", path = "../sdkwork-mcp-gateway-assembly" }
+axum.workspace = true
+tokio.workspace = true
+tracing.workspace = true
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+

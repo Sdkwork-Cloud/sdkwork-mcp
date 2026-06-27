@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 1,
+  "generator": "@sdkwork/sdk-generator",
+  "sdk": {
+    "name": "sdkwork-mcp-app-sdk",
+    "version": "0.1.0",
+    "language": "flutter",
+    "sdkType": "app",
+    "protocol": "http",
+    "packageName": "sdkwork-mcp-app-sdk-generated-flutter"
+  },
+  "generatedFiles": [
+    {
+      "path": "bin/publish-core.mjs",
+      "sha256": "98ad0918a78bfbe22bf8f12fec709b0bed545b9e01edd40f5e4abf31a23378a5"
+    },
+    {
+      "path": "bin/publish.ps1",
+      "sha256": "d33098ab9fb4a03ff09c5ae72fdde57d21f0e1ffa17a6c02155ce0600f3c7c9a"
+    },
+    {
+      "path": "bin/publish.sh",
+      "sha256": "fffdc9107c6db283c0b4ffc651ce55c3b266242edb0ac980d7fff6eee9ec31ca"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "sha256": "fb941a0806986a54fc192f98a98f6d9c282b8d350b2b19a3e71dda404e92d545"
+    },
+    {
+      "path": "lib/app_client.dart",
+      "sha256": "4873e3bb8f8f03b0ed646df24fba27d81be74b20c81b39ea808180b4309b95ed"
+    },
+    {
+      "path": "lib/sdkwork_mcp_app_sdk_generated_flutter.dart",
+      "sha256": "96b99f6712df9c7603abf748d9a9e438acc510adfa574ba1c32b5ef3d0685c56"
+    },
+    {
+      "path": "lib/src/api/api.dart",
+      "sha256": "6d629a05c1d4e4299425af73210297c6de74b734b67d5f347bf2c1d3ad63a953"
+    },
+    {
+      "path": "lib/src/api/mcp.dart",
+      "sha256": "c072b63604b15ca646ac4f755bf0753fedc9861513067304f961ce6c0260365e"
+    },
+    {
+      "path": "lib/src/api/paths.dart",
+      "sha256": "fc74022b8530edc3908245114ac0c9bf5268bba34f1852dcb4ffbde5cef81be1"
+    },
+    {
+      "path": "lib/src/api/response_helpers.dart",
+      "sha256": "8295b6cc4e67bb9d54a1b0a98c4282dcf8ea0cb126835a32797dd4d2c91a4214"
+    },
+    {
+      "path": "lib/src/http/client.dart",
+      "sha256": "c28278decf2c7456a2332dd12d708c8fc4f2bcf2b5843631d983d0dca581fcf9"
+    },
+    {
+      "path": "lib/src/models.dart",
+      "sha256": "48c67826cb2f941663de06dfc79544e9a867160b0b66347d29544bb586f5392d"
+    },
+    {
+      "path": "LICENSE",
+      "sha256": "7840cc7d2b36ff364ac16c2fc5ec15b861bfe96854eecf81fb59b00edb8b1447"
+    },
+    {
+      "path": "pubspec_overrides.yaml",
+      "sha256": "5ccf90e0ffa0922f263b9e4e0c0ea7c3cc75574f10fc7ee037306bddd769e342"
+    },
+    {
+      "path": "pubspec.yaml",
+      "sha256": "9015e99f31da8e92e92abca8dd489db7a5da7271a67a480d3437c16af214e99b"
+    },
+    {
+      "path": "README.md",
+      "sha256": "3edcdec04b8dca58cf2d8281e0d879f9d6c190ce4ea75650395896db55cf79d3"
+    },
+    {
+      "path": "sdkwork-sdk.json",
+      "sha256": "85a7695eabf54ba5ec5003c1330fc88b8de73f4903447da8df9ec8e06e8710f4"
+    }
+  ],
+  "scaffoldFiles": [
+    "custom/README.md"
+  ],
+  "customRoots": [
+    "custom/"
+  ]
+}

@@ -1,0 +1,130 @@
+{
+  "schemaVersion": 1,
+  "generator": "@sdkwork/sdk-generator",
+  "artifacts": {
+    "stateDir": ".sdkwork",
+    "manifestPath": ".sdkwork/sdkwork-generator-manifest.json",
+    "changeSummaryPath": ".sdkwork/sdkwork-generator-changes.json",
+    "executionReportPath": ".sdkwork/sdkwork-generator-report.json",
+    "manualBackupDir": ".sdkwork/manual-backups"
+  },
+  "status": "ok",
+  "mode": "apply",
+  "hasChanges": false,
+  "hasDestructiveChanges": false,
+  "changeFingerprint": "0c0a5edd3e57893735ba9796111b9f6488f0195cdcf3480d761aa3eb5e1c1966",
+  "changeImpact": {
+    "schemaVersion": 1,
+    "areas": [],
+    "details": [],
+    "requiresVerification": false,
+    "summary": "No generated, scaffold, or backup changes detected. Verification can be skipped."
+  },
+  "executionDecision": {
+    "schemaVersion": 1,
+    "riskLevel": "low",
+    "nextAction": "skip",
+    "requiresManualReview": false,
+    "applyRequiresExpectedFingerprint": false,
+    "summary": "No actionable changes were detected. No apply or verification step is required.",
+    "reasons": [
+      "no-actionable-changes"
+    ]
+  },
+  "executionHandoff": {
+    "schemaVersion": 1,
+    "summary": "No further commands are required.",
+    "steps": []
+  },
+  "verificationPlan": {
+    "shouldRun": false,
+    "runPhase": "skip",
+    "summary": "No generated, scaffold, or backup changes detected. Verification can be skipped.",
+    "steps": []
+  },
+  "sdk": {
+    "name": "sdkwork-mcp-app-sdk",
+    "version": "0.1.0",
+    "language": "flutter",
+    "sdkType": "app",
+    "protocol": "http",
+    "outputPath": "E:\\sdkwork-space\\sdkwork-mcp\\sdks\\sdkwork-mcp-app-sdk\\sdkwork-mcp-app-sdk-flutter\\generated\\server-openapi",
+    "packageName": "sdkwork-mcp-app-sdk-generated-flutter"
+  },
+  "versioning": {
+    "resolvedVersion": "0.1.0",
+    "localVersions": []
+  },
+  "stats": {
+    "totalFiles": 18,
+    "models": 27,
+    "apis": 1,
+    "types": 1
+  },
+  "warnings": [],
+  "syncSummary": {
+    "dryRun": false,
+    "controlPlaneEnabled": true,
+    "writtenFiles": 0,
+    "skippedScaffoldFiles": 1,
+    "skippedUnchangedGeneratedFiles": 17,
+    "deletedGeneratedFiles": 0,
+    "changeSummaryPath": ".sdkwork/sdkwork-generator-changes.json",
+    "changeFingerprint": "0c0a5edd3e57893735ba9796111b9f6488f0195cdcf3480d761aa3eb5e1c1966",
+    "changes": {
+      "createdGeneratedFiles": [],
+      "updatedGeneratedFiles": [],
+      "unchangedGeneratedFiles": [
+        "bin/publish-core.mjs",
+        "bin/publish.ps1",
+        "bin/publish.sh",
+        "CHANGELOG.md",
+        "lib/app_client.dart",
+        "lib/sdkwork_mcp_app_sdk_generated_flutter.dart",
+        "lib/src/api/api.dart",
+        "lib/src/api/mcp.dart",
+        "lib/src/api/paths.dart",
+        "lib/src/api/response_helpers.dart",
+        "lib/src/http/client.dart",
+        "lib/src/models.dart",
+        "LICENSE",
+        "pubspec_overrides.yaml",
+        "pubspec.yaml",
+        "README.md",
+        "sdkwork-sdk.json"
+      ],
+      "deletedGeneratedFiles": [],
+      "scaffoldedFiles": [],
+      "preservedScaffoldFiles": [
+        "custom/README.md"
+      ],
+      "backedUpFiles": []
+    },
+    "impact": {
+      "schemaVersion": 1,
+      "areas": [],
+      "details": [],
+      "requiresVerification": false,
+      "summary": "No generated, scaffold, or backup changes detected. Verification can be skipped."
+    },
+    "verificationPlan": {
+      "shouldRun": false,
+      "runPhase": "skip",
+      "summary": "No generated, scaffold, or backup changes detected. Verification can be skipped.",
+      "steps": []
+    },
+    "executionDecision": {
+      "schemaVersion": 1,
+      "riskLevel": "low",
+      "nextAction": "skip",
+      "requiresManualReview": false,
+      "applyRequiresExpectedFingerprint": false,
+      "summary": "No actionable changes were detected. No apply or verification step is required.",
+      "reasons": [
+        "no-actionable-changes"
+      ]
+    },
+    "backedUpFiles": [],
+    "preservedLegacyFiles": false
+  }
+}

@@ -10,6 +10,7 @@ mod web_bootstrap;
 use axum::{
     extract::{Extension, Path, Query, State},
     http::{HeaderMap, StatusCode},
+    response::Response,
     routing::{delete, get, post, put},
     Json, Router,
 };
@@ -22,14 +23,15 @@ use sdkwork_mcp_contract::{
     McpAuthKind, McpInvocationKind, McpLifecycleStatus, McpPublishStatus, McpTransportKind,
     McpVisibility,
 };
-use sdkwork_web_core::HttpRouteManifest;
+use sdkwork_web_core::{HttpRouteManifest, WebRequestContext};
 use serde::Deserialize;
 use sqlx::PgPool;
 
 pub use handlers::{
-    append_invocation, default_server_record, delete_connector, delete_server, list_categories,
-    list_connectors, list_invocations, list_servers, resolve_tenant_id, upsert_category,
-    upsert_connector, upsert_prompt, upsert_resource, upsert_server, upsert_tool, SharedMcpService,
+    append_invocation, default_server_record, delete_connector, delete_server, finish_api_json,
+    get_server, list_categories, list_connectors, list_invocations, list_servers, ok_json,
+    resolve_tenant_id, upsert_category, upsert_connector, upsert_prompt, upsert_resource,
+    upsert_server, upsert_tool, SharedMcpService,
 };
 pub use health::DbReadinessCheck;
 pub use http_route_manifest::backend_route_manifest;
@@ -230,104 +232,133 @@ fn resolve_request_tenant_id(
 }
 
 async fn list_servers_handler<R>(
+    ctx: WebRequestContext,
     State(state): State<BackendState<R>>,
     headers: HeaderMap,
     context: Option<Extension<McpBackendRequestContext>>,
-) -> Result<Json<serde_json::Value>, (StatusCode, String)>
+) -> Response
 where
     R: sdkwork_intelligence_mcp_service::McpRepository + Send + Sync,
 {
-    let tenant_id = resolve_request_tenant_id(context.as_ref(), &headers, state.default_tenant_id);
-    Ok(Json(list_servers(state.service.as_ref(), tenant_id).await?))
+    finish_api_json(
+        &ctx,
+        async {
+            let tenant_id =
+                resolve_request_tenant_id(context.as_ref(), &headers, state.default_tenant_id);
+            ok_json(list_servers(state.service.as_ref(), tenant_id).await?)
+        }
+        .await,
+    )
 }
 
 async fn create_server_handler<R>(
+    ctx: WebRequestContext,
     State(state): State<BackendState<R>>,
     headers: HeaderMap,
     context: Option<Extension<McpBackendRequestContext>>,
     Json(body): Json<CreateServerRequest>,
-) -> Result<Json<serde_json::Value>, (StatusCode, String)>
+) -> Response
 where
     R: sdkwork_intelligence_mcp_service::McpRepository + Send + Sync,
 {
-    let ctx = resolve_write_context(context.as_ref(), &headers, state.default_tenant_id);
-    let owner_user_id = context
-        .as_ref()
-        .and_then(|value| value.0.operator_id)
-        .unwrap_or(0);
-    let mut record = default_server_record(
-        ctx,
-        owner_user_id,
-        body.server_key,
-        body.name,
-        body.transport,
-        body.visibility.unwrap_or(McpVisibility::Tenant),
-    );
-    record.description = body.description;
-    record.category_id = body.category_id;
-    record.category_code = body.category_code;
-    record.tags = body.tags;
-    record.icon_ref = body.icon_ref;
-    Ok(Json(upsert_server(state.service.as_ref(), record).await?))
+    finish_api_json(
+        &ctx,
+        async {
+            let write_ctx = resolve_write_context(context.as_ref(), &headers, state.default_tenant_id);
+            let owner_user_id = context
+                .as_ref()
+                .and_then(|value| value.0.operator_id)
+                .unwrap_or(0);
+            let mut record = default_server_record(
+                write_ctx,
+                owner_user_id,
+                body.server_key,
+                body.name,
+                body.transport,
+                body.visibility.unwrap_or(McpVisibility::Tenant),
+            );
+            record.description = body.description;
+            record.category_id = body.category_id;
+            record.category_code = body.category_code;
+            record.tags = body.tags;
+            record.icon_ref = body.icon_ref;
+            ok_json(upsert_server(state.service.as_ref(), record).await?)
+        }
+        .await,
+    )
 }
 
 async fn update_server_handler<R>(
+    ctx: WebRequestContext,
     State(state): State<BackendState<R>>,
     headers: HeaderMap,
     Path(server_key): Path<String>,
     context: Option<Extension<McpBackendRequestContext>>,
     Json(body): Json<UpdateServerRequest>,
-) -> Result<Json<serde_json::Value>, (StatusCode, String)>
+) -> Response
 where
     R: sdkwork_intelligence_mcp_service::McpRepository + Send + Sync,
 {
-    let tenant_id = resolve_request_tenant_id(context.as_ref(), &headers, state.default_tenant_id);
-    let mut record = state
-        .service
-        .get_server(tenant_id, server_key.as_str())
-        .await
-        .map_err(sdkwork_routes_mcp_shared::http::service_error_response)?;
-    if let Some(value) = body.name {
-        record.name = value;
-    }
-    if let Some(value) = body.description {
-        record.description = Some(value);
-    }
-    if let Some(value) = body.transport {
-        record.transport = value;
-    }
-    if let Some(value) = body.lifecycle_status {
-        record.lifecycle_status = value;
-    }
-    if let Some(value) = body.visibility {
-        record.visibility = value;
-        record.data_scope = value.default_data_scope();
-    }
-    if let Some(value) = body.category_id {
-        record.category_id = Some(value);
-    }
-    if let Some(value) = body.category_code {
-        record.category_code = Some(value);
-    }
-    if let Some(value) = body.tags {
-        record.tags = value;
-    }
-    if let Some(value) = body.icon_ref {
-        record.icon_ref = Some(value);
-    }
-    Ok(Json(upsert_server(state.service.as_ref(), record).await?))
+    finish_api_json(
+        &ctx,
+        async {
+            let tenant_id =
+                resolve_request_tenant_id(context.as_ref(), &headers, state.default_tenant_id);
+            let mut record = get_server(state.service.as_ref(), tenant_id, server_key.as_str())
+                .await?
+                .item;
+            if let Some(value) = body.name {
+                record.name = value;
+            }
+            if let Some(value) = body.description {
+                record.description = Some(value);
+            }
+            if let Some(value) = body.transport {
+                record.transport = value;
+            }
+            if let Some(value) = body.lifecycle_status {
+                record.lifecycle_status = value;
+            }
+            if let Some(value) = body.visibility {
+                record.visibility = value;
+                record.data_scope = value.default_data_scope();
+            }
+            if let Some(value) = body.category_id {
+                record.category_id = Some(value);
+            }
+            if let Some(value) = body.category_code {
+                record.category_code = Some(value);
+            }
+            if let Some(value) = body.tags {
+                record.tags = value;
+            }
+            if let Some(value) = body.icon_ref {
+                record.icon_ref = Some(value);
+            }
+            ok_json(upsert_server(state.service.as_ref(), record).await?)
+        }
+        .await,
+    )
 }
 
 async fn list_categories_handler<R>(
+    ctx: WebRequestContext,
     State(state): State<BackendState<R>>,
     headers: HeaderMap,
     context: Option<Extension<McpBackendRequestContext>>,
-) -> Result<Json<serde_json::Value>, (StatusCode, String)>
+) -> Response
 where
     R: sdkwork_intelligence_mcp_service::McpRepository + Send + Sync,
 {
-    let tenant_id = resolve_request_tenant_id(context.as_ref(), &headers, state.default_tenant_id);
-    Ok(Json(list_categories(state.service.as_ref(), tenant_id).await?))
+    finish_api_json(
+        &ctx,
+        async {
+            let tenant_id =
+                resolve_request_tenant_id(context.as_ref(), &headers, state.default_tenant_id);
+            ok_json(list_categories(state.service.as_ref(), tenant_id).await?)
+        }
+        .await,
+    )
 }
 
 fn resolve_write_context(
@@ -344,237 +375,309 @@ fn resolve_write_context(
 }
 
 async fn upsert_category_handler<R>(
+    ctx: WebRequestContext,
     State(state): State<BackendState<R>>,
     headers: HeaderMap,
     context: Option<Extension<McpBackendRequestContext>>,
     Json(body): Json<UpsertCategoryRequest>,
-) -> Result<Json<serde_json::Value>, (StatusCode, String)>
+) -> Response
 where
     R: sdkwork_intelligence_mcp_service::McpRepository + Send + Sync,
 {
-    let ctx = resolve_write_context(context.as_ref(), &headers, state.default_tenant_id);
-    let record = category_record(
-        ctx,
-        body.category_code,
-        body.name,
-        body.description,
-        body.parent_id.unwrap_or(0),
-        body.sort_order.unwrap_or(0),
-        body.icon_ref,
-    );
-    Ok(Json(upsert_category(state.service.as_ref(), record).await?))
+    finish_api_json(
+        &ctx,
+        async {
+            let write_ctx = resolve_write_context(context.as_ref(), &headers, state.default_tenant_id);
+            let record = category_record(
+                write_ctx,
+                body.category_code,
+                body.name,
+                body.description,
+                body.parent_id.unwrap_or(0),
+                body.sort_order.unwrap_or(0),
+                body.icon_ref,
+            );
+            ok_json(upsert_category(state.service.as_ref(), record).await?)
+        }
+        .await,
+    )
 }
 
 async fn delete_server_handler<R>(
+    ctx: WebRequestContext,
     State(state): State<BackendState<R>>,
     headers: HeaderMap,
     Path(server_key): Path<String>,
     context: Option<Extension<McpBackendRequestContext>>,
-) -> Result<Json<serde_json::Value>, (StatusCode, String)>
+) -> Response
 where
     R: sdkwork_intelligence_mcp_service::McpRepository + Send + Sync,
 {
-    let tenant_id = resolve_request_tenant_id(context.as_ref(), &headers, state.default_tenant_id);
-    Ok(Json(
-        delete_server(state.service.as_ref(), tenant_id, server_key.as_str()).await?,
-    ))
+    finish_api_json(
+        &ctx,
+        async {
+            let tenant_id =
+                resolve_request_tenant_id(context.as_ref(), &headers, state.default_tenant_id);
+            ok_json(
+                delete_server(state.service.as_ref(), tenant_id, server_key.as_str()).await?,
+            )
+        }
+        .await,
+    )
 }
 
 async fn list_connectors_handler<R>(
+    ctx: WebRequestContext,
     State(state): State<BackendState<R>>,
     headers: HeaderMap,
     Path(server_id): Path<u64>,
     context: Option<Extension<McpBackendRequestContext>>,
-) -> Result<Json<serde_json::Value>, (StatusCode, String)>
+) -> Response
 where
     R: sdkwork_intelligence_mcp_service::McpRepository + Send + Sync,
 {
-    let tenant_id = resolve_request_tenant_id(context.as_ref(), &headers, state.default_tenant_id);
-    Ok(Json(
-        list_connectors(state.service.as_ref(), tenant_id, server_id).await?,
-    ))
+    finish_api_json(
+        &ctx,
+        async {
+            let tenant_id =
+                resolve_request_tenant_id(context.as_ref(), &headers, state.default_tenant_id);
+            ok_json(list_connectors(state.service.as_ref(), tenant_id, server_id).await?)
+        }
+        .await,
+    )
 }
 
 async fn upsert_connector_handler<R>(
+    ctx: WebRequestContext,
     State(state): State<BackendState<R>>,
     headers: HeaderMap,
     Path(server_id): Path<u64>,
     context: Option<Extension<McpBackendRequestContext>>,
     Json(body): Json<UpsertConnectorRequest>,
-) -> Result<Json<serde_json::Value>, (StatusCode, String)>
+) -> Response
 where
     R: sdkwork_intelligence_mcp_service::McpRepository + Send + Sync,
 {
-    let ctx = resolve_write_context(context.as_ref(), &headers, state.default_tenant_id);
-    let record = connector_record(
-        ctx,
-        server_id,
-        body.connector_key,
-        body.transport,
-        body.endpoint_url,
-        body.command_ref,
-        body.args_json.unwrap_or_else(|| "[]".to_string()),
-        body.env_schema_json.unwrap_or_else(|| "{}".to_string()),
-        body.auth_type.unwrap_or(McpAuthKind::None),
-        body.secret_ref,
-        body.timeout_ms.unwrap_or(30_000),
-        body.retry_policy_json.unwrap_or_else(|| "{}".to_string()),
-        body.publish_status.unwrap_or(McpPublishStatus::Draft),
-        body.lifecycle_status.unwrap_or(McpLifecycleStatus::Draft),
-    );
-    Ok(Json(upsert_connector(state.service.as_ref(), record).await?))
+    finish_api_json(
+        &ctx,
+        async {
+            let write_ctx = resolve_write_context(context.as_ref(), &headers, state.default_tenant_id);
+            let record = connector_record(
+                write_ctx,
+                server_id,
+                body.connector_key,
+                body.transport,
+                body.endpoint_url,
+                body.command_ref,
+                body.args_json.unwrap_or_else(|| "[]".to_string()),
+                body.env_schema_json.unwrap_or_else(|| "{}".to_string()),
+                body.auth_type.unwrap_or(McpAuthKind::None),
+                body.secret_ref,
+                body.timeout_ms.unwrap_or(30_000),
+                body.retry_policy_json.unwrap_or_else(|| "{}".to_string()),
+                body.publish_status.unwrap_or(McpPublishStatus::Draft),
+                body.lifecycle_status.unwrap_or(McpLifecycleStatus::Draft),
+            );
+            ok_json(upsert_connector(state.service.as_ref(), record).await?)
+        }
+        .await,
+    )
 }
 
 async fn delete_connector_handler<R>(
+    ctx: WebRequestContext,
     State(state): State<BackendState<R>>,
     headers: HeaderMap,
     Path((server_id, connector_key)): Path<(u64, String)>,
     context: Option<Extension<McpBackendRequestContext>>,
-) -> Result<Json<serde_json::Value>, (StatusCode, String)>
+) -> Response
 where
     R: sdkwork_intelligence_mcp_service::McpRepository + Send + Sync,
 {
-    let tenant_id = resolve_request_tenant_id(context.as_ref(), &headers, state.default_tenant_id);
-    Ok(Json(
-        delete_connector(
-            state.service.as_ref(),
-            tenant_id,
-            server_id,
-            connector_key.as_str(),
-        )
-        .await?,
-    ))
+    finish_api_json(
+        &ctx,
+        async {
+            let tenant_id =
+                resolve_request_tenant_id(context.as_ref(), &headers, state.default_tenant_id);
+            ok_json(
+                delete_connector(
+                    state.service.as_ref(),
+                    tenant_id,
+                    server_id,
+                    connector_key.as_str(),
+                )
+                .await?,
+            )
+        }
+        .await,
+    )
 }
 
 async fn upsert_tool_handler<R>(
+    ctx: WebRequestContext,
     State(state): State<BackendState<R>>,
     headers: HeaderMap,
     Path(server_id): Path<u64>,
     context: Option<Extension<McpBackendRequestContext>>,
     Json(body): Json<UpsertToolRequest>,
-) -> Result<Json<serde_json::Value>, (StatusCode, String)>
+) -> Response
 where
     R: sdkwork_intelligence_mcp_service::McpRepository + Send + Sync,
 {
-    let ctx = resolve_write_context(context.as_ref(), &headers, state.default_tenant_id);
-    let record = tool_record(
-        ctx,
-        server_id,
-        body.connector_id,
-        body.tool_key,
-        body.name,
-        body.description,
-        body.input_schema_json.unwrap_or_else(|| "{}".to_string()),
-        body.output_schema_json.unwrap_or_else(|| "{}".to_string()),
-        body.risk_level.unwrap_or_else(|| "low".to_string()),
-        body.requires_approval.unwrap_or(false),
-        body.enabled.unwrap_or(true),
-        body.sort_weight.unwrap_or(0),
-    );
-    Ok(Json(upsert_tool(state.service.as_ref(), record).await?))
+    finish_api_json(
+        &ctx,
+        async {
+            let write_ctx = resolve_write_context(context.as_ref(), &headers, state.default_tenant_id);
+            let record = tool_record(
+                write_ctx,
+                server_id,
+                body.connector_id,
+                body.tool_key,
+                body.name,
+                body.description,
+                body.input_schema_json.unwrap_or_else(|| "{}".to_string()),
+                body.output_schema_json.unwrap_or_else(|| "{}".to_string()),
+                body.risk_level.unwrap_or_else(|| "low".to_string()),
+                body.requires_approval.unwrap_or(false),
+                body.enabled.unwrap_or(true),
+                body.sort_weight.unwrap_or(0),
+            );
+            ok_json(upsert_tool(state.service.as_ref(), record).await?)
+        }
+        .await,
+    )
 }
 
 async fn upsert_resource_handler<R>(
+    ctx: WebRequestContext,
     State(state): State<BackendState<R>>,
     headers: HeaderMap,
     Path(server_id): Path<u64>,
     context: Option<Extension<McpBackendRequestContext>>,
     Json(body): Json<UpsertResourceRequest>,
-) -> Result<Json<serde_json::Value>, (StatusCode, String)>
+) -> Response
 where
     R: sdkwork_intelligence_mcp_service::McpRepository + Send + Sync,
 {
-    let ctx = resolve_write_context(context.as_ref(), &headers, state.default_tenant_id);
-    let record = resource_record(
-        ctx,
-        server_id,
-        body.connector_id,
-        body.resource_key,
-        body.uri,
-        body.name,
-        body.description,
-        body.mime_type,
-        body.enabled.unwrap_or(true),
-    );
-    Ok(Json(upsert_resource(state.service.as_ref(), record).await?))
+    finish_api_json(
+        &ctx,
+        async {
+            let write_ctx = resolve_write_context(context.as_ref(), &headers, state.default_tenant_id);
+            let record = resource_record(
+                write_ctx,
+                server_id,
+                body.connector_id,
+                body.resource_key,
+                body.uri,
+                body.name,
+                body.description,
+                body.mime_type,
+                body.enabled.unwrap_or(true),
+            );
+            ok_json(upsert_resource(state.service.as_ref(), record).await?)
+        }
+        .await,
+    )
 }
 
 async fn upsert_prompt_handler<R>(
+    ctx: WebRequestContext,
     State(state): State<BackendState<R>>,
     headers: HeaderMap,
     Path(server_id): Path<u64>,
     context: Option<Extension<McpBackendRequestContext>>,
     Json(body): Json<UpsertPromptRequest>,
-) -> Result<Json<serde_json::Value>, (StatusCode, String)>
+) -> Response
 where
     R: sdkwork_intelligence_mcp_service::McpRepository + Send + Sync,
 {
-    let ctx = resolve_write_context(context.as_ref(), &headers, state.default_tenant_id);
-    let record = prompt_record(
-        ctx,
-        server_id,
-        body.connector_id,
-        body.prompt_key,
-        body.name,
-        body.description,
-        body.arguments_schema_json.unwrap_or_else(|| "[]".to_string()),
-        body.enabled.unwrap_or(true),
-    );
-    Ok(Json(upsert_prompt(state.service.as_ref(), record).await?))
+    finish_api_json(
+        &ctx,
+        async {
+            let write_ctx = resolve_write_context(context.as_ref(), &headers, state.default_tenant_id);
+            let record = prompt_record(
+                write_ctx,
+                server_id,
+                body.connector_id,
+                body.prompt_key,
+                body.name,
+                body.description,
+                body.arguments_schema_json.unwrap_or_else(|| "[]".to_string()),
+                body.enabled.unwrap_or(true),
+            );
+            ok_json(upsert_prompt(state.service.as_ref(), record).await?)
+        }
+        .await,
+    )
 }
 
 async fn list_invocations_handler<R>(
+    ctx: WebRequestContext,
     State(state): State<BackendState<R>>,
     headers: HeaderMap,
     Query(query): Query<InvocationQuery>,
     context: Option<Extension<McpBackendRequestContext>>,
-) -> Result<Json<serde_json::Value>, (StatusCode, String)>
+) -> Response
 where
     R: sdkwork_intelligence_mcp_service::McpRepository + Send + Sync,
 {
-    let tenant_id = resolve_request_tenant_id(context.as_ref(), &headers, state.default_tenant_id);
-    Ok(Json(
-        list_invocations(
-            state.service.as_ref(),
-            tenant_id,
-            query.server_id,
-            query.limit.unwrap_or(100),
-        )
-        .await?,
-    ))
+    finish_api_json(
+        &ctx,
+        async {
+            let tenant_id =
+                resolve_request_tenant_id(context.as_ref(), &headers, state.default_tenant_id);
+            ok_json(
+                list_invocations(
+                    state.service.as_ref(),
+                    tenant_id,
+                    query.server_id,
+                    query.limit.unwrap_or(100),
+                )
+                .await?,
+            )
+        }
+        .await,
+    )
 }
 
 async fn append_invocation_handler<R>(
+    ctx: WebRequestContext,
     State(state): State<BackendState<R>>,
     headers: HeaderMap,
     context: Option<Extension<McpBackendRequestContext>>,
     Json(body): Json<AppendInvocationRequest>,
-) -> Result<Json<serde_json::Value>, (StatusCode, String)>
+) -> Response
 where
     R: sdkwork_intelligence_mcp_service::McpRepository + Send + Sync,
 {
-    let ctx = resolve_write_context(context.as_ref(), &headers, state.default_tenant_id);
-    let user_id = context
-        .as_ref()
-        .and_then(|value| value.0.operator_id)
-        .unwrap_or(0);
-    let record = invocation_record(
-        ctx,
-        user_id,
-        body.server_id,
-        body.connector_id,
-        body.invocation_kind,
-        body.target_key,
-        body.request_id,
-        body.trace_id,
-        body.idempotency_key,
-        body.request_json.unwrap_or_else(|| "{}".to_string()),
-        body.response_json,
-        body.status.unwrap_or_else(|| "success".to_string()),
-        body.error_message,
-        body.duration_ms,
-    );
-    Ok(Json(append_invocation(state.service.as_ref(), record).await?))
+    finish_api_json(
+        &ctx,
+        async {
+            let write_ctx = resolve_write_context(context.as_ref(), &headers, state.default_tenant_id);
+            let user_id = context
+                .as_ref()
+                .and_then(|value| value.0.operator_id)
+                .unwrap_or(0);
+            let record = invocation_record(
+                write_ctx,
+                user_id,
+                body.server_id,
+                body.connector_id,
+                body.invocation_kind,
+                body.target_key,
+                body.request_id,
+                body.trace_id,
+                body.idempotency_key,
+                body.request_json.unwrap_or_else(|| "{}".to_string()),
+                body.response_json,
+                body.status.unwrap_or_else(|| "success".to_string()),
+                body.error_message,
+                body.duration_ms,
+            );
+            ok_json(append_invocation(state.service.as_ref(), record).await?)
+        }
+        .await,
+    )
 }
 
 pub fn build_router<R>(service: Arc<McpService<R>>, default_tenant_id: u64) -> Router

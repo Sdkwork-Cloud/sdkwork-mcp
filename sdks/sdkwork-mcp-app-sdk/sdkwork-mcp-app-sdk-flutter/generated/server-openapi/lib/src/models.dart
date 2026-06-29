@@ -12,19 +12,214 @@ List<dynamic>? _sdkworkAsList(dynamic value) {
   return value is List ? value : null;
 }
 
+class SdkWorkApiResponse {
+  final int code;
+  final dynamic data;
+  final String traceId;
+
+  SdkWorkApiResponse({
+    required this.code,
+    required this.data,
+    required this.traceId
+  });
+
+  factory SdkWorkApiResponse.fromJson(Map<String, dynamic> json) {
+    return SdkWorkApiResponse(
+      code: (() {
+        final value = json['code'];
+        if (value is! int) {
+          throw FormatException('SdkWorkApiResponse.code is required');
+        }
+        return value;
+      })(),
+      data: json['data'],
+      traceId: (() {
+        final value = json['traceId']?.toString();
+        if (value == null) {
+          throw FormatException('SdkWorkApiResponse.traceId is required');
+        }
+        return value;
+      })()
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return <String, dynamic>{
+      'code': code,
+      'data': data,
+      'traceId': traceId,
+    };
+  }
+}
+
+class SdkWorkResourceData {
+  final Map<String, dynamic> item;
+
+  SdkWorkResourceData({
+    required this.item
+  });
+
+  factory SdkWorkResourceData.fromJson(Map<String, dynamic> json) {
+    return SdkWorkResourceData(
+      item: (() {
+        final map = _sdkworkAsMap(json['item']);
+        if (map == null) {
+          throw FormatException('SdkWorkResourceData.item is required');
+        }
+        return map;
+      })()
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return <String, dynamic>{
+      'item': item,
+    };
+  }
+}
+
+class SdkWorkPageData {
+  final List<Map<String, dynamic>> items;
+  final PageInfo pageInfo;
+
+  SdkWorkPageData({
+    required this.items,
+    required this.pageInfo
+  });
+
+  factory SdkWorkPageData.fromJson(Map<String, dynamic> json) {
+    return SdkWorkPageData(
+      items: (() {
+        final list = _sdkworkAsList(json['items']);
+        if (list == null) {
+          throw FormatException('SdkWorkPageData.items is required');
+        }
+        return list
+            .map((item) => _sdkworkAsMap(item))
+            .whereType<Map<String, dynamic>>()
+            .toList();
+      })(),
+      pageInfo: (() {
+        final map = _sdkworkAsMap(json['pageInfo']);
+        if (map == null) {
+          throw FormatException('SdkWorkPageData.pageInfo is required');
+        }
+        return PageInfo.fromJson(map);
+      })()
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return <String, dynamic>{
+      'items': items.map((item) => item).toList(),
+      'pageInfo': pageInfo.toJson(),
+    };
+  }
+}
+
+class SdkWorkCommandData {
+  final bool accepted;
+  final String? resourceId;
+  final String? status;
+
+  SdkWorkCommandData({
+    required this.accepted,
+    this.resourceId,
+    this.status
+  });
+
+  factory SdkWorkCommandData.fromJson(Map<String, dynamic> json) {
+    return SdkWorkCommandData(
+      accepted: (() {
+        final value = json['accepted'];
+        if (value is! bool) {
+          throw FormatException('SdkWorkCommandData.accepted is required');
+        }
+        return value;
+      })(),
+      resourceId: json['resourceId']?.toString(),
+      status: json['status']?.toString()
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return <String, dynamic>{
+      'accepted': accepted,
+      'resourceId': resourceId,
+      'status': status,
+    };
+  }
+}
+
+class PageInfo {
+  final String mode;
+  final int? page;
+  final int? pageSize;
+  final String? totalItems;
+  final int? totalPages;
+  final String? nextCursor;
+  final bool? hasMore;
+
+  PageInfo({
+    required this.mode,
+    this.page,
+    this.pageSize,
+    this.totalItems,
+    this.totalPages,
+    this.nextCursor,
+    this.hasMore
+  });
+
+  factory PageInfo.fromJson(Map<String, dynamic> json) {
+    return PageInfo(
+      mode: (() {
+        final value = json['mode']?.toString();
+        if (value == null) {
+          throw FormatException('PageInfo.mode is required');
+        }
+        return value;
+      })(),
+      page: json['page'] is int ? json['page'] : null,
+      pageSize: json['pageSize'] is int ? json['pageSize'] : null,
+      totalItems: json['totalItems']?.toString(),
+      totalPages: json['totalPages'] is int ? json['totalPages'] : null,
+      nextCursor: json['nextCursor']?.toString(),
+      hasMore: json['hasMore'] is bool ? json['hasMore'] : null
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return <String, dynamic>{
+      'mode': mode,
+      'page': page,
+      'pageSize': pageSize,
+      'totalItems': totalItems,
+      'totalPages': totalPages,
+      'nextCursor': nextCursor,
+      'hasMore': hasMore,
+    };
+  }
+}
+
 class ProblemDetail {
   final String type;
   final String title;
   final int status;
   final String? detail;
-  final String? requestId;
+  final String? instance;
+  final int code;
+  final String traceId;
+  final List<FieldError>? errors;
 
   ProblemDetail({
     required this.type,
     required this.title,
     required this.status,
     this.detail,
-    this.requestId
+    this.instance,
+    required this.code,
+    required this.traceId,
+    this.errors
   });
 
   factory ProblemDetail.fromJson(Map<String, dynamic> json) {
@@ -51,7 +246,34 @@ class ProblemDetail {
         return value;
       })(),
       detail: json['detail']?.toString(),
-      requestId: json['requestId']?.toString()
+      instance: json['instance']?.toString(),
+      code: (() {
+        final value = json['code'];
+        if (value is! int) {
+          throw FormatException('ProblemDetail.code is required');
+        }
+        return value;
+      })(),
+      traceId: (() {
+        final value = json['traceId']?.toString();
+        if (value == null) {
+          throw FormatException('ProblemDetail.traceId is required');
+        }
+        return value;
+      })(),
+      errors: (() {
+        final list = _sdkworkAsList(json['errors']);
+        if (list == null) {
+          return null;
+        }
+        return list
+            .map((item) => (() {
+        final map = _sdkworkAsMap(item);
+        return map == null ? null : FieldError.fromJson(map);
+      })())
+            .whereType<FieldError>()
+            .toList();
+      })()
     );
   }
 
@@ -61,7 +283,170 @@ class ProblemDetail {
       'title': title,
       'status': status,
       'detail': detail,
-      'requestId': requestId,
+      'instance': instance,
+      'code': code,
+      'traceId': traceId,
+      'errors': errors?.map((item) => item.toJson()).toList(),
+    };
+  }
+}
+
+class FieldError {
+  final String field;
+  final String message;
+  final int? code;
+
+  FieldError({
+    required this.field,
+    required this.message,
+    this.code
+  });
+
+  factory FieldError.fromJson(Map<String, dynamic> json) {
+    return FieldError(
+      field: (() {
+        final value = json['field']?.toString();
+        if (value == null) {
+          throw FormatException('FieldError.field is required');
+        }
+        return value;
+      })(),
+      message: (() {
+        final value = json['message']?.toString();
+        if (value == null) {
+          throw FormatException('FieldError.message is required');
+        }
+        return value;
+      })(),
+      code: json['code'] is int ? json['code'] : null
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return <String, dynamic>{
+      'field': field,
+      'message': message,
+      'code': code,
+    };
+  }
+}
+
+class SdkWorkResourceResponse {
+  final int code;
+  final dynamic data;
+  final String traceId;
+
+  SdkWorkResourceResponse({
+    required this.code,
+    required this.data,
+    required this.traceId
+  });
+
+  factory SdkWorkResourceResponse.fromJson(Map<String, dynamic> json) {
+    return SdkWorkResourceResponse(
+      code: (() {
+        final value = json['code'];
+        if (value is! int) {
+          throw FormatException('SdkWorkResourceResponse.code is required');
+        }
+        return value;
+      })(),
+      data: json['data'],
+      traceId: (() {
+        final value = json['traceId']?.toString();
+        if (value == null) {
+          throw FormatException('SdkWorkResourceResponse.traceId is required');
+        }
+        return value;
+      })()
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return <String, dynamic>{
+      'code': code,
+      'data': data,
+      'traceId': traceId,
+    };
+  }
+}
+
+class SdkWorkListResponse {
+  final int code;
+  final dynamic data;
+  final String traceId;
+
+  SdkWorkListResponse({
+    required this.code,
+    required this.data,
+    required this.traceId
+  });
+
+  factory SdkWorkListResponse.fromJson(Map<String, dynamic> json) {
+    return SdkWorkListResponse(
+      code: (() {
+        final value = json['code'];
+        if (value is! int) {
+          throw FormatException('SdkWorkListResponse.code is required');
+        }
+        return value;
+      })(),
+      data: json['data'],
+      traceId: (() {
+        final value = json['traceId']?.toString();
+        if (value == null) {
+          throw FormatException('SdkWorkListResponse.traceId is required');
+        }
+        return value;
+      })()
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return <String, dynamic>{
+      'code': code,
+      'data': data,
+      'traceId': traceId,
+    };
+  }
+}
+
+class SdkWorkCommandResponse {
+  final int code;
+  final dynamic data;
+  final String traceId;
+
+  SdkWorkCommandResponse({
+    required this.code,
+    required this.data,
+    required this.traceId
+  });
+
+  factory SdkWorkCommandResponse.fromJson(Map<String, dynamic> json) {
+    return SdkWorkCommandResponse(
+      code: (() {
+        final value = json['code'];
+        if (value is! int) {
+          throw FormatException('SdkWorkCommandResponse.code is required');
+        }
+        return value;
+      })(),
+      data: json['data'],
+      traceId: (() {
+        final value = json['traceId']?.toString();
+        if (value == null) {
+          throw FormatException('SdkWorkCommandResponse.traceId is required');
+        }
+        return value;
+      })()
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return <String, dynamic>{
+      'code': code,
+      'data': data,
+      'traceId': traceId,
     };
   }
 }
@@ -781,334 +1166,6 @@ class McpInvocationRecord {
   }
 }
 
-class McpServerCategoryListResponse {
-  final List<McpServerCategoryRecord> items;
-
-  McpServerCategoryListResponse({
-    required this.items
-  });
-
-  factory McpServerCategoryListResponse.fromJson(Map<String, dynamic> json) {
-    return McpServerCategoryListResponse(
-      items: (() {
-        final list = _sdkworkAsList(json['items']);
-        if (list == null) {
-          throw FormatException('McpServerCategoryListResponse.items is required');
-        }
-        return list
-            .map((item) => (() {
-        final map = _sdkworkAsMap(item);
-        return map == null ? null : McpServerCategoryRecord.fromJson(map);
-      })())
-            .whereType<McpServerCategoryRecord>()
-            .toList();
-      })()
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return <String, dynamic>{
-      'items': items.map((item) => item.toJson()).toList(),
-    };
-  }
-}
-
-class McpServerCategoryRecordResponse {
-  final McpServerCategoryRecord data;
-
-  McpServerCategoryRecordResponse({
-    required this.data
-  });
-
-  factory McpServerCategoryRecordResponse.fromJson(Map<String, dynamic> json) {
-    return McpServerCategoryRecordResponse(
-      data: (() {
-        final map = _sdkworkAsMap(json['data']);
-        if (map == null) {
-          throw FormatException('McpServerCategoryRecordResponse.data is required');
-        }
-        return McpServerCategoryRecord.fromJson(map);
-      })()
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return <String, dynamic>{
-      'data': data.toJson(),
-    };
-  }
-}
-
-class McpServerListResponse {
-  final List<McpServerRecord> items;
-
-  McpServerListResponse({
-    required this.items
-  });
-
-  factory McpServerListResponse.fromJson(Map<String, dynamic> json) {
-    return McpServerListResponse(
-      items: (() {
-        final list = _sdkworkAsList(json['items']);
-        if (list == null) {
-          throw FormatException('McpServerListResponse.items is required');
-        }
-        return list
-            .map((item) => (() {
-        final map = _sdkworkAsMap(item);
-        return map == null ? null : McpServerRecord.fromJson(map);
-      })())
-            .whereType<McpServerRecord>()
-            .toList();
-      })()
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return <String, dynamic>{
-      'items': items.map((item) => item.toJson()).toList(),
-    };
-  }
-}
-
-class McpServerRecordResponse {
-  final McpServerRecord data;
-
-  McpServerRecordResponse({
-    required this.data
-  });
-
-  factory McpServerRecordResponse.fromJson(Map<String, dynamic> json) {
-    return McpServerRecordResponse(
-      data: (() {
-        final map = _sdkworkAsMap(json['data']);
-        if (map == null) {
-          throw FormatException('McpServerRecordResponse.data is required');
-        }
-        return McpServerRecord.fromJson(map);
-      })()
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return <String, dynamic>{
-      'data': data.toJson(),
-    };
-  }
-}
-
-class McpConnectorListResponse {
-  final List<McpConnectorRecord> items;
-
-  McpConnectorListResponse({
-    required this.items
-  });
-
-  factory McpConnectorListResponse.fromJson(Map<String, dynamic> json) {
-    return McpConnectorListResponse(
-      items: (() {
-        final list = _sdkworkAsList(json['items']);
-        if (list == null) {
-          throw FormatException('McpConnectorListResponse.items is required');
-        }
-        return list
-            .map((item) => (() {
-        final map = _sdkworkAsMap(item);
-        return map == null ? null : McpConnectorRecord.fromJson(map);
-      })())
-            .whereType<McpConnectorRecord>()
-            .toList();
-      })()
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return <String, dynamic>{
-      'items': items.map((item) => item.toJson()).toList(),
-    };
-  }
-}
-
-class McpToolListResponse {
-  final List<McpToolRecord> items;
-
-  McpToolListResponse({
-    required this.items
-  });
-
-  factory McpToolListResponse.fromJson(Map<String, dynamic> json) {
-    return McpToolListResponse(
-      items: (() {
-        final list = _sdkworkAsList(json['items']);
-        if (list == null) {
-          throw FormatException('McpToolListResponse.items is required');
-        }
-        return list
-            .map((item) => (() {
-        final map = _sdkworkAsMap(item);
-        return map == null ? null : McpToolRecord.fromJson(map);
-      })())
-            .whereType<McpToolRecord>()
-            .toList();
-      })()
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return <String, dynamic>{
-      'items': items.map((item) => item.toJson()).toList(),
-    };
-  }
-}
-
-class McpToolRecordResponse {
-  final McpToolRecord data;
-
-  McpToolRecordResponse({
-    required this.data
-  });
-
-  factory McpToolRecordResponse.fromJson(Map<String, dynamic> json) {
-    return McpToolRecordResponse(
-      data: (() {
-        final map = _sdkworkAsMap(json['data']);
-        if (map == null) {
-          throw FormatException('McpToolRecordResponse.data is required');
-        }
-        return McpToolRecord.fromJson(map);
-      })()
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return <String, dynamic>{
-      'data': data.toJson(),
-    };
-  }
-}
-
-class McpResourceListResponse {
-  final List<McpResourceRecord> items;
-
-  McpResourceListResponse({
-    required this.items
-  });
-
-  factory McpResourceListResponse.fromJson(Map<String, dynamic> json) {
-    return McpResourceListResponse(
-      items: (() {
-        final list = _sdkworkAsList(json['items']);
-        if (list == null) {
-          throw FormatException('McpResourceListResponse.items is required');
-        }
-        return list
-            .map((item) => (() {
-        final map = _sdkworkAsMap(item);
-        return map == null ? null : McpResourceRecord.fromJson(map);
-      })())
-            .whereType<McpResourceRecord>()
-            .toList();
-      })()
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return <String, dynamic>{
-      'items': items.map((item) => item.toJson()).toList(),
-    };
-  }
-}
-
-class McpPromptListResponse {
-  final List<McpPromptRecord> items;
-
-  McpPromptListResponse({
-    required this.items
-  });
-
-  factory McpPromptListResponse.fromJson(Map<String, dynamic> json) {
-    return McpPromptListResponse(
-      items: (() {
-        final list = _sdkworkAsList(json['items']);
-        if (list == null) {
-          throw FormatException('McpPromptListResponse.items is required');
-        }
-        return list
-            .map((item) => (() {
-        final map = _sdkworkAsMap(item);
-        return map == null ? null : McpPromptRecord.fromJson(map);
-      })())
-            .whereType<McpPromptRecord>()
-            .toList();
-      })()
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return <String, dynamic>{
-      'items': items.map((item) => item.toJson()).toList(),
-    };
-  }
-}
-
-class McpInvocationListResponse {
-  final List<McpInvocationRecord> items;
-
-  McpInvocationListResponse({
-    required this.items
-  });
-
-  factory McpInvocationListResponse.fromJson(Map<String, dynamic> json) {
-    return McpInvocationListResponse(
-      items: (() {
-        final list = _sdkworkAsList(json['items']);
-        if (list == null) {
-          throw FormatException('McpInvocationListResponse.items is required');
-        }
-        return list
-            .map((item) => (() {
-        final map = _sdkworkAsMap(item);
-        return map == null ? null : McpInvocationRecord.fromJson(map);
-      })())
-            .whereType<McpInvocationRecord>()
-            .toList();
-      })()
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return <String, dynamic>{
-      'items': items.map((item) => item.toJson()).toList(),
-    };
-  }
-}
-
-class McpInvocationRecordResponse {
-  final McpInvocationRecord data;
-
-  McpInvocationRecordResponse({
-    required this.data
-  });
-
-  factory McpInvocationRecordResponse.fromJson(Map<String, dynamic> json) {
-    return McpInvocationRecordResponse(
-      data: (() {
-        final map = _sdkworkAsMap(json['data']);
-        if (map == null) {
-          throw FormatException('McpInvocationRecordResponse.data is required');
-        }
-        return McpInvocationRecord.fromJson(map);
-      })()
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return <String, dynamic>{
-      'data': data.toJson(),
-    };
-  }
-}
-
 class AppendMcpInvocationCommand {
   final int serverId;
   final int? connectorId;
@@ -1655,6 +1712,374 @@ class UpsertMcpPromptCommand {
       'description': description,
       'arguments_schema_json': argumentsSchemaJson,
       'enabled': enabled,
+    };
+  }
+}
+
+class McpListCategoriesResponse {
+  final int code;
+  final dynamic data;
+  final String traceId;
+
+  McpListCategoriesResponse({
+    required this.code,
+    required this.data,
+    required this.traceId
+  });
+
+  factory McpListCategoriesResponse.fromJson(Map<String, dynamic> json) {
+    return McpListCategoriesResponse(
+      code: (() {
+        final value = json['code'];
+        if (value is! int) {
+          throw FormatException('McpListCategoriesResponse.code is required');
+        }
+        return value;
+      })(),
+      data: (() {
+        final map = _sdkworkAsMap(json['data']);
+        if (map == null) {
+          throw FormatException('McpListCategoriesResponse.data is required');
+        }
+        return map;
+      })(),
+      traceId: (() {
+        final value = json['traceId']?.toString();
+        if (value == null) {
+          throw FormatException('McpListCategoriesResponse.traceId is required');
+        }
+        return value;
+      })()
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return <String, dynamic>{
+      'code': code,
+      'data': data,
+      'traceId': traceId,
+    };
+  }
+}
+
+class McpListServersResponse {
+  final int code;
+  final dynamic data;
+  final String traceId;
+
+  McpListServersResponse({
+    required this.code,
+    required this.data,
+    required this.traceId
+  });
+
+  factory McpListServersResponse.fromJson(Map<String, dynamic> json) {
+    return McpListServersResponse(
+      code: (() {
+        final value = json['code'];
+        if (value is! int) {
+          throw FormatException('McpListServersResponse.code is required');
+        }
+        return value;
+      })(),
+      data: (() {
+        final map = _sdkworkAsMap(json['data']);
+        if (map == null) {
+          throw FormatException('McpListServersResponse.data is required');
+        }
+        return map;
+      })(),
+      traceId: (() {
+        final value = json['traceId']?.toString();
+        if (value == null) {
+          throw FormatException('McpListServersResponse.traceId is required');
+        }
+        return value;
+      })()
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return <String, dynamic>{
+      'code': code,
+      'data': data,
+      'traceId': traceId,
+    };
+  }
+}
+
+class McpGetServerResponse {
+  final int code;
+  final dynamic data;
+  final String traceId;
+
+  McpGetServerResponse({
+    required this.code,
+    required this.data,
+    required this.traceId
+  });
+
+  factory McpGetServerResponse.fromJson(Map<String, dynamic> json) {
+    return McpGetServerResponse(
+      code: (() {
+        final value = json['code'];
+        if (value is! int) {
+          throw FormatException('McpGetServerResponse.code is required');
+        }
+        return value;
+      })(),
+      data: (() {
+        final map = _sdkworkAsMap(json['data']);
+        if (map == null) {
+          throw FormatException('McpGetServerResponse.data is required');
+        }
+        return map;
+      })(),
+      traceId: (() {
+        final value = json['traceId']?.toString();
+        if (value == null) {
+          throw FormatException('McpGetServerResponse.traceId is required');
+        }
+        return value;
+      })()
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return <String, dynamic>{
+      'code': code,
+      'data': data,
+      'traceId': traceId,
+    };
+  }
+}
+
+class McpListToolsResponse {
+  final int code;
+  final dynamic data;
+  final String traceId;
+
+  McpListToolsResponse({
+    required this.code,
+    required this.data,
+    required this.traceId
+  });
+
+  factory McpListToolsResponse.fromJson(Map<String, dynamic> json) {
+    return McpListToolsResponse(
+      code: (() {
+        final value = json['code'];
+        if (value is! int) {
+          throw FormatException('McpListToolsResponse.code is required');
+        }
+        return value;
+      })(),
+      data: (() {
+        final map = _sdkworkAsMap(json['data']);
+        if (map == null) {
+          throw FormatException('McpListToolsResponse.data is required');
+        }
+        return map;
+      })(),
+      traceId: (() {
+        final value = json['traceId']?.toString();
+        if (value == null) {
+          throw FormatException('McpListToolsResponse.traceId is required');
+        }
+        return value;
+      })()
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return <String, dynamic>{
+      'code': code,
+      'data': data,
+      'traceId': traceId,
+    };
+  }
+}
+
+class McpGetToolResponse {
+  final int code;
+  final dynamic data;
+  final String traceId;
+
+  McpGetToolResponse({
+    required this.code,
+    required this.data,
+    required this.traceId
+  });
+
+  factory McpGetToolResponse.fromJson(Map<String, dynamic> json) {
+    return McpGetToolResponse(
+      code: (() {
+        final value = json['code'];
+        if (value is! int) {
+          throw FormatException('McpGetToolResponse.code is required');
+        }
+        return value;
+      })(),
+      data: (() {
+        final map = _sdkworkAsMap(json['data']);
+        if (map == null) {
+          throw FormatException('McpGetToolResponse.data is required');
+        }
+        return map;
+      })(),
+      traceId: (() {
+        final value = json['traceId']?.toString();
+        if (value == null) {
+          throw FormatException('McpGetToolResponse.traceId is required');
+        }
+        return value;
+      })()
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return <String, dynamic>{
+      'code': code,
+      'data': data,
+      'traceId': traceId,
+    };
+  }
+}
+
+class McpListResourcesResponse {
+  final int code;
+  final dynamic data;
+  final String traceId;
+
+  McpListResourcesResponse({
+    required this.code,
+    required this.data,
+    required this.traceId
+  });
+
+  factory McpListResourcesResponse.fromJson(Map<String, dynamic> json) {
+    return McpListResourcesResponse(
+      code: (() {
+        final value = json['code'];
+        if (value is! int) {
+          throw FormatException('McpListResourcesResponse.code is required');
+        }
+        return value;
+      })(),
+      data: (() {
+        final map = _sdkworkAsMap(json['data']);
+        if (map == null) {
+          throw FormatException('McpListResourcesResponse.data is required');
+        }
+        return map;
+      })(),
+      traceId: (() {
+        final value = json['traceId']?.toString();
+        if (value == null) {
+          throw FormatException('McpListResourcesResponse.traceId is required');
+        }
+        return value;
+      })()
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return <String, dynamic>{
+      'code': code,
+      'data': data,
+      'traceId': traceId,
+    };
+  }
+}
+
+class McpListPromptsResponse {
+  final int code;
+  final dynamic data;
+  final String traceId;
+
+  McpListPromptsResponse({
+    required this.code,
+    required this.data,
+    required this.traceId
+  });
+
+  factory McpListPromptsResponse.fromJson(Map<String, dynamic> json) {
+    return McpListPromptsResponse(
+      code: (() {
+        final value = json['code'];
+        if (value is! int) {
+          throw FormatException('McpListPromptsResponse.code is required');
+        }
+        return value;
+      })(),
+      data: (() {
+        final map = _sdkworkAsMap(json['data']);
+        if (map == null) {
+          throw FormatException('McpListPromptsResponse.data is required');
+        }
+        return map;
+      })(),
+      traceId: (() {
+        final value = json['traceId']?.toString();
+        if (value == null) {
+          throw FormatException('McpListPromptsResponse.traceId is required');
+        }
+        return value;
+      })()
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return <String, dynamic>{
+      'code': code,
+      'data': data,
+      'traceId': traceId,
+    };
+  }
+}
+
+class McpListInvocationsResponse {
+  final int code;
+  final dynamic data;
+  final String traceId;
+
+  McpListInvocationsResponse({
+    required this.code,
+    required this.data,
+    required this.traceId
+  });
+
+  factory McpListInvocationsResponse.fromJson(Map<String, dynamic> json) {
+    return McpListInvocationsResponse(
+      code: (() {
+        final value = json['code'];
+        if (value is! int) {
+          throw FormatException('McpListInvocationsResponse.code is required');
+        }
+        return value;
+      })(),
+      data: (() {
+        final map = _sdkworkAsMap(json['data']);
+        if (map == null) {
+          throw FormatException('McpListInvocationsResponse.data is required');
+        }
+        return map;
+      })(),
+      traceId: (() {
+        final value = json['traceId']?.toString();
+        if (value == null) {
+          throw FormatException('McpListInvocationsResponse.traceId is required');
+        }
+        return value;
+      })()
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return <String, dynamic>{
+      'code': code,
+      'data': data,
+      'traceId': traceId,
     };
   }
 }

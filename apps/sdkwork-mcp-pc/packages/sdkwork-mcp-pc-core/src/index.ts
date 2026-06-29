@@ -6,8 +6,6 @@ export type {
   McpResourceRecord,
   McpPromptRecord,
   McpInvocationRecord,
-  McpServerListResponse,
-  McpServerCategoryListResponse,
 } from 'sdkwork-mcp-app-sdk-generated-typescript/src/types';
 
 export type {

@@ -58,7 +58,7 @@ test('flutter lib sources expose marketplace routes', () => {
   assert.match(marketplace, /fetchMarketplaceCatalog/);
 });
 
-test('flutter core package wires generated sdkwork-mcp-app-sdk flutter client', () => {
+test('flutter core wires generated sdkwork-mcp-app-sdk flutter client', () => {
   const corePubspec = readFlutter('packages/sdkwork_mcp_flutter_mobile_core/pubspec.yaml');
   assert.match(
     corePubspec,
@@ -71,6 +71,11 @@ test('flutter core package wires generated sdkwork-mcp-app-sdk flutter client', 
   assert.match(sdkClients, /SdkworkMcpFlutterSdkClients/);
   assert.match(sdkClients, /appClient/);
   assert.doesNotMatch(sdkClients, /pendingGeneratedSdk/);
+  assert.doesNotMatch(
+    sdkClients,
+    /sdkwork-drive-app-sdk/,
+    'flutter must not claim drive SDK until generated flutter client is wired',
+  );
 });
 
 test('flutter core exposes IAM session model and appbase bridge', () => {

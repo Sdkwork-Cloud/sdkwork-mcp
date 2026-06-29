@@ -59,11 +59,12 @@ test('shared route crate is wired into workspace members', () => {
   assert.match(cargo, /sdkwork-routes-mcp-shared = \{ path = "crates\/sdkwork-routes-mcp-shared" \}/);
 });
 
-test('app and backend route crates depend on shared handlers', () => {
+test('app and backend route crates depend on shared service ops', () => {
   for (const crate of ['sdkwork-routes-mcp-app-api', 'sdkwork-routes-mcp-backend-api']) {
     const manifest = readText(`crates/${crate}/Cargo.toml`);
     assert.match(manifest, /sdkwork-routes-mcp-shared/);
     const handlers = readText(`crates/${crate}/src/handlers.rs`);
-    assert.match(handlers, /sdkwork_routes_mcp_shared::handlers::/);
+    assert.match(handlers, /sdkwork_routes_mcp_shared::/);
+    assert.match(handlers, /finish_api_json/);
   }
 });

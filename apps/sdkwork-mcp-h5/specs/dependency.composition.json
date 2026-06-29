@@ -6,7 +6,7 @@
   "surfaces": [
     {
       "surface": "app",
-      "corePackage": "@sdkwork/mcp-h5-core",
+      "corePackage": "sdkwork-mcp-h5-core",
       "sdkClients": [],
       "reusableModules": [],
       "hostAdapters": [],
@@ -17,6 +17,7 @@
   "buildToolEntries": {
     "pnpm": {
       "workspacePackages": [
+        "sdkwork-mcp-h5-core",
         "@sdkwork/mcp-h5-commons",
         "@sdkwork/mcp-h5-core",
         "@sdkwork/mcp-h5-mcp",

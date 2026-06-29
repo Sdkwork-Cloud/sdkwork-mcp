@@ -1,5 +1,3 @@
-pub mod integration;
-
 mod validation;
 
 #[cfg(test)]
@@ -12,8 +10,6 @@ use sdkwork_mcp_contract::{
 };
 use thiserror::Error;
 
-use crate::integration::drive::McpDrivePort;
-
 #[derive(Debug, Error)]
 pub enum McpServiceError {
     #[error("not found: {0}")]
@@ -22,8 +18,6 @@ pub enum McpServiceError {
     InvalidArgument(String),
     #[error("repository error: {0}")]
     Repository(String),
-    #[error("drive error: {0}")]
-    Drive(String),
 }
 
 pub type McpResult<T> = Result<T, McpServiceError>;
@@ -114,20 +108,11 @@ pub trait McpRepository: Send + Sync {
 
 pub struct McpService<R: McpRepository> {
     repository: R,
-    drive_port: Box<dyn McpDrivePort>,
 }
 
 impl<R: McpRepository> McpService<R> {
     pub fn new(repository: R) -> Self {
-        Self {
-            repository,
-            drive_port: Box::new(integration::drive::ContractMcpDrivePort),
-        }
-    }
-
-    pub fn with_drive_port(mut self, drive_port: Box<dyn McpDrivePort>) -> Self {
-        self.drive_port = drive_port;
-        self
+        Self { repository }
     }
 
     pub async fn list_servers(&self, tenant_id: u64) -> McpResult<Vec<McpServerRecord>> {
@@ -141,11 +126,6 @@ impl<R: McpRepository> McpService<R> {
 
     pub async fn upsert_server(&self, record: McpServerRecord) -> McpResult<McpServerRecord> {
         validation::validate_server_record(&record)?;
-        if let Some(icon_ref) = record.icon_ref.as_deref() {
-            self.drive_port
-                .validate_icon_reference(icon_ref)
-                .map_err(McpServiceError::Drive)?;
-        }
         self.repository.upsert_server(record).await
     }
 
@@ -308,12 +288,5 @@ impl<R: McpRepository> McpService<R> {
     ) -> McpResult<McpInvocationRecord> {
         validation::validate_invocation_record(&record)?;
         self.repository.append_invocation(record).await
-    }
-
-    pub fn create_icon_upload_grant(&self, icon_ref: &str) -> McpResult<String> {
-        validation::validate_icon_ref(icon_ref)?;
-        self.drive_port
-            .create_upload_grant(icon_ref)
-            .map_err(McpServiceError::Drive)
     }
 }

@@ -2,7 +2,7 @@
 
 Status: active
 Owner: mcp-platform
-Updated: 2026-06-26
+Updated: 2026-06-29
 Specs: `../sdkwork-specs/DATABASE_FRAMEWORK_SPEC.md`, `../sdkwork-specs/WEB_FRAMEWORK_SPEC.md`
 
 ## 1. Architecture Overview
@@ -15,7 +15,7 @@ Clients (PC/H5/Flutter)
   -> sdkwork-mcp-gateway-assembly
       -> sdkwork-routes-mcp-app-api (read)
       -> sdkwork-routes-mcp-backend-api (admin)
-      ^ shared: sdkwork-routes-mcp-shared (handlers, HTTP helpers, record builders)
+      ^ shared: sdkwork-routes-mcp-shared (service_ops, SdkWorkApiResponse envelope, record builders)
   -> sdkwork-intelligence-mcp-service
   -> sdkwork-intelligence-mcp-repository-sqlx
   -> PostgreSQL (ai_mcp_* tables)
@@ -36,14 +36,15 @@ Clients (PC/H5/Flutter)
 | `sdkwork-mcp-contract` | Domain records and enums |
 | `sdkwork-intelligence-mcp-service` | Validation and orchestration |
 | `sdkwork-intelligence-mcp-repository-sqlx` | SQL persistence |
-| `sdkwork-routes-mcp-shared` | Shared HTTP handlers, record builders, tenant resolution |
+| `sdkwork-routes-mcp-shared` | Shared service operations, `SdkWorkApiResponse` / `ProblemDetail` mapping, record builders, tenant resolution |
 | `sdkwork-routes-mcp-app-api` / `sdkwork-routes-mcp-backend-api` | HTTP route surfaces |
 | `sdkwork-mcp-database-host` | Database module SPI registration |
 
 Cross-cutting integrations:
 
 - IAM tenant context via web request context headers
-- File icons via `sdkwork-drive` URI validation (`drive://spaces/.../nodes/...`)
+- File icons via `sdkwork-drive` URI validation (`drive://spaces/.../nodes/...`) in `validation.rs` using `sdkwork-drive-contract`
+- Icon uploads are client-side through `@sdkwork/drive-app-sdk` on PC admin (and H5 bootstrap); Flutter mobile is browse-only until a generated drive Flutter SDK exists
 
 ## 4. Database Design
 
@@ -66,7 +67,9 @@ Planned tables (registry only, no DDL yet):
 ## 5. API, SDK, And Data Ownership
 
 - API authority: `sdkwork-mcp.backend`, `sdkwork-mcp.app`
-- Generated SDKs: `sdks/sdkwork-mcp-backend-sdk`, `sdks/sdkwork-mcp-app-sdk`
+- HTTP success bodies use `SdkWorkApiResponse` (`code`, `data`, `traceId`); lists use `data.items` + `data.pageInfo`; singles use `data.item`
+- Errors use `application/problem+json` (`ProblemDetail`) via `sdkwork-web-core`
+- Generated SDKs: `sdks/sdkwork-mcp-backend-sdk`, `sdks/sdkwork-mcp-app-sdk` (TypeScript + Flutter)
 - Breaking field rename in v1.1.0: entity `status` -> `lifecycle_status`; connector publish state -> `publish_status`
 
 ## 6. Security, Privacy, And Observability
@@ -102,6 +105,9 @@ H5 client (`apps/sdkwork-mcp-h5`):
 Flutter client (`apps/sdkwork-mcp-flutter-mobile`):
 
 - Dart package: `packages/sdkwork_mcp_flutter_mobile_core`
+- Generated client: `sdks/sdkwork-mcp-app-sdk/sdkwork-mcp-app-sdk-flutter`
+- Routes: marketplace list and server detail via `McpRoutes`
+- SDK entry: `sdk_clients.dart` → generated MCP app SDK (no raw HTTP)
 
 ## 8. Verification
 

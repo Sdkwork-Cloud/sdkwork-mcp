@@ -7,7 +7,7 @@ import {
   healthTone,
   healthToneBadgeClass,
 } from '@sdkwork/mcp-h5-commons';
-import type { McpServerRecord } from 'sdkwork-mcp-app-sdk-generated-typescript/src/types/mcp-server-record';
+import type { McpServerRecord } from '@sdkwork/mcp-h5-core';
 
 export function ServerCard({ server }: { server: McpServerRecord }) {
   const tone = healthTone(server.health_status);

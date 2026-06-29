@@ -1,7 +1,7 @@
 import { backendApiPath } from './paths';
 import type { HttpClient } from '../http/client';
 
-import type { AppendMcpInvocationCommand, CreateMcpServerCommand, McpConnectorListResponse, McpInvocationListResponse, McpInvocationRecordResponse, McpPromptListResponse, McpResourceListResponse, McpServerCategoryListResponse, McpServerCategoryRecordResponse, McpServerListResponse, McpServerRecordResponse, McpToolListResponse, UpdateMcpServerCommand, UpsertMcpConnectorCommand, UpsertMcpPromptCommand, UpsertMcpResourceCommand, UpsertMcpServerCategoryCommand, UpsertMcpToolCommand } from '../types';
+import type { AppendMcpInvocationCommand, CreateMcpServerCommand, McpConnectorRecord, McpInvocationRecord, McpPromptRecord, McpResourceRecord, McpServerCategoryRecord, McpServerRecord, McpToolRecord, PageInfo, UpdateMcpServerCommand, UpsertMcpConnectorCommand, UpsertMcpPromptCommand, UpsertMcpResourceCommand, UpsertMcpServerCategoryCommand, UpsertMcpToolCommand } from '../types';
 
 
 export class McpMcpAdminApi {
@@ -13,73 +13,73 @@ export class McpMcpAdminApi {
 
 
 /** MCP mcpAdmin.listCategories */
-  async listCategories(): Promise<McpServerCategoryListResponse> {
-    return this.client.get<McpServerCategoryListResponse>(backendApiPath(`/mcp/categories`));
+  async listCategories(): Promise<Record<string, unknown>> {
+    return this.client.get<Record<string, unknown>>(backendApiPath(`/mcp/categories`));
   }
 
 /** MCP mcpAdmin.upsertCategory */
-  async upsertCategory(body: UpsertMcpServerCategoryCommand): Promise<McpServerCategoryRecordResponse> {
-    return this.client.post<McpServerCategoryRecordResponse>(backendApiPath(`/mcp/categories`), body, undefined, undefined, 'application/json');
+  async upsertCategory(body: UpsertMcpServerCategoryCommand): Promise<McpServerCategoryRecord> {
+    return this.client.post<McpServerCategoryRecord>(backendApiPath(`/mcp/categories`), body, undefined, undefined, 'application/json');
   }
 
 /** MCP mcpAdmin.listServers */
-  async listServers(): Promise<McpServerListResponse> {
-    return this.client.get<McpServerListResponse>(backendApiPath(`/mcp/servers`));
+  async listServers(): Promise<Record<string, unknown>> {
+    return this.client.get<Record<string, unknown>>(backendApiPath(`/mcp/servers`));
   }
 
 /** MCP mcpAdmin.createServer */
-  async createServer(body: CreateMcpServerCommand): Promise<McpServerRecordResponse> {
-    return this.client.post<McpServerRecordResponse>(backendApiPath(`/mcp/servers`), body, undefined, undefined, 'application/json');
+  async createServer(body: CreateMcpServerCommand): Promise<McpServerRecord> {
+    return this.client.post<McpServerRecord>(backendApiPath(`/mcp/servers`), body, undefined, undefined, 'application/json');
   }
 
 /** MCP mcpAdmin.updateServer */
-  async updateServer(serverKey: string, body: UpdateMcpServerCommand): Promise<McpServerRecordResponse> {
-    return this.client.put<McpServerRecordResponse>(backendApiPath(`/mcp/servers/${serializePathParameter(serverKey, { name: 'serverKey', style: 'simple', explode: false })}`), body, undefined, undefined, 'application/json');
+  async updateServer(serverKey: string, body: UpdateMcpServerCommand): Promise<McpServerRecord> {
+    return this.client.put<McpServerRecord>(backendApiPath(`/mcp/servers/${serializePathParameter(serverKey, { name: 'serverKey', style: 'simple', explode: false })}`), body, undefined, undefined, 'application/json');
   }
 
 /** MCP mcpAdmin.deleteServer */
-  async deleteServer(serverKey: string): Promise<McpServerRecordResponse> {
-    return this.client.delete<McpServerRecordResponse>(backendApiPath(`/mcp/servers/${serializePathParameter(serverKey, { name: 'serverKey', style: 'simple', explode: false })}`));
+  async deleteServer(serverKey: string): Promise<McpServerRecord> {
+    return this.client.delete<McpServerRecord>(backendApiPath(`/mcp/servers/${serializePathParameter(serverKey, { name: 'serverKey', style: 'simple', explode: false })}`));
   }
 
 /** MCP mcpAdmin.listConnectors */
-  async listConnectors(serverId: string): Promise<McpConnectorListResponse> {
-    return this.client.get<McpConnectorListResponse>(backendApiPath(`/mcp/servers/${serializePathParameter(serverId, { name: 'serverId', style: 'simple', explode: false })}/connectors`));
+  async listConnectors(serverId: string): Promise<Record<string, unknown>> {
+    return this.client.get<Record<string, unknown>>(backendApiPath(`/mcp/servers/${serializePathParameter(serverId, { name: 'serverId', style: 'simple', explode: false })}/connectors`));
   }
 
 /** MCP mcpAdmin.upsertConnector */
-  async upsertConnector(serverId: string, body: UpsertMcpConnectorCommand): Promise<McpConnectorListResponse> {
-    return this.client.post<McpConnectorListResponse>(backendApiPath(`/mcp/servers/${serializePathParameter(serverId, { name: 'serverId', style: 'simple', explode: false })}/connectors`), body, undefined, undefined, 'application/json');
+  async upsertConnector(serverId: string, body: UpsertMcpConnectorCommand): Promise<Record<string, unknown>> {
+    return this.client.post<Record<string, unknown>>(backendApiPath(`/mcp/servers/${serializePathParameter(serverId, { name: 'serverId', style: 'simple', explode: false })}/connectors`), body, undefined, undefined, 'application/json');
   }
 
 /** MCP mcpAdmin.deleteConnector */
-  async deleteConnector(serverId: string, connectorKey: string): Promise<McpConnectorListResponse> {
-    return this.client.delete<McpConnectorListResponse>(backendApiPath(`/mcp/servers/${serializePathParameter(serverId, { name: 'serverId', style: 'simple', explode: false })}/connectors/${serializePathParameter(connectorKey, { name: 'connectorKey', style: 'simple', explode: false })}`));
+  async deleteConnector(serverId: string, connectorKey: string): Promise<Record<string, unknown>> {
+    return this.client.delete<Record<string, unknown>>(backendApiPath(`/mcp/servers/${serializePathParameter(serverId, { name: 'serverId', style: 'simple', explode: false })}/connectors/${serializePathParameter(connectorKey, { name: 'connectorKey', style: 'simple', explode: false })}`));
   }
 
 /** MCP mcpAdmin.upsertTool */
-  async upsertTool(serverId: string, body: UpsertMcpToolCommand): Promise<McpToolListResponse> {
-    return this.client.post<McpToolListResponse>(backendApiPath(`/mcp/servers/${serializePathParameter(serverId, { name: 'serverId', style: 'simple', explode: false })}/tools`), body, undefined, undefined, 'application/json');
+  async upsertTool(serverId: string, body: UpsertMcpToolCommand): Promise<Record<string, unknown>> {
+    return this.client.post<Record<string, unknown>>(backendApiPath(`/mcp/servers/${serializePathParameter(serverId, { name: 'serverId', style: 'simple', explode: false })}/tools`), body, undefined, undefined, 'application/json');
   }
 
 /** MCP mcpAdmin.upsertResource */
-  async upsertResource(serverId: string, body: UpsertMcpResourceCommand): Promise<McpResourceListResponse> {
-    return this.client.post<McpResourceListResponse>(backendApiPath(`/mcp/servers/${serializePathParameter(serverId, { name: 'serverId', style: 'simple', explode: false })}/resources`), body, undefined, undefined, 'application/json');
+  async upsertResource(serverId: string, body: UpsertMcpResourceCommand): Promise<Record<string, unknown>> {
+    return this.client.post<Record<string, unknown>>(backendApiPath(`/mcp/servers/${serializePathParameter(serverId, { name: 'serverId', style: 'simple', explode: false })}/resources`), body, undefined, undefined, 'application/json');
   }
 
 /** MCP mcpAdmin.upsertPrompt */
-  async upsertPrompt(serverId: string, body: UpsertMcpPromptCommand): Promise<McpPromptListResponse> {
-    return this.client.post<McpPromptListResponse>(backendApiPath(`/mcp/servers/${serializePathParameter(serverId, { name: 'serverId', style: 'simple', explode: false })}/prompts`), body, undefined, undefined, 'application/json');
+  async upsertPrompt(serverId: string, body: UpsertMcpPromptCommand): Promise<Record<string, unknown>> {
+    return this.client.post<Record<string, unknown>>(backendApiPath(`/mcp/servers/${serializePathParameter(serverId, { name: 'serverId', style: 'simple', explode: false })}/prompts`), body, undefined, undefined, 'application/json');
   }
 
 /** MCP mcpAdmin.listInvocations */
-  async listInvocations(): Promise<McpInvocationListResponse> {
-    return this.client.get<McpInvocationListResponse>(backendApiPath(`/mcp/invocations`));
+  async listInvocations(): Promise<Record<string, unknown>> {
+    return this.client.get<Record<string, unknown>>(backendApiPath(`/mcp/invocations`));
   }
 
 /** MCP mcpAdmin.appendInvocation */
-  async appendInvocation(body: AppendMcpInvocationCommand): Promise<McpInvocationRecordResponse> {
-    return this.client.post<McpInvocationRecordResponse>(backendApiPath(`/mcp/invocations`), body, undefined, undefined, 'application/json');
+  async appendInvocation(body: AppendMcpInvocationCommand): Promise<McpInvocationRecord> {
+    return this.client.post<McpInvocationRecord>(backendApiPath(`/mcp/invocations`), body, undefined, undefined, 'application/json');
   }
 }
 

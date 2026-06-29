@@ -11,74 +11,74 @@ class McpApi {
   McpApi(this._client);
 
   /// MCP mcp.listCategories
-  Future<McpServerCategoryListResponse?> listCategories() async {
+  Future<McpListCategoriesResponse?> listCategories() async {
     final response = await _client.get(ApiPaths.appPath('/mcp/categories'));
     return (() {
       final map = sdkworkResponseAsMap(response);
-      return map == null ? null : McpServerCategoryListResponse.fromJson(map);
+      return map == null ? null : McpListCategoriesResponse.fromJson(map);
     })();
   }
 
   /// MCP mcp.listServers
-  Future<McpServerListResponse?> listServers() async {
+  Future<McpListServersResponse?> listServers() async {
     final response = await _client.get(ApiPaths.appPath('/mcp/servers'));
     return (() {
       final map = sdkworkResponseAsMap(response);
-      return map == null ? null : McpServerListResponse.fromJson(map);
+      return map == null ? null : McpListServersResponse.fromJson(map);
     })();
   }
 
   /// MCP mcp.getServer
-  Future<McpServerRecordResponse?> getServer(String serverKey) async {
+  Future<McpGetServerResponse?> getServer(String serverKey) async {
     final response = await _client.get(ApiPaths.appPath('/mcp/servers/${serializePathParameter(serverKey, const PathParameterSpec('serverKey', 'simple', false))}'));
     return (() {
       final map = sdkworkResponseAsMap(response);
-      return map == null ? null : McpServerRecordResponse.fromJson(map);
+      return map == null ? null : McpGetServerResponse.fromJson(map);
     })();
   }
 
   /// MCP mcp.listTools
-  Future<McpToolListResponse?> listTools(int serverId) async {
+  Future<McpListToolsResponse?> listTools(int serverId) async {
     final response = await _client.get(ApiPaths.appPath('/mcp/servers/${serializePathParameter(serverId, const PathParameterSpec('serverId', 'simple', false))}/tools'));
     return (() {
       final map = sdkworkResponseAsMap(response);
-      return map == null ? null : McpToolListResponse.fromJson(map);
+      return map == null ? null : McpListToolsResponse.fromJson(map);
     })();
   }
 
   /// MCP mcp.getTool
-  Future<McpToolRecordResponse?> getTool(int serverId, String toolKey) async {
+  Future<McpGetToolResponse?> getTool(int serverId, String toolKey) async {
     final response = await _client.get(ApiPaths.appPath('/mcp/servers/${serializePathParameter(serverId, const PathParameterSpec('serverId', 'simple', false))}/tools/${serializePathParameter(toolKey, const PathParameterSpec('toolKey', 'simple', false))}'));
     return (() {
       final map = sdkworkResponseAsMap(response);
-      return map == null ? null : McpToolRecordResponse.fromJson(map);
+      return map == null ? null : McpGetToolResponse.fromJson(map);
     })();
   }
 
   /// MCP mcp.listResources
-  Future<McpResourceListResponse?> listResources(int serverId) async {
+  Future<McpListResourcesResponse?> listResources(int serverId) async {
     final response = await _client.get(ApiPaths.appPath('/mcp/servers/${serializePathParameter(serverId, const PathParameterSpec('serverId', 'simple', false))}/resources'));
     return (() {
       final map = sdkworkResponseAsMap(response);
-      return map == null ? null : McpResourceListResponse.fromJson(map);
+      return map == null ? null : McpListResourcesResponse.fromJson(map);
     })();
   }
 
   /// MCP mcp.listPrompts
-  Future<McpPromptListResponse?> listPrompts(int serverId) async {
+  Future<McpListPromptsResponse?> listPrompts(int serverId) async {
     final response = await _client.get(ApiPaths.appPath('/mcp/servers/${serializePathParameter(serverId, const PathParameterSpec('serverId', 'simple', false))}/prompts'));
     return (() {
       final map = sdkworkResponseAsMap(response);
-      return map == null ? null : McpPromptListResponse.fromJson(map);
+      return map == null ? null : McpListPromptsResponse.fromJson(map);
     })();
   }
 
   /// MCP mcp.listInvocations
-  Future<McpInvocationListResponse?> listInvocations() async {
+  Future<McpListInvocationsResponse?> listInvocations() async {
     final response = await _client.get(ApiPaths.appPath('/mcp/invocations'));
     return (() {
       final map = sdkworkResponseAsMap(response);
-      return map == null ? null : McpInvocationListResponse.fromJson(map);
+      return map == null ? null : McpListInvocationsResponse.fromJson(map);
     })();
   }
 }

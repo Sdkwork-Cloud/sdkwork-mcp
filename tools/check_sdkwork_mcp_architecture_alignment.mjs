@@ -100,9 +100,15 @@ for (const table of [
   assert(mcpSchema.includes(table), `mcp-database.schema.yaml must declare ${table}`);
 }
 
-const driveIntegration = readText('crates/sdkwork-intelligence-mcp-service/src/integration/drive.rs');
-assert(driveIntegration.includes('McpDrivePort'), 'MCP service must define Drive port for uploads');
-assert(driveIntegration.includes('drive'), 'MCP drive integration must reference drive');
+const driveValidation = readText('crates/sdkwork-intelligence-mcp-service/src/validation.rs');
+assert(driveValidation.includes('sdkwork_drive_contract::DriveUri'), 'MCP validation must use sdkwork-drive-contract for icon_ref');
+assert(driveValidation.includes('validate_icon_ref'), 'MCP validation must expose validate_icon_ref');
+
+const pcDriveUpload = readText(
+  'apps/sdkwork-mcp-pc/packages/sdkwork-mcp-pc-admin/src/services/driveAssetUploadService.ts',
+);
+assert(pcDriveUpload.includes('@sdkwork/drive-app-sdk'), 'PC admin drive upload must use @sdkwork/drive-app-sdk');
+assert(pcDriveUpload.includes('formatDrivePackageRef'), 'PC admin drive upload must format canonical drive URIs');
 
 const contractSource = readText('crates/sdkwork-mcp-contract/src/records.rs');
 assert(
@@ -142,9 +148,13 @@ assert(
 );
 assert(cargoToml.includes('sdkwork-routes-mcp-shared'), 'Cargo.toml must declare sdkwork-routes-mcp-shared');
 
-const sharedHandlers = readText('crates/sdkwork-routes-mcp-shared/src/handlers.rs');
-assert(sharedHandlers.includes('list_categories'), 'shared handlers must expose list_categories');
-assert(sharedHandlers.includes('append_invocation'), 'shared handlers must expose append_invocation');
+const sharedServiceOps = readText('crates/sdkwork-routes-mcp-shared/src/service_ops.rs');
+assert(sharedServiceOps.includes('list_categories'), 'shared service ops must expose list_categories');
+assert(sharedServiceOps.includes('append_invocation'), 'shared service ops must expose append_invocation');
+
+const sharedResponse = readText('crates/sdkwork-routes-mcp-shared/src/response.rs');
+assert(sharedResponse.includes('finish_api_json'), 'shared response must expose finish_api_json');
+assert(sharedResponse.includes('SdkWorkApiResponse'), 'shared response must use SdkWorkApiResponse envelope');
 
 assert(
   fs.existsSync(path.join(repoRoot, 'crates/sdkwork-mcp-database-host/src/lib.rs')),

@@ -13,6 +13,11 @@
       "language": "typescript",
       "packageName": "sdkwork-mcp-app-sdk-generated-typescript",
       "generatedOutput": "sdkwork-mcp-app-sdk-typescript/generated/server-openapi"
+    },
+    "flutter": {
+      "language": "flutter",
+      "packageName": "sdkwork-mcp-app-sdk-generated-flutter",
+      "generatedOutput": "sdkwork-mcp-app-sdk-flutter/generated/server-openapi"
     }
   },
   "generatorName": "@sdkwork/sdk-generator",

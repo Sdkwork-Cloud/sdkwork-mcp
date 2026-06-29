@@ -5,7 +5,7 @@
     "key": "mcp-h5",
     "name": "SDKWork MCP H5",
     "displayName": "SDKWork MCP H5",
-    "description": "SDKWork MCP h5 client application scaffold.",
+    "description": "SDKWork MCP H5 mobile client application.",
     "vendor": "SDKWork",
     "officialWebsiteUrl": "https://sdkwork.com/apps/mcp-h5",
     "supportUrl": "https://sdkwork.com/support",
@@ -92,7 +92,7 @@
     "config": {
       "workspaceRoot": "apps/sdkwork-mcp-h5",
       "framework": "react-h5",
-      "managedBy": "sdkwork-mcp-client-scaffold"
+      "managedBy": "sdkwork-mcp-h5"
     }
   },
   "environments": {

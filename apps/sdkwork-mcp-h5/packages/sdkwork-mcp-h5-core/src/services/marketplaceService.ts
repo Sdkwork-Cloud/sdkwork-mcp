@@ -1,4 +1,22 @@
+import type { PageInfo } from 'sdkwork-mcp-app-sdk-generated-typescript/src/types/page-info';
+import type {
+  McpPromptRecord,
+  McpResourceRecord,
+  McpServerCategoryRecord,
+  McpServerRecord,
+  McpToolRecord,
+} from 'sdkwork-mcp-app-sdk-generated-typescript/src/types';
+
 import { getMCPAppSdkClientWithSession } from '../sdk/mcpAppSdkClient';
+
+type SdkWorkPage<T> = {
+  items: T[];
+  pageInfo?: PageInfo;
+};
+
+function unwrapSdkWorkPage<T>(value: Record<string, unknown>): SdkWorkPage<T> {
+  return value as SdkWorkPage<T>;
+}
 
 export async function fetchMarketplaceCatalog() {
   const client = getMCPAppSdkClientWithSession();
@@ -7,16 +25,15 @@ export async function fetchMarketplaceCatalog() {
     client.mcp.listServers(),
   ]);
   return {
-    categories: categoryResponse.items,
-    servers: serverResponse.items,
+    categories: unwrapSdkWorkPage<McpServerCategoryRecord>(categoryResponse).items,
+    servers: unwrapSdkWorkPage<McpServerRecord>(serverResponse).items,
   };
 }
 
 export async function fetchServerDetail(serverKey: string) {
   const client = getMCPAppSdkClientWithSession();
-  const serverResponse = await client.mcp.getServer(serverKey);
-  const server = serverResponse.data;
-  const serverId = server.id;
+  const server = await client.mcp.getServer(serverKey);
+  const serverId = String(server.id);
   const [tools, resources, prompts] = await Promise.all([
     client.mcp.listTools(serverId),
     client.mcp.listResources(serverId),
@@ -24,8 +41,8 @@ export async function fetchServerDetail(serverKey: string) {
   ]);
   return {
     server,
-    tools: tools.items,
-    resources: resources.items,
-    prompts: prompts.items,
+    tools: unwrapSdkWorkPage<McpToolRecord>(tools).items,
+    resources: unwrapSdkWorkPage<McpResourceRecord>(resources).items,
+    prompts: unwrapSdkWorkPage<McpPromptRecord>(prompts).items,
   };
 }

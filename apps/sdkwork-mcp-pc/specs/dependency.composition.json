@@ -6,7 +6,7 @@
   "surfaces": [
     {
       "surface": "app",
-      "corePackage": "@sdkwork/mcp-pc-core",
+      "corePackage": "sdkwork-mcp-pc-core",
       "sdkClients": [],
       "reusableModules": [],
       "hostAdapters": [],
@@ -15,7 +15,7 @@
     },
     {
       "surface": "backend-admin",
-      "corePackage": "@sdkwork/mcp-pc-admin-core",
+      "corePackage": "sdkwork-mcp-pc-admin-core",
       "sdkClients": [],
       "reusableModules": [],
       "hostAdapters": [],
@@ -26,11 +26,13 @@
   "buildToolEntries": {
     "pnpm": {
       "workspacePackages": [
-        "@sdkwork/mcp-pc-core",
-        "@sdkwork/mcp-pc-admin-core",
+        "sdkwork-mcp-pc-core",
+        "sdkwork-mcp-pc-admin-core",
         "@sdkwork/mcp-pc-admin",
+        "@sdkwork/mcp-pc-admin-core",
         "@sdkwork/mcp-pc-commons",
         "@sdkwork/mcp-pc-console",
+        "@sdkwork/mcp-pc-core",
         "@sdkwork/mcp-pc-hub",
         "@sdkwork/mcp-pc-shell"
       ]

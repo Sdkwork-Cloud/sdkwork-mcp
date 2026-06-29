@@ -93,7 +93,9 @@ export function ServerDetailPage() {
           {tabItems.map((item) => (
             <div key={item.id} className="rounded-xl border border-white/10 bg-[#1f1f1f] p-3">
               <p className="font-medium text-white">{item.name}</p>
-              {item.description ? <p className="mt-1 text-sm text-gray-400">{item.description}</p> : null}
+              {('description' in item && item.description) ? (
+                <p className="mt-1 text-sm text-gray-400">{item.description}</p>
+              ) : null}
             </div>
           ))}
         </div>

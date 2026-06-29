@@ -1,7 +1,7 @@
 import { appApiPath } from './paths';
 import type { HttpClient } from '../http/client';
 
-import type { McpInvocationListResponse, McpPromptListResponse, McpResourceListResponse, McpServerCategoryListResponse, McpServerListResponse, McpServerRecordResponse, McpToolListResponse, McpToolRecordResponse } from '../types';
+import type { McpInvocationRecord, McpPromptRecord, McpResourceRecord, McpServerCategoryRecord, McpServerRecord, McpToolRecord, PageInfo } from '../types';
 
 
 export class McpApi {
@@ -13,43 +13,43 @@ export class McpApi {
 
 
 /** MCP mcp.listCategories */
-  async listCategories(): Promise<McpServerCategoryListResponse> {
-    return this.client.get<McpServerCategoryListResponse>(appApiPath(`/mcp/categories`));
+  async listCategories(): Promise<Record<string, unknown>> {
+    return this.client.get<Record<string, unknown>>(appApiPath(`/mcp/categories`));
   }
 
 /** MCP mcp.listServers */
-  async listServers(): Promise<McpServerListResponse> {
-    return this.client.get<McpServerListResponse>(appApiPath(`/mcp/servers`));
+  async listServers(): Promise<Record<string, unknown>> {
+    return this.client.get<Record<string, unknown>>(appApiPath(`/mcp/servers`));
   }
 
 /** MCP mcp.getServer */
-  async getServer(serverKey: string): Promise<McpServerRecordResponse> {
-    return this.client.get<McpServerRecordResponse>(appApiPath(`/mcp/servers/${serializePathParameter(serverKey, { name: 'serverKey', style: 'simple', explode: false })}`));
+  async getServer(serverKey: string): Promise<McpServerRecord> {
+    return this.client.get<McpServerRecord>(appApiPath(`/mcp/servers/${serializePathParameter(serverKey, { name: 'serverKey', style: 'simple', explode: false })}`));
   }
 
 /** MCP mcp.listTools */
-  async listTools(serverId: string): Promise<McpToolListResponse> {
-    return this.client.get<McpToolListResponse>(appApiPath(`/mcp/servers/${serializePathParameter(serverId, { name: 'serverId', style: 'simple', explode: false })}/tools`));
+  async listTools(serverId: string): Promise<Record<string, unknown>> {
+    return this.client.get<Record<string, unknown>>(appApiPath(`/mcp/servers/${serializePathParameter(serverId, { name: 'serverId', style: 'simple', explode: false })}/tools`));
   }
 
 /** MCP mcp.getTool */
-  async getTool(serverId: string, toolKey: string): Promise<McpToolRecordResponse> {
-    return this.client.get<McpToolRecordResponse>(appApiPath(`/mcp/servers/${serializePathParameter(serverId, { name: 'serverId', style: 'simple', explode: false })}/tools/${serializePathParameter(toolKey, { name: 'toolKey', style: 'simple', explode: false })}`));
+  async getTool(serverId: string, toolKey: string): Promise<McpToolRecord> {
+    return this.client.get<McpToolRecord>(appApiPath(`/mcp/servers/${serializePathParameter(serverId, { name: 'serverId', style: 'simple', explode: false })}/tools/${serializePathParameter(toolKey, { name: 'toolKey', style: 'simple', explode: false })}`));
   }
 
 /** MCP mcp.listResources */
-  async listResources(serverId: string): Promise<McpResourceListResponse> {
-    return this.client.get<McpResourceListResponse>(appApiPath(`/mcp/servers/${serializePathParameter(serverId, { name: 'serverId', style: 'simple', explode: false })}/resources`));
+  async listResources(serverId: string): Promise<Record<string, unknown>> {
+    return this.client.get<Record<string, unknown>>(appApiPath(`/mcp/servers/${serializePathParameter(serverId, { name: 'serverId', style: 'simple', explode: false })}/resources`));
   }
 
 /** MCP mcp.listPrompts */
-  async listPrompts(serverId: string): Promise<McpPromptListResponse> {
-    return this.client.get<McpPromptListResponse>(appApiPath(`/mcp/servers/${serializePathParameter(serverId, { name: 'serverId', style: 'simple', explode: false })}/prompts`));
+  async listPrompts(serverId: string): Promise<Record<string, unknown>> {
+    return this.client.get<Record<string, unknown>>(appApiPath(`/mcp/servers/${serializePathParameter(serverId, { name: 'serverId', style: 'simple', explode: false })}/prompts`));
   }
 
 /** MCP mcp.listInvocations */
-  async listInvocations(): Promise<McpInvocationListResponse> {
-    return this.client.get<McpInvocationListResponse>(appApiPath(`/mcp/invocations`));
+  async listInvocations(): Promise<Record<string, unknown>> {
+    return this.client.get<Record<string, unknown>>(appApiPath(`/mcp/invocations`));
   }
 }
 

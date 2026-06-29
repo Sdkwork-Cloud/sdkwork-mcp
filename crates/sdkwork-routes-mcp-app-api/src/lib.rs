@@ -10,17 +10,18 @@ mod web_bootstrap;
 use axum::{
     extract::{Extension, Path, Query, State},
     http::{HeaderMap, StatusCode},
+    response::Response,
     routing::get,
     Json, Router,
 };
 use sdkwork_intelligence_mcp_service::McpService;
-use sdkwork_web_core::HttpRouteManifest;
+use sdkwork_web_core::{HttpRouteManifest, WebRequestContext};
 use serde::Deserialize;
 use sqlx::PgPool;
 
 pub use handlers::{
-    get_server, get_tool, list_categories, list_invocations, list_prompts, list_resources,
-    list_servers, list_tools, resolve_tenant_id, SharedMcpService,
+    finish_api_json, get_server, get_tool, list_categories, list_invocations, list_prompts,
+    list_resources, list_servers, list_tools, ok_json, resolve_tenant_id, SharedMcpService,
 };
 pub use health::DbReadinessCheck;
 pub use http_route_manifest::app_route_manifest;
@@ -105,129 +106,187 @@ fn resolve_request_tenant_id(
 }
 
 async fn list_categories_handler<R>(
+    ctx: WebRequestContext,
     State(state): State<AppState<R>>,
     headers: HeaderMap,
     context: Option<Extension<McpAppRequestContext>>,
-) -> Result<Json<serde_json::Value>, (StatusCode, String)>
+) -> Response
 where
     R: sdkwork_intelligence_mcp_service::McpRepository + Send + Sync,
 {
-    let tenant_id = resolve_request_tenant_id(context.as_ref(), &headers, state.default_tenant_id);
-    Ok(Json(list_categories(state.service.as_ref(), tenant_id).await?))
+    finish_api_json(
+        &ctx,
+        async {
+            let tenant_id =
+                resolve_request_tenant_id(context.as_ref(), &headers, state.default_tenant_id);
+            ok_json(list_categories(state.service.as_ref(), tenant_id).await?)
+        }
+        .await,
+    )
 }
 
 async fn list_servers_handler<R>(
+    ctx: WebRequestContext,
     State(state): State<AppState<R>>,
     headers: HeaderMap,
     context: Option<Extension<McpAppRequestContext>>,
-) -> Result<Json<serde_json::Value>, (StatusCode, String)>
+) -> Response
 where
     R: sdkwork_intelligence_mcp_service::McpRepository + Send + Sync,
 {
-    let tenant_id = resolve_request_tenant_id(context.as_ref(), &headers, state.default_tenant_id);
-    Ok(Json(list_servers(state.service.as_ref(), tenant_id).await?))
+    finish_api_json(
+        &ctx,
+        async {
+            let tenant_id =
+                resolve_request_tenant_id(context.as_ref(), &headers, state.default_tenant_id);
+            ok_json(list_servers(state.service.as_ref(), tenant_id).await?)
+        }
+        .await,
+    )
 }
 
 async fn get_server_handler<R>(
+    ctx: WebRequestContext,
     State(state): State<AppState<R>>,
     headers: HeaderMap,
     Path(server_key): Path<String>,
     context: Option<Extension<McpAppRequestContext>>,
-) -> Result<Json<serde_json::Value>, (StatusCode, String)>
+) -> Response
 where
     R: sdkwork_intelligence_mcp_service::McpRepository + Send + Sync,
 {
-    let tenant_id = resolve_request_tenant_id(context.as_ref(), &headers, state.default_tenant_id);
-    Ok(Json(
-        get_server(state.service.as_ref(), tenant_id, server_key.as_str()).await?,
-    ))
+    finish_api_json(
+        &ctx,
+        async {
+            let tenant_id =
+                resolve_request_tenant_id(context.as_ref(), &headers, state.default_tenant_id);
+            ok_json(
+                get_server(state.service.as_ref(), tenant_id, server_key.as_str()).await?,
+            )
+        }
+        .await,
+    )
 }
 
 async fn list_tools_handler<R>(
+    ctx: WebRequestContext,
     State(state): State<AppState<R>>,
     headers: HeaderMap,
     Path(server_id): Path<u64>,
     context: Option<Extension<McpAppRequestContext>>,
-) -> Result<Json<serde_json::Value>, (StatusCode, String)>
+) -> Response
 where
     R: sdkwork_intelligence_mcp_service::McpRepository + Send + Sync,
 {
-    let tenant_id = resolve_request_tenant_id(context.as_ref(), &headers, state.default_tenant_id);
-    Ok(Json(
-        list_tools(state.service.as_ref(), tenant_id, server_id).await?,
-    ))
+    finish_api_json(
+        &ctx,
+        async {
+            let tenant_id =
+                resolve_request_tenant_id(context.as_ref(), &headers, state.default_tenant_id);
+            ok_json(list_tools(state.service.as_ref(), tenant_id, server_id).await?)
+        }
+        .await,
+    )
 }
 
 async fn get_tool_handler<R>(
+    ctx: WebRequestContext,
     State(state): State<AppState<R>>,
     headers: HeaderMap,
     Path((server_id, tool_key)): Path<(u64, String)>,
     context: Option<Extension<McpAppRequestContext>>,
-) -> Result<Json<serde_json::Value>, (StatusCode, String)>
+) -> Response
 where
     R: sdkwork_intelligence_mcp_service::McpRepository + Send + Sync,
 {
-    let tenant_id = resolve_request_tenant_id(context.as_ref(), &headers, state.default_tenant_id);
-    Ok(Json(
-        get_tool(
-            state.service.as_ref(),
-            tenant_id,
-            server_id,
-            tool_key.as_str(),
-        )
-        .await?,
-    ))
+    finish_api_json(
+        &ctx,
+        async {
+            let tenant_id =
+                resolve_request_tenant_id(context.as_ref(), &headers, state.default_tenant_id);
+            ok_json(
+                get_tool(
+                    state.service.as_ref(),
+                    tenant_id,
+                    server_id,
+                    tool_key.as_str(),
+                )
+                .await?,
+            )
+        }
+        .await,
+    )
 }
 
 async fn list_resources_handler<R>(
+    ctx: WebRequestContext,
     State(state): State<AppState<R>>,
     headers: HeaderMap,
     Path(server_id): Path<u64>,
     context: Option<Extension<McpAppRequestContext>>,
-) -> Result<Json<serde_json::Value>, (StatusCode, String)>
+) -> Response
 where
     R: sdkwork_intelligence_mcp_service::McpRepository + Send + Sync,
 {
-    let tenant_id = resolve_request_tenant_id(context.as_ref(), &headers, state.default_tenant_id);
-    Ok(Json(
-        list_resources(state.service.as_ref(), tenant_id, server_id).await?,
-    ))
+    finish_api_json(
+        &ctx,
+        async {
+            let tenant_id =
+                resolve_request_tenant_id(context.as_ref(), &headers, state.default_tenant_id);
+            ok_json(list_resources(state.service.as_ref(), tenant_id, server_id).await?)
+        }
+        .await,
+    )
 }
 
 async fn list_prompts_handler<R>(
+    ctx: WebRequestContext,
     State(state): State<AppState<R>>,
     headers: HeaderMap,
     Path(server_id): Path<u64>,
     context: Option<Extension<McpAppRequestContext>>,
-) -> Result<Json<serde_json::Value>, (StatusCode, String)>
+) -> Response
 where
     R: sdkwork_intelligence_mcp_service::McpRepository + Send + Sync,
 {
-    let tenant_id = resolve_request_tenant_id(context.as_ref(), &headers, state.default_tenant_id);
-    Ok(Json(
-        list_prompts(state.service.as_ref(), tenant_id, server_id).await?,
-    ))
+    finish_api_json(
+        &ctx,
+        async {
+            let tenant_id =
+                resolve_request_tenant_id(context.as_ref(), &headers, state.default_tenant_id);
+            ok_json(list_prompts(state.service.as_ref(), tenant_id, server_id).await?)
+        }
+        .await,
+    )
 }
 
 async fn list_invocations_handler<R>(
+    ctx: WebRequestContext,
     State(state): State<AppState<R>>,
     headers: HeaderMap,
     Query(query): Query<InvocationQuery>,
     context: Option<Extension<McpAppRequestContext>>,
-) -> Result<Json<serde_json::Value>, (StatusCode, String)>
+) -> Response
 where
     R: sdkwork_intelligence_mcp_service::McpRepository + Send + Sync,
 {
-    let tenant_id = resolve_request_tenant_id(context.as_ref(), &headers, state.default_tenant_id);
-    Ok(Json(
-        list_invocations(
-            state.service.as_ref(),
-            tenant_id,
-            query.server_id,
-            query.limit.unwrap_or(50),
-        )
-        .await?,
-    ))
+    finish_api_json(
+        &ctx,
+        async {
+            let tenant_id =
+                resolve_request_tenant_id(context.as_ref(), &headers, state.default_tenant_id);
+            ok_json(
+                list_invocations(
+                    state.service.as_ref(),
+                    tenant_id,
+                    query.server_id,
+                    query.limit.unwrap_or(50),
+                )
+                .await?,
+            )
+        }
+        .await,
+    )
 }
 
 pub fn build_router<R>(service: Arc<McpService<R>>, default_tenant_id: u64) -> Router

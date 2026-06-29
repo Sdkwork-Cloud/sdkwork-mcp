@@ -9,3 +9,5 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  sdkwork_mcp_app_sdk_generated_flutter:
+    path: ../../../../sdks/sdkwork-mcp-app-sdk/sdkwork-mcp-app-sdk-flutter/generated/server-openapi

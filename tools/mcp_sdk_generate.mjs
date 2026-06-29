@@ -22,7 +22,14 @@ const check = process.argv.includes("--check");
 run("tools/mcp_openapi_materialize.mjs", check ? ["--check"] : []);
 
 if (!check) {
-  run("sdks/sdkwork-mcp-app-sdk/bin/generate-sdk.mjs", ["--input", appPath]);
+  run("sdks/sdkwork-mcp-app-sdk/bin/generate-sdk.mjs", [
+    "--input",
+    appPath,
+    "--language",
+    "typescript",
+    "--language",
+    "flutter",
+  ]);
   run("sdks/sdkwork-mcp-backend-sdk/bin/generate-sdk.mjs", ["--input", backendPath]);
 }
 

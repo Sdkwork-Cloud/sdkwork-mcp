@@ -18,6 +18,7 @@ export type SdkworkMCPAppClient = GeneratedSdkworkMCPAppClient;
 export type SdkworkMCPAppClientConfig = SdkworkAppConfig & {
   interceptors?: Interceptors;
 };
+export type { McpServerRecord } from "sdkwork-mcp-app-sdk-generated-typescript/src/types/mcp-server-record";
 
 let mcpAppSdkClient: SdkworkMCPAppClient | null = null;
 

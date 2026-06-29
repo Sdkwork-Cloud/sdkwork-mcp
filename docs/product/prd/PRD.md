@@ -3,7 +3,7 @@
 Status: active
 Owner: mcp-platform
 Application: sdkwork-mcp
-Updated: 2026-06-26
+Updated: 2026-06-29
 Specs: `../sdkwork-specs/DATABASE_SPEC.md`, `../sdkwork-specs/DATABASE_FRAMEWORK_SPEC.md`
 
 ## 1. Background And Problem
@@ -40,10 +40,10 @@ In scope:
 - App read API (`/app/v3/api/mcp/*`)
 - PC marketplace (`apps/sdkwork-mcp-pc` `/mcp-hub`) with category filters and capability detail
 - H5 mobile marketplace (`apps/sdkwork-mcp-h5`) with server browse and capability detail (`@sdkwork/mcp-h5-mcp`)
-- Flutter mobile shell (`apps/sdkwork-mcp-flutter-mobile`) with MCP SDK bootstrap scaffold
+- Flutter mobile (`apps/sdkwork-mcp-flutter-mobile`) with generated `sdkwork-mcp-app-sdk-flutter`, IAM session bootstrap, and marketplace browse/detail routes
 - PC admin console (`/admin/servers`, `/admin/categories`, `/admin/invocations`) with server lifecycle settings, connector CRUD, and capability upsert
 - PostgreSQL persistence via `database/` contract and baseline DDL v1.1.0
-- Icon uploads through `sdkwork-drive` references only
+- Icon uploads through `sdkwork-drive` references only (PC admin upload surface; service validates `icon_ref` via `sdkwork-drive-contract`)
 
 ## 5. Data Modules (Building Blocks)
 

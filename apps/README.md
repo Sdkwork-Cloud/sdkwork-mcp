@@ -1,45 +1,41 @@
-# apps
+# apps/
 
-Client surfaces for **sdkwork-mcp**. Each app consumes generated MCP SDKs through local core packages — no raw HTTP to MCP APIs.
+Application: sdkwork-mcp
+Status: active
+Owner: SDKWork maintainers
+Specs: APPLICATION_SPEC.md, SDKWORK_WORKSPACE_SPEC.md
 
-## Surfaces
+## Primary App Surface
 
-| App | Path | Role | Dev command |
-| --- | --- | --- | --- |
-| PC Hub / Admin | `sdkwork-mcp-pc` | Marketplace (`/mcp-hub`), tenant console, admin CRUD | `pnpm start:pc` |
-| H5 MCP | `sdkwork-mcp-h5` | Mobile MCP workflows via `@sdkwork/mcp-h5-*` packages | `pnpm start:h5` |
-| Flutter Mobile | `sdkwork-mcp-flutter-mobile` | Native mobile shell (scaffold) | `pnpm start:flutter` |
+The repository root is the primary runnable app surface.
+The repository root `sdkwork.app.config.json` governs the primary application manifest.
 
-## H5 architecture
+## Directory Index
 
-```text
-pages (@sdkwork/mcp-h5-mcp)
-  → @sdkwork/mcp-h5-core/sdk (mcpAppSdkClient)
-  → generated sdkwork-mcp-app-sdk
-```
+| Directory | Surface role | Runnable | Purpose | Entry |
+| --- | --- | --- | --- | --- |
+| sdkwork-mcp-flutter-mobile | flutter-mobile | yes | SDKWork MCP Mobile flutter-mobile application root. | `sdkwork-mcp-flutter-mobile/` |
+| sdkwork-mcp-h5 | h5 | yes | SDKWork MCP H5 h5 application root. | `sdkwork-mcp-h5/` |
+| sdkwork-mcp-pc | pc | yes | SDKWork MCP Hub pc application root. | `sdkwork-mcp-pc/` |
 
-Packages live under `apps/sdkwork-mcp-h5/packages/sdkwork-mcp-h5-*` per `NAMING_SPEC.md`.
+## Allowed Content
 
-## PC architecture
+- Selected language/architecture application roots with `README.md`, `AGENTS.md`, `.sdkwork/`, and `specs/` when authored packages exist.
+- Architecture-local `packages/`, `config/`, `src/`, `lib/`, `App/`, or `entry/` directories required by the owning architecture standard.
 
-```text
-pages (@sdkwork/mcp-pc-hub | mcp-pc-admin)
-  → @sdkwork/mcp-pc-core/services (marketplaceService, adminMcpService)
-  → generated sdkwork-mcp-app-sdk / sdkwork-mcp-backend-sdk
-```
+## Forbidden Content
 
-Shared UI and labels live in `@sdkwork/mcp-pc-commons`. Admin permissions are declared in `specs/mcp-admin.permissions.json` and enforced in `@sdkwork/mcp-pc-admin-core`.
+- Repository-root API contracts, generated SDK workspaces, Rust crates, or deployment descriptors moved under `apps/`.
+- Runtime secrets, user-private state, generated SDK transport output, or cross-application copied business logic.
+
+## Related Specs
+
+- `../sdkwork-specs/APPLICATION_SPEC.md`
+- `../sdkwork-specs/SDKWORK_WORKSPACE_SPEC.md`
+- `../sdkwork-specs/APP_CLIENT_ARCHITECTURE_ALIGNMENT_SPEC.md`
 
 ## Verification
 
 ```bash
-pnpm verify
-node --test tests/static/mcp-app-package-naming.test.mjs
-node --test apps/sdkwork-mcp-pc/tests/routes.test.mjs
-node --test apps/sdkwork-mcp-h5/tests/routes.test.mjs
+node ../sdkwork-specs/tools/check-apps-directory-index.mjs --root .
 ```
-
-## Related docs
-
-- [docs/product/prd/PRD.md](../docs/product/prd/PRD.md)
-- [docs/architecture/tech/TECH_ARCHITECTURE.md](../docs/architecture/tech/TECH_ARCHITECTURE.md)

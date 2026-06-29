@@ -1,6 +1,13 @@
 import type {
   AppendMcpInvocationCommand,
   CreateMcpServerCommand,
+  McpConnectorRecord,
+  McpInvocationRecord,
+  McpPromptRecord,
+  McpResourceRecord,
+  McpServerCategoryRecord,
+  McpServerRecord,
+  McpToolRecord,
   UpdateMcpServerCommand,
   UpsertMcpConnectorCommand,
   UpsertMcpPromptCommand,
@@ -10,28 +17,27 @@ import type {
 } from 'sdkwork-mcp-backend-sdk-generated-typescript/src/types';
 
 import type { MCPClients } from '../clients';
+import { unwrapSdkWorkPage } from '../sdk/sdkPage';
 
 export async function listAdminCategories(clients: MCPClients) {
   const response = await clients.backend.mcp.mcpAdmin.listCategories();
-  return response.items;
+  return unwrapSdkWorkPage<McpServerCategoryRecord>(response).items;
 }
 
 export async function upsertAdminCategory(
   clients: MCPClients,
   command: UpsertMcpServerCategoryCommand,
 ) {
-  const response = await clients.backend.mcp.mcpAdmin.upsertCategory(command);
-  return response.data;
+  return clients.backend.mcp.mcpAdmin.upsertCategory(command);
 }
 
 export async function listAdminServers(clients: MCPClients) {
   const response = await clients.backend.mcp.mcpAdmin.listServers();
-  return response.items;
+  return unwrapSdkWorkPage<McpServerRecord>(response).items;
 }
 
 export async function createAdminServer(clients: MCPClients, command: CreateMcpServerCommand) {
-  const response = await clients.backend.mcp.mcpAdmin.createServer(command);
-  return response.data;
+  return clients.backend.mcp.mcpAdmin.createServer(command);
 }
 
 export async function updateAdminServer(
@@ -39,18 +45,16 @@ export async function updateAdminServer(
   serverKey: string,
   command: UpdateMcpServerCommand,
 ) {
-  const response = await clients.backend.mcp.mcpAdmin.updateServer(serverKey, command);
-  return response.data;
+  return clients.backend.mcp.mcpAdmin.updateServer(serverKey, command);
 }
 
 export async function deleteAdminServer(clients: MCPClients, serverKey: string) {
-  const response = await clients.backend.mcp.mcpAdmin.deleteServer(serverKey);
-  return response.data;
+  return clients.backend.mcp.mcpAdmin.deleteServer(serverKey);
 }
 
 export async function listAdminConnectors(clients: MCPClients, serverId: string) {
   const response = await clients.backend.mcp.mcpAdmin.listConnectors(serverId);
-  return response.items;
+  return unwrapSdkWorkPage<McpConnectorRecord>(response).items;
 }
 
 export async function upsertAdminConnector(
@@ -59,7 +63,7 @@ export async function upsertAdminConnector(
   command: UpsertMcpConnectorCommand,
 ) {
   const response = await clients.backend.mcp.mcpAdmin.upsertConnector(serverId, command);
-  return response.items;
+  return unwrapSdkWorkPage<McpConnectorRecord>(response).items;
 }
 
 export async function deleteAdminConnector(
@@ -68,7 +72,7 @@ export async function deleteAdminConnector(
   connectorKey: string,
 ) {
   const response = await clients.backend.mcp.mcpAdmin.deleteConnector(serverId, connectorKey);
-  return response.items;
+  return unwrapSdkWorkPage<McpConnectorRecord>(response).items;
 }
 
 export async function upsertAdminTool(
@@ -77,7 +81,7 @@ export async function upsertAdminTool(
   command: UpsertMcpToolCommand,
 ) {
   const response = await clients.backend.mcp.mcpAdmin.upsertTool(serverId, command);
-  return response.items;
+  return unwrapSdkWorkPage<McpToolRecord>(response).items;
 }
 
 export async function upsertAdminResource(
@@ -86,7 +90,7 @@ export async function upsertAdminResource(
   command: UpsertMcpResourceCommand,
 ) {
   const response = await clients.backend.mcp.mcpAdmin.upsertResource(serverId, command);
-  return response.items;
+  return unwrapSdkWorkPage<McpResourceRecord>(response).items;
 }
 
 export async function upsertAdminPrompt(
@@ -95,18 +99,17 @@ export async function upsertAdminPrompt(
   command: UpsertMcpPromptCommand,
 ) {
   const response = await clients.backend.mcp.mcpAdmin.upsertPrompt(serverId, command);
-  return response.items;
+  return unwrapSdkWorkPage<McpPromptRecord>(response).items;
 }
 
 export async function listAdminInvocations(clients: MCPClients) {
   const response = await clients.backend.mcp.mcpAdmin.listInvocations();
-  return response.items;
+  return unwrapSdkWorkPage<McpInvocationRecord>(response).items;
 }
 
 export async function appendAdminInvocation(
   clients: MCPClients,
   command: AppendMcpInvocationCommand,
 ) {
-  const response = await clients.backend.mcp.mcpAdmin.appendInvocation(command);
-  return response.data;
+  return clients.backend.mcp.mcpAdmin.appendInvocation(command);
 }

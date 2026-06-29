@@ -10,6 +10,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  app_links: ^6.4.0
+  shared_preferences: ^2.5.3
+  url_launcher: ^6.3.1
   sdkwork_mcp_flutter_mobile_core:
     path: packages/sdkwork_mcp_flutter_mobile_core
 

@@ -62,8 +62,8 @@ export function MarketplacePage() {
           <button
             key={category.id}
             type="button"
-            className={`rounded-full px-3 py-1 text-xs ${categoryCode === category.code ? 'bg-blue-600 text-white' : 'bg-white/10 text-gray-300'}`}
-            onClick={() => setCategoryCode(category.code)}
+            className={`rounded-full px-3 py-1 text-xs ${categoryCode === category.category_code ? 'bg-blue-600 text-white' : 'bg-white/10 text-gray-300'}`}
+            onClick={() => setCategoryCode(category.category_code)}
           >
             {category.name}
           </button>

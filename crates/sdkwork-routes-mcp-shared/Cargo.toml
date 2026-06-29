@@ -8,5 +8,6 @@ license.workspace = true
 axum.workspace = true
 sdkwork-intelligence-mcp-service = { path = "../sdkwork-intelligence-mcp-service" }
 sdkwork-mcp-contract.workspace = true
+sdkwork-utils-rust.workspace = true
+sdkwork-web-core.workspace = true
 serde.workspace = true
-serde_json.workspace = true

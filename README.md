@@ -17,14 +17,14 @@ pnpm start:pc    # http://localhost:5175/mcp-hub
 | PC tenant console | `/console/mcp` | active |
 | PC admin | `/admin/servers`, `/admin/categories`, `/admin/invocations` | active |
 | H5 MCP | mobile MCP workflows (`@sdkwork/mcp-h5-*`) | active |
-| Flutter mobile | native shell | scaffold |
+| Flutter mobile | marketplace browse + server detail | active |
 
 ## Backend
 
 - PostgreSQL `ai_mcp_*` tables (contract v1.1.0)
 - Admin API: `/backend/v3/api/mcp/*`
 - App read API: `/app/v3/api/mcp/*`
-- Shared route handlers: `crates/sdkwork-routes-mcp-shared`
+- Shared route layer: `crates/sdkwork-routes-mcp-shared` (`service_ops`, `SdkWorkApiResponse` envelope, record builders)
 
 ## Docs
 

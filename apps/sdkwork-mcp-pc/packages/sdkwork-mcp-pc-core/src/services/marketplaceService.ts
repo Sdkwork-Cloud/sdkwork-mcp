@@ -1,4 +1,14 @@
+import type {
+  McpInvocationRecord,
+  McpPromptRecord,
+  McpResourceRecord,
+  McpServerCategoryRecord,
+  McpServerRecord,
+  McpToolRecord,
+} from 'sdkwork-mcp-app-sdk-generated-typescript/src/types';
+
 import type { MCPClients } from '../clients';
+import { unwrapSdkWorkPage } from '../sdk/sdkPage';
 
 export async function fetchMarketplaceCatalog(clients: MCPClients) {
   const [categoryResponse, serverResponse] = await Promise.all([
@@ -6,15 +16,14 @@ export async function fetchMarketplaceCatalog(clients: MCPClients) {
     clients.app.mcp.listServers(),
   ]);
   return {
-    categories: categoryResponse.items,
-    servers: serverResponse.items,
+    categories: unwrapSdkWorkPage<McpServerCategoryRecord>(categoryResponse).items,
+    servers: unwrapSdkWorkPage<McpServerRecord>(serverResponse).items,
   };
 }
 
 export async function fetchServerDetail(clients: MCPClients, serverKey: string) {
-  const serverResponse = await clients.app.mcp.getServer(serverKey);
-  const server = serverResponse.data;
-  const serverId = server.id;
+  const server = await clients.app.mcp.getServer(serverKey);
+  const serverId = String(server.id);
   const [tools, resources, prompts] = await Promise.all([
     clients.app.mcp.listTools(serverId),
     clients.app.mcp.listResources(serverId),
@@ -22,9 +31,9 @@ export async function fetchServerDetail(clients: MCPClients, serverKey: string) 
   ]);
   return {
     server,
-    tools: tools.items,
-    resources: resources.items,
-    prompts: prompts.items,
+    tools: unwrapSdkWorkPage<McpToolRecord>(tools).items,
+    resources: unwrapSdkWorkPage<McpResourceRecord>(resources).items,
+    prompts: unwrapSdkWorkPage<McpPromptRecord>(prompts).items,
   };
 }
 
@@ -34,7 +43,7 @@ export async function fetchConsoleOverview(clients: MCPClients) {
     clients.app.mcp.listInvocations(),
   ]);
   return {
-    servers: servers.items,
-    invocations: invocations.items.slice(0, 20),
+    servers: unwrapSdkWorkPage<McpServerRecord>(servers).items,
+    invocations: unwrapSdkWorkPage<McpInvocationRecord>(invocations).items.slice(0, 20),
   };
 }

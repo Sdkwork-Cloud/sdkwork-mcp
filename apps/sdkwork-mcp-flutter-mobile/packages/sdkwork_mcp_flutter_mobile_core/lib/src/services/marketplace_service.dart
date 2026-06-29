@@ -25,16 +25,46 @@ class ServerDetailBundle {
   final List<McpPromptRecord> prompts;
 }
 
+List<T> _readPageItems<T>(
+  dynamic data,
+  T Function(Map<String, dynamic> json) fromJson,
+) {
+  if (data is! Map) {
+    return const [];
+  }
+  final items = data['items'];
+  if (items is! List) {
+    return const [];
+  }
+  return items
+      .whereType<Map>()
+      .map((entry) => fromJson(Map<String, dynamic>.from(entry)))
+      .toList(growable: false);
+}
+
+McpServerRecord? _readResourceItem(dynamic data) {
+  if (data is! Map) {
+    return null;
+  }
+  final item = data['item'];
+  if (item is! Map) {
+    return null;
+  }
+  return McpServerRecord.fromJson(Map<String, dynamic>.from(item));
+}
+
 Future<MarketplaceCatalog> fetchMarketplaceCatalog(SdkworkAppClient client) async {
-  final results = await Future.wait([
-    client.mcp.listCategories(),
-    client.mcp.listServers(),
-  ]);
-  final categories = results[0] as McpServerCategoryListResponse?;
-  final servers = results[1] as McpServerListResponse?;
+  final categoriesResponse = await client.mcp.listCategories();
+  final serversResponse = await client.mcp.listServers();
   return MarketplaceCatalog(
-    categories: categories?.items ?? const [],
-    servers: servers?.items ?? const [],
+    categories: _readPageItems(
+      categoriesResponse?.data,
+      McpServerCategoryRecord.fromJson,
+    ),
+    servers: _readPageItems(
+      serversResponse?.data,
+      McpServerRecord.fromJson,
+    ),
   );
 }
 
@@ -43,7 +73,7 @@ Future<ServerDetailBundle> fetchServerDetail(
   String serverKey,
 ) async {
   final serverResponse = await client.mcp.getServer(serverKey);
-  final server = serverResponse?.data;
+  final server = _readResourceItem(serverResponse?.data);
   if (server == null) {
     throw StateError('MCP server not found: $serverKey');
   }
@@ -53,13 +83,10 @@ Future<ServerDetailBundle> fetchServerDetail(
     client.mcp.listResources(serverId),
     client.mcp.listPrompts(serverId),
   ]);
-  final tools = results[0] as McpToolListResponse?;
-  final resources = results[1] as McpResourceListResponse?;
-  final prompts = results[2] as McpPromptListResponse?;
   return ServerDetailBundle(
     server: server,
-    tools: tools?.items ?? const [],
-    resources: resources?.items ?? const [],
-    prompts: prompts?.items ?? const [],
+    tools: _readPageItems(results[0]?.data, McpToolRecord.fromJson),
+    resources: _readPageItems(results[1]?.data, McpResourceRecord.fromJson),
+    prompts: _readPageItems(results[2]?.data, McpPromptRecord.fromJson),
   );
 }

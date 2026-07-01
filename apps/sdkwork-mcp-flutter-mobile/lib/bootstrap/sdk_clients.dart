@@ -13,7 +13,6 @@ SdkworkMcpFlutterSdkClients createSdkClients({McpAppSession? session}) {
   _clients = createSdkworkMcpFlutterSdkClients(
     apiBaseUrl: environment.apiBaseUrl,
     backendApiBaseUrl: environment.backendApiBaseUrl,
-    driveAppApiBaseUrl: environment.driveAppApiBaseUrl,
     session: session ?? loadAppSession(),
   );
   return _clients!;

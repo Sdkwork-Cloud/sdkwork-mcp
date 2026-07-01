@@ -1,5 +1,5 @@
-# runbooks
+# Runbooks (PC surface)
 
-See `DOCUMENTATION_SPEC.md` section 2.
+Operational runbooks are maintained at repository root:
 
-See `DOCUMENTATION_SPEC.md` section 2.
+[../../../../docs/runbooks/README.md](../../../../docs/runbooks/README.md)

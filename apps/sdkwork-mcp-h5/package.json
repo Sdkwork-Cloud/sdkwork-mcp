@@ -10,7 +10,6 @@
     "typecheck": "tsc --noEmit -p tsconfig.app.json"
   },
   "dependencies": {
-    "@sdkwork/drive-app-sdk": "workspace:*",
     "@sdkwork/utils": "workspace:*",
     "sdkwork-mcp-app-sdk-generated-typescript": "workspace:*",
     "@sdkwork/mcp-h5-mcp": "workspace:*",
@@ -29,14 +28,14 @@
     "@tiptap/pm": "catalog:",
     "@tiptap/react": "catalog:",
     "@tiptap/starter-kit": "catalog:",
-    "emoji-picker-react": "catalog:"
+    "emoji-picker-react": "catalog:",
+    "tailwindcss": "catalog:",
+    "@tailwindcss/vite": "catalog:"
   },
   "devDependencies": {
-    "@tailwindcss/vite": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "@vitejs/plugin-react": "catalog:",
-    "tailwindcss": "catalog:",
     "typescript": "catalog:",
     "vite": "catalog:"
   },

@@ -12,7 +12,5 @@
     ],
     "generated": false
   },
-  "contracts": {
-    "dependencyComposition": "../../../specs/dependency.composition.json"
-  }
+  "contracts": {}
 }

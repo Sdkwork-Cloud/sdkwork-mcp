@@ -7,14 +7,12 @@ class SdkworkMcpFlutterSdkClients {
   const SdkworkMcpFlutterSdkClients({
     required this.apiBaseUrl,
     required this.backendApiBaseUrl,
-    required this.driveAppApiBaseUrl,
     required this.sdkFamilies,
     required this.appClient,
   });
 
   final String apiBaseUrl;
   final String backendApiBaseUrl;
-  final String driveAppApiBaseUrl;
   final List<String> sdkFamilies;
   final SdkworkAppClient appClient;
 }
@@ -22,7 +20,6 @@ class SdkworkMcpFlutterSdkClients {
 SdkworkMcpFlutterSdkClients createSdkworkMcpFlutterSdkClients({
   required String apiBaseUrl,
   String? backendApiBaseUrl,
-  String? driveAppApiBaseUrl,
   McpAppSession? session,
 }) {
   final normalizedApiBaseUrl = apiBaseUrl.replaceAll(RegExp(r'/+$'), '');
@@ -38,7 +35,6 @@ SdkworkMcpFlutterSdkClients createSdkworkMcpFlutterSdkClients({
     apiBaseUrl: normalizedApiBaseUrl,
     backendApiBaseUrl: backendApiBaseUrl ??
         normalizedApiBaseUrl.replaceAll('/app/v3/api', '/backend/v3/api'),
-    driveAppApiBaseUrl: driveAppApiBaseUrl ?? normalizedApiBaseUrl,
     sdkFamilies: const [
       'sdkwork-mcp-app-sdk',
     ],

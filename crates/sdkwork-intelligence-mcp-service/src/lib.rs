@@ -97,10 +97,18 @@ pub trait McpRepository: Send + Sync {
     ) -> McpResult<McpPromptRecord>;
     async fn upsert_prompt(&self, record: McpPromptRecord) -> McpResult<McpPromptRecord>;
 
+    async fn count_invocations(
+        &self,
+        tenant_id: u64,
+        server_id: Option<u64>,
+        search: Option<&str>,
+    ) -> McpResult<u64>;
     async fn list_invocations(
         &self,
         tenant_id: u64,
         server_id: Option<u64>,
+        search: Option<&str>,
+        offset: u32,
         limit: u32,
     ) -> McpResult<Vec<McpInvocationRecord>>;
     async fn append_invocation(&self, record: McpInvocationRecord) -> McpResult<McpInvocationRecord>;
@@ -271,14 +279,27 @@ impl<R: McpRepository> McpService<R> {
         self.repository.upsert_prompt(record).await
     }
 
+    pub async fn count_invocations(
+        &self,
+        tenant_id: u64,
+        server_id: Option<u64>,
+        search: Option<&str>,
+    ) -> McpResult<u64> {
+        self.repository
+            .count_invocations(tenant_id, server_id, search)
+            .await
+    }
+
     pub async fn list_invocations(
         &self,
         tenant_id: u64,
         server_id: Option<u64>,
+        search: Option<&str>,
+        offset: u32,
         limit: u32,
     ) -> McpResult<Vec<McpInvocationRecord>> {
         self.repository
-            .list_invocations(tenant_id, server_id, limit)
+            .list_invocations(tenant_id, server_id, search, offset, limit)
             .await
     }
 

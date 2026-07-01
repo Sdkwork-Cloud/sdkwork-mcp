@@ -31,7 +31,7 @@ pub use handlers::{
     append_invocation, default_server_record, delete_connector, delete_server, finish_api_json,
     get_server, list_categories, list_connectors, list_invocations, list_servers, ok_json,
     resolve_tenant_id, upsert_category, upsert_connector, upsert_prompt, upsert_resource,
-    upsert_server, upsert_tool, SharedMcpService,
+    upsert_server, upsert_tool, McpInvocationListQuery, SdkWorkListQuery, SharedMcpService,
 };
 pub use health::DbReadinessCheck;
 pub use http_route_manifest::backend_route_manifest;
@@ -46,12 +46,6 @@ pub struct BackendState<R: sdkwork_intelligence_mcp_service::McpRepository> {
     pub service: SharedMcpService<R>,
     pub default_tenant_id: u64,
     pub readiness: Option<DbReadinessCheck>,
-}
-
-#[derive(Debug, Deserialize)]
-struct InvocationQuery {
-    server_id: Option<u64>,
-    limit: Option<u32>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -235,6 +229,7 @@ async fn list_servers_handler<R>(
     ctx: WebRequestContext,
     State(state): State<BackendState<R>>,
     headers: HeaderMap,
+    Query(query): Query<SdkWorkListQuery>,
     context: Option<Extension<McpBackendRequestContext>>,
 ) -> Response
 where
@@ -245,7 +240,7 @@ where
         async {
             let tenant_id =
                 resolve_request_tenant_id(context.as_ref(), &headers, state.default_tenant_id);
-            ok_json(list_servers(state.service.as_ref(), tenant_id).await?)
+            ok_json(list_servers(state.service.as_ref(), tenant_id, &query).await?)
         }
         .await,
     )
@@ -345,6 +340,7 @@ async fn list_categories_handler<R>(
     ctx: WebRequestContext,
     State(state): State<BackendState<R>>,
     headers: HeaderMap,
+    Query(query): Query<SdkWorkListQuery>,
     context: Option<Extension<McpBackendRequestContext>>,
 ) -> Response
 where
@@ -355,7 +351,7 @@ where
         async {
             let tenant_id =
                 resolve_request_tenant_id(context.as_ref(), &headers, state.default_tenant_id);
-            ok_json(list_categories(state.service.as_ref(), tenant_id).await?)
+            ok_json(list_categories(state.service.as_ref(), tenant_id, &query).await?)
         }
         .await,
     )
@@ -431,6 +427,7 @@ async fn list_connectors_handler<R>(
     State(state): State<BackendState<R>>,
     headers: HeaderMap,
     Path(server_id): Path<u64>,
+    Query(query): Query<SdkWorkListQuery>,
     context: Option<Extension<McpBackendRequestContext>>,
 ) -> Response
 where
@@ -441,7 +438,7 @@ where
         async {
             let tenant_id =
                 resolve_request_tenant_id(context.as_ref(), &headers, state.default_tenant_id);
-            ok_json(list_connectors(state.service.as_ref(), tenant_id, server_id).await?)
+            ok_json(list_connectors(state.service.as_ref(), tenant_id, server_id, &query).await?)
         }
         .await,
     )
@@ -615,7 +612,7 @@ async fn list_invocations_handler<R>(
     ctx: WebRequestContext,
     State(state): State<BackendState<R>>,
     headers: HeaderMap,
-    Query(query): Query<InvocationQuery>,
+    Query(query): Query<McpInvocationListQuery>,
     context: Option<Extension<McpBackendRequestContext>>,
 ) -> Response
 where
@@ -626,15 +623,7 @@ where
         async {
             let tenant_id =
                 resolve_request_tenant_id(context.as_ref(), &headers, state.default_tenant_id);
-            ok_json(
-                list_invocations(
-                    state.service.as_ref(),
-                    tenant_id,
-                    query.server_id,
-                    query.limit.unwrap_or(100),
-                )
-                .await?,
-            )
+            ok_json(list_invocations(state.service.as_ref(), tenant_id, &query).await?)
         }
         .await,
     )

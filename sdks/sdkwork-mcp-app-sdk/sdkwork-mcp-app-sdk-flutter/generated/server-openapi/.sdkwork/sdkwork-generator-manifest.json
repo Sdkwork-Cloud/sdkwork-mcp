@@ -36,11 +36,11 @@
     },
     {
       "path": "lib/src/api/api.dart",
-      "sha256": "6d629a05c1d4e4299425af73210297c6de74b734b67d5f347bf2c1d3ad63a953"
+      "sha256": "4225f0b3a9f5d526324f1600c5de4c00a28fe8cd2d48d43fb6c598ae491bc271"
     },
     {
       "path": "lib/src/api/mcp.dart",
-      "sha256": "422afa36e7c27367b6632c3afd6e2995a0c999a22247ef4d03905ee1b54c5e90"
+      "sha256": "47e8b0d8711d573b253a95eb80db76516dd318a030382a2a223069907e46b901"
     },
     {
       "path": "lib/src/api/paths.dart",
@@ -72,7 +72,7 @@
     },
     {
       "path": "README.md",
-      "sha256": "3edcdec04b8dca58cf2d8281e0d879f9d6c190ce4ea75650395896db55cf79d3"
+      "sha256": "c0200f2b8287a02843cf85198d558a7bb0525c4158a42ed919518ff379a77256"
     },
     {
       "path": "sdkwork-sdk.json",

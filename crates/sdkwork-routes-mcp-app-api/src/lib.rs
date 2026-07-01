@@ -16,12 +16,12 @@ use axum::{
 };
 use sdkwork_intelligence_mcp_service::McpService;
 use sdkwork_web_core::{HttpRouteManifest, WebRequestContext};
-use serde::Deserialize;
 use sqlx::PgPool;
 
 pub use handlers::{
     finish_api_json, get_server, get_tool, list_categories, list_invocations, list_prompts,
-    list_resources, list_servers, list_tools, ok_json, resolve_tenant_id, SharedMcpService,
+    list_resources, list_servers, list_tools, ok_json, resolve_tenant_id, McpInvocationListQuery,
+    SdkWorkListQuery, SharedMcpService,
 };
 pub use health::DbReadinessCheck;
 pub use http_route_manifest::app_route_manifest;
@@ -35,12 +35,6 @@ pub struct AppState<R: sdkwork_intelligence_mcp_service::McpRepository> {
     pub service: SharedMcpService<R>,
     pub default_tenant_id: u64,
     pub readiness: Option<DbReadinessCheck>,
-}
-
-#[derive(Debug, Deserialize)]
-struct InvocationQuery {
-    server_id: Option<u64>,
-    limit: Option<u32>,
 }
 
 fn business_routes<R>() -> Router<AppState<R>>
@@ -109,6 +103,7 @@ async fn list_categories_handler<R>(
     ctx: WebRequestContext,
     State(state): State<AppState<R>>,
     headers: HeaderMap,
+    Query(query): Query<SdkWorkListQuery>,
     context: Option<Extension<McpAppRequestContext>>,
 ) -> Response
 where
@@ -119,7 +114,7 @@ where
         async {
             let tenant_id =
                 resolve_request_tenant_id(context.as_ref(), &headers, state.default_tenant_id);
-            ok_json(list_categories(state.service.as_ref(), tenant_id).await?)
+            ok_json(list_categories(state.service.as_ref(), tenant_id, &query).await?)
         }
         .await,
     )
@@ -129,6 +124,7 @@ async fn list_servers_handler<R>(
     ctx: WebRequestContext,
     State(state): State<AppState<R>>,
     headers: HeaderMap,
+    Query(query): Query<SdkWorkListQuery>,
     context: Option<Extension<McpAppRequestContext>>,
 ) -> Response
 where
@@ -139,7 +135,7 @@ where
         async {
             let tenant_id =
                 resolve_request_tenant_id(context.as_ref(), &headers, state.default_tenant_id);
-            ok_json(list_servers(state.service.as_ref(), tenant_id).await?)
+            ok_json(list_servers(state.service.as_ref(), tenant_id, &query).await?)
         }
         .await,
     )
@@ -173,6 +169,7 @@ async fn list_tools_handler<R>(
     State(state): State<AppState<R>>,
     headers: HeaderMap,
     Path(server_id): Path<u64>,
+    Query(query): Query<SdkWorkListQuery>,
     context: Option<Extension<McpAppRequestContext>>,
 ) -> Response
 where
@@ -183,7 +180,7 @@ where
         async {
             let tenant_id =
                 resolve_request_tenant_id(context.as_ref(), &headers, state.default_tenant_id);
-            ok_json(list_tools(state.service.as_ref(), tenant_id, server_id).await?)
+            ok_json(list_tools(state.service.as_ref(), tenant_id, server_id, &query).await?)
         }
         .await,
     )
@@ -223,6 +220,7 @@ async fn list_resources_handler<R>(
     State(state): State<AppState<R>>,
     headers: HeaderMap,
     Path(server_id): Path<u64>,
+    Query(query): Query<SdkWorkListQuery>,
     context: Option<Extension<McpAppRequestContext>>,
 ) -> Response
 where
@@ -233,7 +231,7 @@ where
         async {
             let tenant_id =
                 resolve_request_tenant_id(context.as_ref(), &headers, state.default_tenant_id);
-            ok_json(list_resources(state.service.as_ref(), tenant_id, server_id).await?)
+            ok_json(list_resources(state.service.as_ref(), tenant_id, server_id, &query).await?)
         }
         .await,
     )
@@ -244,6 +242,7 @@ async fn list_prompts_handler<R>(
     State(state): State<AppState<R>>,
     headers: HeaderMap,
     Path(server_id): Path<u64>,
+    Query(query): Query<SdkWorkListQuery>,
     context: Option<Extension<McpAppRequestContext>>,
 ) -> Response
 where
@@ -254,7 +253,7 @@ where
         async {
             let tenant_id =
                 resolve_request_tenant_id(context.as_ref(), &headers, state.default_tenant_id);
-            ok_json(list_prompts(state.service.as_ref(), tenant_id, server_id).await?)
+            ok_json(list_prompts(state.service.as_ref(), tenant_id, server_id, &query).await?)
         }
         .await,
     )
@@ -264,7 +263,7 @@ async fn list_invocations_handler<R>(
     ctx: WebRequestContext,
     State(state): State<AppState<R>>,
     headers: HeaderMap,
-    Query(query): Query<InvocationQuery>,
+    Query(query): Query<McpInvocationListQuery>,
     context: Option<Extension<McpAppRequestContext>>,
 ) -> Response
 where
@@ -275,15 +274,7 @@ where
         async {
             let tenant_id =
                 resolve_request_tenant_id(context.as_ref(), &headers, state.default_tenant_id);
-            ok_json(
-                list_invocations(
-                    state.service.as_ref(),
-                    tenant_id,
-                    query.server_id,
-                    query.limit.unwrap_or(50),
-                )
-                .await?,
-            )
+            ok_json(list_invocations(state.service.as_ref(), tenant_id, &query).await?)
         }
         .await,
     )

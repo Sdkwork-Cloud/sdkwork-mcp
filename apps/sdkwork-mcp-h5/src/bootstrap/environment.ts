@@ -2,7 +2,6 @@ export interface MCPEnvironment {
   apiBaseUrl: string;
   appbaseAppApiBaseUrl: string;
   backendApiBaseUrl: string;
-  driveAppApiBaseUrl: string;
   appbaseLoginUrl: string;
 }
 
@@ -37,10 +36,6 @@ export function resolveEnvironment(): MCPEnvironment {
     backendApiBaseUrl: normalizeBaseUrl(
       import.meta.env.VITE_SDKWORK_MCP_H5_BACKEND_API_BASE_URL,
       deriveBackendApiBaseUrl(applicationPublicHttpUrl),
-    ),
-    driveAppApiBaseUrl: normalizeBaseUrl(
-      import.meta.env.VITE_SDKWORK_MCP_H5_DRIVE_APP_API_BASE_URL,
-      deriveAppApiBaseUrl(applicationPublicHttpUrl),
     ),
     appbaseLoginUrl: normalizeBaseUrl(
       import.meta.env.VITE_SDKWORK_MCP_H5_APPBASE_LOGIN_URL,

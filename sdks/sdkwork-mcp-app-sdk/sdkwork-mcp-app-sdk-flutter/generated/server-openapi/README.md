@@ -21,7 +21,13 @@ client.setAuthToken('your-auth-token');
 client.setAccessToken('your-access-token');
 
 // Use the SDK
-final result = await client.mcp.listCategories();
+final params = <String, dynamic>{
+  'page': 1,
+  'page_size': 2,
+  'cursor': 'cursor',
+  'q': 'q',
+};
+final result = await client.mcp.listCategories(params);
 print(result);
 ```
 
@@ -51,7 +57,13 @@ client.setHeader('X-Custom-Header', 'value');
 ### mcp
 ```dart
 // MCP mcp.listCategories
-final result = await client.mcp.listCategories();
+final params = <String, dynamic>{
+  'page': 1,
+  'page_size': 2,
+  'cursor': 'cursor',
+  'q': 'q',
+};
+final result = await client.mcp.listCategories(params);
 print(result);
 ```
 
@@ -59,7 +71,13 @@ print(result);
 
 ```dart
 try {
-  final result = await client.mcp.listCategories();
+  final params = <String, dynamic>{
+    'page': 1,
+    'page_size': 2,
+    'cursor': 'cursor',
+    'q': 'q',
+  };
+  final result = await client.mcp.listCategories(params);
   print(result);
 } catch (e) {
   print('Error: $e');

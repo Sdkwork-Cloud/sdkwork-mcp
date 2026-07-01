@@ -1,5 +1,7 @@
-# Developer Guide
+# Developer Guide (PC surface)
 
-Local setup, verification, and contribution workflow.
-
-See `DOCUMENTATION_SPEC.md` section 2.
+| Topic | Document |
+| --- | --- |
+| PC routes and packages | [../../product/prd/PRD.md](../../product/prd/PRD.md) |
+| Repository setup and verification | [../../../../docs/guides/developer/README.md](../../../../docs/guides/developer/README.md) |
+| API and SDK integration | [../../../../docs/guides/integrator/README.md](../../../../docs/guides/integrator/README.md) |

@@ -44,7 +44,7 @@ Cross-cutting integrations:
 
 - IAM tenant context via web request context headers
 - File icons via `sdkwork-drive` URI validation (`drive://spaces/.../nodes/...`) in `validation.rs` using `sdkwork-drive-contract`
-- Icon uploads are client-side through `@sdkwork/drive-app-sdk` on PC admin (and H5 bootstrap); Flutter mobile is browse-only until a generated drive Flutter SDK exists
+- Icon uploads are client-side through `@sdkwork/drive-app-sdk` on PC admin only; H5 and Flutter mobile are browse-only until admin/upload surfaces and generated drive mobile SDKs exist
 
 ## 4. Database Design
 
@@ -68,6 +68,7 @@ Planned tables (registry only, no DDL yet):
 
 - API authority: `sdkwork-mcp.backend`, `sdkwork-mcp.app`
 - HTTP success bodies use `SdkWorkApiResponse` (`code`, `data`, `traceId`); lists use `data.items` + `data.pageInfo`; singles use `data.item`
+- List routes accept `SdkWorkListQuery` (`page`, `page_size`, `q`); default `page_size=20`, max `200`; invocation lists support DB-backed offset pagination with optional `server_id` filter
 - Errors use `application/problem+json` (`ProblemDetail`) via `sdkwork-web-core`
 - Generated SDKs: `sdks/sdkwork-mcp-backend-sdk`, `sdks/sdkwork-mcp-app-sdk` (TypeScript + Flutter)
 - Breaking field rename in v1.1.0: entity `status` -> `lifecycle_status`; connector publish state -> `publish_status`

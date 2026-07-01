@@ -11,24 +11,57 @@ use sdkwork_web_core::{
 };
 use serde::Serialize;
 
+use crate::list_query::SdkWorkListQuery;
+
 pub type ApiResult<T> = Result<T, ApiProblem>;
 
 pub fn ok_json<T>(data: T) -> ApiResult<T> {
     Ok(data)
 }
 
-pub fn list_data<T>(items: Vec<T>) -> SdkWorkPageData<T> {
-    let count = items.len();
+pub fn paginate_items<T>(items: Vec<T>, query: &SdkWorkListQuery) -> SdkWorkPageData<T> {
+    let total = items.len();
+    let page_size = query.effective_page_size() as usize;
+    let page = query.effective_page() as usize;
+    let total_pages = if total == 0 {
+        0
+    } else {
+        total.div_ceil(page_size) as i32
+    };
+    let start = (page.saturating_sub(1)).saturating_mul(page_size);
+    let page_items: Vec<T> = items.into_iter().skip(start).take(page_size).collect();
+    SdkWorkPageData {
+        items: page_items,
+        page_info: PageInfo {
+            mode: PageMode::Offset,
+            page: Some(page as i32),
+            page_size: Some(page_size as i32),
+            total_items: Some(total.to_string()),
+            total_pages: Some(total_pages),
+            next_cursor: None,
+            has_more: Some((page * page_size) < total),
+        },
+    }
+}
+
+pub fn page_data<T>(items: Vec<T>, total: usize, query: &SdkWorkListQuery) -> SdkWorkPageData<T> {
+    let page_size = query.effective_page_size() as usize;
+    let page = query.effective_page() as usize;
+    let total_pages = if total == 0 {
+        0
+    } else {
+        total.div_ceil(page_size) as i32
+    };
     SdkWorkPageData {
         items,
         page_info: PageInfo {
             mode: PageMode::Offset,
-            page: Some(1),
-            page_size: Some(count.max(1) as i32),
-            total_items: Some(count.to_string()),
-            total_pages: Some(1),
+            page: Some(page as i32),
+            page_size: Some(page_size as i32),
+            total_items: Some(total.to_string()),
+            total_pages: Some(total_pages),
             next_cursor: None,
-            has_more: Some(false),
+            has_more: Some((page * page_size) < total),
         },
     }
 }
@@ -106,5 +139,40 @@ impl ApiProblem {
 
     pub fn into_response_for(self, ctx: &WebRequestContext) -> Response {
         problem_response(&self.framework_error(), ctx.problem_correlation())
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::list_query::SdkWorkListQuery;
+
+    #[test]
+    fn paginate_items_returns_requested_page_slice() {
+        let items: Vec<i32> = (1..=25).collect();
+        let query = SdkWorkListQuery {
+            page: Some(2),
+            page_size: Some(10),
+            ..Default::default()
+        };
+        let page = paginate_items(items, &query);
+        assert_eq!(page.items, vec![11, 12, 13, 14, 15, 16, 17, 18, 19, 20]);
+        assert_eq!(page.page_info.page, Some(2));
+        assert_eq!(page.page_info.page_size, Some(10));
+        assert_eq!(page.page_info.total_pages, Some(3));
+        assert_eq!(page.page_info.has_more, Some(true));
+    }
+
+    #[test]
+    fn page_data_reflects_database_total() {
+        let query = SdkWorkListQuery {
+            page: Some(1),
+            page_size: Some(20),
+            ..Default::default()
+        };
+        let page = page_data(vec![1, 2, 3], 120, &query);
+        assert_eq!(page.items.len(), 3);
+        assert_eq!(page.page_info.total_items, Some("120".to_string()));
+        assert_eq!(page.page_info.total_pages, Some(6));
     }
 }

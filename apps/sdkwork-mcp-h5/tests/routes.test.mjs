@@ -44,3 +44,9 @@ test('h5 core marketplace service uses mcp app sdk client', () => {
   assert.match(service, /client\.mcp\.getServer/);
   assert.doesNotMatch(service, /agentsAppSdkClient/i);
 });
+
+test('h5 bootstrap wires MCP app SDK only on browse-only surface', () => {
+  const sdkClients = fs.readFileSync(path.join(appRoot, 'src/bootstrap/sdkClients.ts'), 'utf8');
+  assert.match(sdkClients, /sdkwork-mcp-app-sdk/);
+  assert.doesNotMatch(sdkClients, /@sdkwork\/drive-app-sdk/);
+});

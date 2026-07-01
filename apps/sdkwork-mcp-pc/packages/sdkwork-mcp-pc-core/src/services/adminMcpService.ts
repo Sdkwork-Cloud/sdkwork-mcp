@@ -19,8 +19,10 @@ import type {
 import type { MCPClients } from '../clients';
 import { unwrapSdkWorkPage } from '../sdk/sdkPage';
 
+const catalogListParams = { pageSize: 200 } as const;
+
 export async function listAdminCategories(clients: MCPClients) {
-  const response = await clients.backend.mcp.mcpAdmin.listCategories();
+  const response = await clients.backend.mcp.mcpAdmin.listCategories(catalogListParams);
   return unwrapSdkWorkPage<McpServerCategoryRecord>(response).items;
 }
 
@@ -32,7 +34,7 @@ export async function upsertAdminCategory(
 }
 
 export async function listAdminServers(clients: MCPClients) {
-  const response = await clients.backend.mcp.mcpAdmin.listServers();
+  const response = await clients.backend.mcp.mcpAdmin.listServers(catalogListParams);
   return unwrapSdkWorkPage<McpServerRecord>(response).items;
 }
 
@@ -53,7 +55,7 @@ export async function deleteAdminServer(clients: MCPClients, serverKey: string) 
 }
 
 export async function listAdminConnectors(clients: MCPClients, serverId: string) {
-  const response = await clients.backend.mcp.mcpAdmin.listConnectors(serverId);
+  const response = await clients.backend.mcp.mcpAdmin.listConnectors(serverId, catalogListParams);
   return unwrapSdkWorkPage<McpConnectorRecord>(response).items;
 }
 
@@ -103,7 +105,7 @@ export async function upsertAdminPrompt(
 }
 
 export async function listAdminInvocations(clients: MCPClients) {
-  const response = await clients.backend.mcp.mcpAdmin.listInvocations();
+  const response = await clients.backend.mcp.mcpAdmin.listInvocations({ pageSize: 100 });
   return unwrapSdkWorkPage<McpInvocationRecord>(response).items;
 }
 

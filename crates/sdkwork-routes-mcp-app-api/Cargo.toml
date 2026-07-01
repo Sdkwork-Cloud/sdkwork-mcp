@@ -14,7 +14,7 @@ sdkwork-intelligence-mcp-service = { path = "../sdkwork-intelligence-mcp-service
 sdkwork-routes-mcp-shared = { path = "../sdkwork-routes-mcp-shared" }
 sdkwork-mcp-contract.workspace = true
 sdkwork-web-axum.workspace = true
-sdkwork-web-bootstrap = { path = "../../../sdkwork-web-framework/crates/sdkwork-web-bootstrap" }
+sdkwork-web-bootstrap = { workspace = true }
 sdkwork-web-core.workspace = true
 serde.workspace = true
 serde_json.workspace = true

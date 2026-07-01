@@ -1,5 +1,7 @@
-# Integrator Guide
+# Integrator Guide (PC surface)
 
-SDK consumption, API boundaries, and integration examples.
+PC consumes generated `sdkwork-mcp-app-sdk` (marketplace/console) and `sdkwork-mcp-backend-sdk` (admin). Icon uploads use `@sdkwork/drive-app-sdk` on admin surfaces only.
 
-See `DOCUMENTATION_SPEC.md` section 2.
+Canonical integration contract:
+
+[../../../../docs/guides/integrator/README.md](../../../../docs/guides/integrator/README.md)

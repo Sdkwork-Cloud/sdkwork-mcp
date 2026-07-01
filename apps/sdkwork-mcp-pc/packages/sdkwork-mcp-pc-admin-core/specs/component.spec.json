@@ -10,13 +10,27 @@
     "domain": "intelligence",
     "capability": "mcp",
     "surface": "backend-admin",
-    "languages": ["typescript"],
+    "languages": [
+      "typescript"
+    ],
     "generated": false,
-    "manifests": ["package.json"]
+    "manifests": [
+      "package.json"
+    ]
   },
   "contracts": {
-    "publicExports": ["."],
-    "sdkClients": ["sdkwork-mcp-backend-sdk"],
-    "dependencyComposition": "../../../specs/dependency.composition.json"
+    "publicExports": [
+      "."
+    ],
+    "sdkClients": [
+      "sdkwork-mcp-backend-sdk"
+    ],
+    "sdkDependencies": [
+      {
+        "workspace": "sdkwork-mcp-backend-sdk",
+        "surface": "backend-api",
+        "credentialMode": "authenticated-backend-admin"
+      }
+    ]
   }
 }

@@ -347,31 +347,76 @@ function resourceResponse(itemRef) {
   return typedSdkWorkResourceResponse(itemRef);
 }
 
+function listQueryParameters() {
+  return [
+    {
+      name: "page",
+      in: "query",
+      required: false,
+      description: "One-based page index for offset pagination. Default 1.",
+      schema: { type: "integer", format: "int32", minimum: 1, default: 1 },
+    },
+    {
+      name: "page_size",
+      in: "query",
+      required: false,
+      description: "Page size for offset pagination. Default 20, maximum 200.",
+      schema: { type: "integer", format: "int32", minimum: 1, maximum: 200, default: 20 },
+    },
+    {
+      name: "cursor",
+      in: "query",
+      required: false,
+      description: "Opaque cursor token from a previous list response pageInfo.nextCursor.",
+      schema: { type: "string", minLength: 1, maxLength: 512 },
+    },
+    {
+      name: "q",
+      in: "query",
+      required: false,
+      description: "Generic free-text search keyword.",
+      schema: { type: "string", maxLength: 256 },
+    },
+  ];
+}
+
+function invocationListParameters() {
+  return [
+    ...listQueryParameters(),
+    {
+      name: "server_id",
+      in: "query",
+      required: false,
+      schema: { type: "integer", format: "int64" },
+    },
+  ];
+}
+
 const appRoutes = [
-  route("get", "/app/v3/api/mcp/categories", "mcp.listCategories", listResponse("#/components/schemas/McpServerCategoryRecord")),
-  route("get", "/app/v3/api/mcp/servers", "mcp.listServers", listResponse("#/components/schemas/McpServerRecord")),
+  route("get", "/app/v3/api/mcp/categories", "mcp.listCategories", listResponse("#/components/schemas/McpServerCategoryRecord"), listQueryParameters()),
+  route("get", "/app/v3/api/mcp/servers", "mcp.listServers", listResponse("#/components/schemas/McpServerRecord"), listQueryParameters()),
   route("get", "/app/v3/api/mcp/servers/{serverKey}", "mcp.getServer", resourceResponse("#/components/schemas/McpServerRecord"), [pathParam("serverKey")]),
-  route("get", "/app/v3/api/mcp/servers/{serverId}/tools", "mcp.listTools", listResponse("#/components/schemas/McpToolRecord"), [pathParamInt("serverId")]),
+  route("get", "/app/v3/api/mcp/servers/{serverId}/tools", "mcp.listTools", listResponse("#/components/schemas/McpToolRecord"), [pathParamInt("serverId"), ...listQueryParameters()]),
   route("get", "/app/v3/api/mcp/servers/{serverId}/tools/{toolKey}", "mcp.getTool", resourceResponse("#/components/schemas/McpToolRecord"), [pathParamInt("serverId"), pathParam("toolKey")]),
-  route("get", "/app/v3/api/mcp/servers/{serverId}/resources", "mcp.listResources", listResponse("#/components/schemas/McpResourceRecord"), [pathParamInt("serverId")]),
-  route("get", "/app/v3/api/mcp/servers/{serverId}/prompts", "mcp.listPrompts", listResponse("#/components/schemas/McpPromptRecord"), [pathParamInt("serverId")]),
-  route("get", "/app/v3/api/mcp/invocations", "mcp.listInvocations", listResponse("#/components/schemas/McpInvocationRecord")),
+  route("get", "/app/v3/api/mcp/servers/{serverId}/resources", "mcp.listResources", listResponse("#/components/schemas/McpResourceRecord"), [pathParamInt("serverId"), ...listQueryParameters()]),
+  route("get", "/app/v3/api/mcp/servers/{serverId}/prompts", "mcp.listPrompts", listResponse("#/components/schemas/McpPromptRecord"), [pathParamInt("serverId"), ...listQueryParameters()]),
+  route("get", "/app/v3/api/mcp/invocations", "mcp.listInvocations", listResponse("#/components/schemas/McpInvocationRecord"), invocationListParameters()),
 ];
 
 const backendRoutes = [
-  route("get", "/backend/v3/api/mcp/categories", "mcpAdmin.listCategories", listResponse("#/components/schemas/McpServerCategoryRecord")),
+  route("get", "/backend/v3/api/mcp/categories", "mcpAdmin.listCategories", listResponse("#/components/schemas/McpServerCategoryRecord"), listQueryParameters()),
   route("post", "/backend/v3/api/mcp/categories", "mcpAdmin.upsertCategory", resourceResponse("#/components/schemas/McpServerCategoryRecord"), [], "UpsertMcpServerCategoryCommand"),
-  route("get", "/backend/v3/api/mcp/servers", "mcpAdmin.listServers", listResponse("#/components/schemas/McpServerRecord")),
+  route("get", "/backend/v3/api/mcp/servers", "mcpAdmin.listServers", listResponse("#/components/schemas/McpServerRecord"), listQueryParameters()),
   route("post", "/backend/v3/api/mcp/servers", "mcpAdmin.createServer", resourceResponse("#/components/schemas/McpServerRecord"), [], "CreateMcpServerCommand"),
   route("put", "/backend/v3/api/mcp/servers/{serverKey}", "mcpAdmin.updateServer", resourceResponse("#/components/schemas/McpServerRecord"), [pathParam("serverKey")], "UpdateMcpServerCommand"),
   route("delete", "/backend/v3/api/mcp/servers/{serverKey}", "mcpAdmin.deleteServer", resourceResponse("#/components/schemas/McpServerRecord"), [pathParam("serverKey")]),
-  route("get", "/backend/v3/api/mcp/servers/{serverId}/connectors", "mcpAdmin.listConnectors", listResponse("#/components/schemas/McpConnectorRecord"), [pathParamInt("serverId")]),
+  route("get", "/backend/v3/api/mcp/servers/{serverId}/connectors", "mcpAdmin.listConnectors", listResponse("#/components/schemas/McpConnectorRecord"), [pathParamInt("serverId"), ...listQueryParameters()]),
   route("post", "/backend/v3/api/mcp/servers/{serverId}/connectors", "mcpAdmin.upsertConnector", listResponse("#/components/schemas/McpConnectorRecord"), [pathParamInt("serverId")], "UpsertMcpConnectorCommand"),
   route("delete", "/backend/v3/api/mcp/servers/{serverId}/connectors/{connectorKey}", "mcpAdmin.deleteConnector", listResponse("#/components/schemas/McpConnectorRecord"), [pathParamInt("serverId"), pathParam("connectorKey")]),
   route("post", "/backend/v3/api/mcp/servers/{serverId}/tools", "mcpAdmin.upsertTool", listResponse("#/components/schemas/McpToolRecord"), [pathParamInt("serverId")], "UpsertMcpToolCommand"),
   route("post", "/backend/v3/api/mcp/servers/{serverId}/resources", "mcpAdmin.upsertResource", listResponse("#/components/schemas/McpResourceRecord"), [pathParamInt("serverId")], "UpsertMcpResourceCommand"),
   route("post", "/backend/v3/api/mcp/servers/{serverId}/prompts", "mcpAdmin.upsertPrompt", listResponse("#/components/schemas/McpPromptRecord"), [pathParamInt("serverId")], "UpsertMcpPromptCommand"),
-  route("get", "/backend/v3/api/mcp/invocations", "mcpAdmin.listInvocations", listResponse("#/components/schemas/McpInvocationRecord")),
+  route("get", "/backend/v3/api/mcp/invocations", "mcpAdmin.listInvocations", listResponse("#/components/schemas/McpInvocationRecord"), invocationListParameters()),
   route("post", "/backend/v3/api/mcp/invocations", "mcpAdmin.appendInvocation", resourceResponse("#/components/schemas/McpInvocationRecord"), [], "AppendMcpInvocationCommand"),
 ];
 

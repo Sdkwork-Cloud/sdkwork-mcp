@@ -13,6 +13,10 @@ function readFlutter(relativePath) {
   return fs.readFileSync(path.join(flutterRoot, relativePath), 'utf8');
 }
 
+function readText(relativePath) {
+  return fs.readFileSync(path.join(repoRoot, relativePath), 'utf8');
+}
+
 test('flutter app root uses sdkwork_mcp naming', () => {
   const pubspec = readFlutter('pubspec.yaml');
   assert.match(pubspec, /name: sdkwork_mcp_flutter_mobile/);
@@ -100,6 +104,7 @@ test('flutter app bootstrap wires session storage and environment', () => {
   const environment = readFlutter('lib/bootstrap/environment.dart');
   assert.match(environment, /SDKWORK_MCP_FLUTTER_APPLICATION_PUBLIC_HTTP_URL/);
   assert.match(environment, /8095/);
+  assert.doesNotMatch(environment, /DRIVE_APP_API_BASE_URL/);
   const appAuthGate = readFlutter('lib/app_auth_gate.dart');
   assert.match(appAuthGate, /Continue with Appbase/);
   assert.doesNotMatch(appAuthGate, /bootstrap ready|Dart SDK pending/i);
@@ -112,6 +117,7 @@ test('flutter marketplace service uses generated MCP app SDK client', () => {
   assert.match(service, /fetchMarketplaceCatalog/);
   assert.match(service, /client\.mcp\.listCategories/);
   assert.match(service, /client\.mcp\.listServers/);
+  assert.match(service, /_catalogPageSize/);
   assert.match(service, /client\.mcp\.getServer/);
   assert.doesNotMatch(service, /package:http\/http\.dart|HttpClient\(\)/i);
 });
@@ -134,6 +140,27 @@ test('mcp app sdk manifest declares flutter generated package', () => {
     manifest.generatedPackages.flutter.generatedOutput,
     /sdkwork-mcp-app-sdk-flutter\/generated\/server-openapi/,
   );
+});
+
+test('shared health probes are centralized in sdkwork-routes-mcp-shared', () => {
+  const sharedHealth = readText('crates/sdkwork-routes-mcp-shared/src/health.rs');
+  assert.match(sharedHealth, /DbReadinessCheck/);
+  assert.match(sharedHealth, /readyz_with_state/);
+  for (const crate of ['sdkwork-routes-mcp-app-api', 'sdkwork-routes-mcp-backend-api']) {
+    const health = readText(`crates/${crate}/src/health.rs`);
+    assert.match(health, /sdkwork_routes_mcp_shared::health/);
+  }
+});
+
+test('h5 core reuses sdkPage helper for SdkWorkPageData', () => {
+  const sdkPage = readText('apps/sdkwork-mcp-h5/packages/sdkwork-mcp-h5-core/src/sdk/sdkPage.ts');
+  assert.match(sdkPage, /@sdkwork\/utils/);
+  assert.match(sdkPage, /SdkWorkPageData/);
+  const marketplace = readText(
+    'apps/sdkwork-mcp-h5/packages/sdkwork-mcp-h5-core/src/services/marketplaceService.ts',
+  );
+  assert.match(marketplace, /from '\.\.\/sdk\/sdkPage'/);
+  assert.doesNotMatch(marketplace, /function unwrapSdkWorkPage/);
 });
 
 test('client app configs must not describe H5 as scaffold', () => {

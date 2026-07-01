@@ -25,7 +25,7 @@ This is the PC browser app surface for the root MCP application. Read `../../sdk
 ## Local Dictionary Structure
 
 - `AGENTS.md`: app-surface agent entrypoint and relative SDKWork spec index.
-- `specs/`: `component.spec.json`, `dependency.composition.json`, and admin permission catalog references.
+- `specs/`: `component.spec.json` and `*-core/specs/component.spec.json#contracts.sdkDependencies`.
 - `packages/sdkwork-mcp-pc-*`: PC React packages (`core`, `commons`, `hub`, `console`, `admin`, `admin-core`, `shell`) with npm scopes `@sdkwork/mcp-pc-*`.
 - `src/`: app bootstrap, shell entrypoint, and routes.
 - `vite.config.ts`, `tsconfig.json`: TypeScript and Vite build manifests.

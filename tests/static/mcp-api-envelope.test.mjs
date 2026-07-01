@@ -40,6 +40,8 @@ test('service ops return typed page and resource payloads', () => {
   const serviceOps = readText('crates/sdkwork-routes-mcp-shared/src/service_ops.rs');
   assert.match(serviceOps, /SdkWorkPageData/);
   assert.match(serviceOps, /SdkWorkResourceData/);
-  assert.match(serviceOps, /list_data\(items\)/);
-  assert.match(serviceOps, /item_data\(/);
+  assert.match(serviceOps, /paginate_items\(/);
+  assert.match(serviceOps, /page_data\(/);
+  assert.match(serviceOps, /SdkWorkListQuery/);
+  assert.match(serviceOps, /\.tags/);
 });

@@ -1,5 +1,8 @@
-# Operator Guide
+# Operator Guide (PC surface)
 
-Deployment, monitoring, and incident response entrypoints.
+PC client deployment follows the repository application topology.
 
-See `DOCUMENTATION_SPEC.md` section 2.
+| Topic | Document |
+| --- | --- |
+| Gateway health and release gates | [../../../../docs/guides/operator/README.md](../../../../docs/guides/operator/README.md) |
+| Pre-launch checklist | [../../../../docs/runbooks/README.md](../../../../docs/runbooks/README.md) |

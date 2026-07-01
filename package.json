@@ -5,15 +5,15 @@
   "type": "module",
   "packageManager": "pnpm@10.33.0",
   "dependencies": {
-    "@sdkwork/app-topology": "file:../sdkwork-app-topology",
-    "@sdkwork/utils": "file:../sdkwork-utils/packages/sdkwork-utils-typescript"
+    "@sdkwork/app-topology": "workspace:*",
+    "@sdkwork/utils": "workspace:*"
   },
   "scripts": {
     "dev": "pnpm --dir apps/sdkwork-mcp-pc dev",
     "build": "cargo build --workspace --release && pnpm --dir apps/sdkwork-mcp-pc build",
     "test": "cargo test --workspace && node --test tests/static/*.test.mjs tests/contract/*.test.mjs apps/sdkwork-mcp-pc/tests/*.test.mjs apps/sdkwork-mcp-h5/tests/*.test.mjs",
-    "check": "pnpm check:architecture-alignment && pnpm check:pnpm-script-standard && pnpm check:agent-workflow-standard && pnpm db:validate && pnpm topology:validate",
-    "verify": "pnpm check && pnpm test",
+    "check": "pnpm run check:app-composition && pnpm check:architecture-alignment && pnpm check:pnpm-script-standard && pnpm check:agent-workflow-standard && pnpm db:validate && pnpm topology:validate",
+    "verify": "pnpm check && pnpm test && pnpm run check:app-composition",
     "clean": "cargo clean",
     "typecheck": "pnpm --dir apps/sdkwork-mcp-pc typecheck",
     "lint": "pnpm typecheck",
@@ -44,6 +44,7 @@
     "start:pc": "pnpm --dir apps/sdkwork-mcp-pc dev",
     "start:h5": "pnpm --dir apps/sdkwork-mcp-h5 dev",
     "start:flutter": "cd apps/sdkwork-mcp-flutter-mobile && flutter run",
-    "workflow:build-client-surfaces": "pnpm --dir apps/sdkwork-mcp-pc build && pnpm --dir apps/sdkwork-mcp-h5 build"
+    "workflow:build-client-surfaces": "pnpm --dir apps/sdkwork-mcp-pc build && pnpm --dir apps/sdkwork-mcp-h5 build",
+    "check:app-composition": "node ../sdkwork-specs/tools/verify-repo.mjs --root ."
   }
 }

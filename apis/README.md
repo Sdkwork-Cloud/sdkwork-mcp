@@ -24,6 +24,8 @@ OpenAPI authorities for **sdkwork-mcp**. Materialized from route crates via `pnp
 
 Read-only: categories, servers, tools, resources, prompts, invocations.
 
+All list routes accept `SdkWorkListQuery` query parameters: `page` (default 1), `page_size` (default 20, max 200), `q` (free-text filter). Invocation lists also accept optional `server_id`. Success responses use `data.items` + `data.pageInfo` per `API_SPEC.md` section 14.1.
+
 ## Regenerate
 
 ```bash

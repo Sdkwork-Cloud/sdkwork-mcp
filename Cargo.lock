@@ -1886,8 +1886,11 @@ dependencies = [
  "sdkwork-intelligence-mcp-service",
  "sdkwork-mcp-contract",
  "sdkwork-utils-rust",
+ "sdkwork-web-bootstrap",
  "sdkwork-web-core",
  "serde",
+ "serde_json",
+ "sqlx",
 ]
 
 [[package]]

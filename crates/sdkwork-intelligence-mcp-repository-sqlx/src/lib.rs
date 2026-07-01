@@ -155,13 +155,32 @@ impl McpRepository for SqlxMcpRepository {
         postgres::upsert_prompt(&self.pool, record).await
     }
 
+    async fn count_invocations(
+        &self,
+        tenant_id: u64,
+        server_id: Option<u64>,
+        search: Option<&str>,
+    ) -> McpResult<u64> {
+        postgres::count_invocations(&self.pool, tenant_id, server_id, search).await
+    }
+
     async fn list_invocations(
         &self,
         tenant_id: u64,
         server_id: Option<u64>,
+        search: Option<&str>,
+        offset: u32,
         limit: u32,
     ) -> McpResult<Vec<McpInvocationRecord>> {
-        postgres::list_invocations(&self.pool, tenant_id, server_id, limit).await
+        postgres::list_invocations(
+            &self.pool,
+            tenant_id,
+            server_id,
+            search,
+            offset,
+            limit,
+        )
+        .await
     }
 
     async fn append_invocation(&self, record: McpInvocationRecord) -> McpResult<McpInvocationRecord> {

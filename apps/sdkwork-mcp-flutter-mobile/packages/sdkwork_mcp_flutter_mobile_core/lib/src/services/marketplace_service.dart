@@ -53,9 +53,11 @@ McpServerRecord? _readResourceItem(dynamic data) {
   return McpServerRecord.fromJson(Map<String, dynamic>.from(item));
 }
 
+const _catalogPageSize = 200;
+
 Future<MarketplaceCatalog> fetchMarketplaceCatalog(SdkworkAppClient client) async {
-  final categoriesResponse = await client.mcp.listCategories();
-  final serversResponse = await client.mcp.listServers();
+  final categoriesResponse = await client.mcp.listCategories(null, _catalogPageSize);
+  final serversResponse = await client.mcp.listServers(null, _catalogPageSize);
   return MarketplaceCatalog(
     categories: _readPageItems(
       categoriesResponse?.data,
@@ -79,9 +81,9 @@ Future<ServerDetailBundle> fetchServerDetail(
   }
   final serverId = server.id;
   final results = await Future.wait([
-    client.mcp.listTools(serverId),
-    client.mcp.listResources(serverId),
-    client.mcp.listPrompts(serverId),
+    client.mcp.listTools(serverId, null, _catalogPageSize),
+    client.mcp.listResources(serverId, null, _catalogPageSize),
+    client.mcp.listPrompts(serverId, null, _catalogPageSize),
   ]);
   return ServerDetailBundle(
     server: server,

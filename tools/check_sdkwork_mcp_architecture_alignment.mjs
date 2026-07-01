@@ -110,6 +110,16 @@ const pcDriveUpload = readText(
 assert(pcDriveUpload.includes('@sdkwork/drive-app-sdk'), 'PC admin drive upload must use @sdkwork/drive-app-sdk');
 assert(pcDriveUpload.includes('formatDrivePackageRef'), 'PC admin drive upload must format canonical drive URIs');
 
+const pcAdminPackageJson = readJson('apps/sdkwork-mcp-pc/packages/sdkwork-mcp-pc-admin/package.json');
+assert(
+  pcAdminPackageJson.dependencies?.['@sdkwork/drive-app-sdk'],
+  'PC admin package must depend on @sdkwork/drive-app-sdk',
+);
+
+const sharedHealth = readText('crates/sdkwork-routes-mcp-shared/src/health.rs');
+assert(sharedHealth.includes('DbReadinessCheck'), 'shared health must expose DbReadinessCheck');
+assert(sharedHealth.includes('ReadinessCheck'), 'shared health must implement web bootstrap ReadinessCheck');
+
 const contractSource = readText('crates/sdkwork-mcp-contract/src/records.rs');
 assert(
   contractSource.includes('McpServerRecord') || contractSource.includes('server_key'),
@@ -125,10 +135,13 @@ assert(pcPackageJson.dependencies?.['@sdkwork/utils'], 'PC app must depend on @s
 const h5PackageJson = readJson('apps/sdkwork-mcp-h5/package.json');
 assert(h5PackageJson.name?.includes('mcp'), 'H5 app package name must reference mcp');
 assert(h5PackageJson.dependencies?.['@sdkwork/utils'], 'H5 app must depend on @sdkwork/utils');
-assert(h5PackageJson.dependencies?.['@sdkwork/drive-app-sdk'], 'H5 app must depend on @sdkwork/drive-app-sdk');
+assert(
+  !h5PackageJson.dependencies?.['@sdkwork/drive-app-sdk'],
+  'H5 browse-only surface must not depend on @sdkwork/drive-app-sdk until upload UI exists',
+);
 
 const h5SdkClients = readText('apps/sdkwork-mcp-h5/src/bootstrap/sdkClients.ts');
-assert(h5SdkClients.includes('@sdkwork/drive-app-sdk'), 'H5 sdkClients must wire sdkwork-drive-app-sdk');
+assert(!h5SdkClients.includes('@sdkwork/drive-app-sdk'), 'H5 sdkClients must not wire drive SDK on browse-only surface');
 assert(
   fs.existsSync(path.join(repoRoot, 'apps/sdkwork-mcp-h5/packages/sdkwork-mcp-h5-core/src/sdk/mcpAppSdkClient.ts')),
   'H5 core must expose mcpAppSdkClient entrypoint',
@@ -151,6 +164,15 @@ assert(cargoToml.includes('sdkwork-routes-mcp-shared'), 'Cargo.toml must declare
 const sharedServiceOps = readText('crates/sdkwork-routes-mcp-shared/src/service_ops.rs');
 assert(sharedServiceOps.includes('list_categories'), 'shared service ops must expose list_categories');
 assert(sharedServiceOps.includes('append_invocation'), 'shared service ops must expose append_invocation');
+assert(sharedServiceOps.includes('SdkWorkListQuery'), 'shared service ops must accept SdkWorkListQuery');
+assert(sharedServiceOps.includes('.tags'), 'shared service ops server q filter must include tags');
+
+const runbooks = readText('docs/runbooks/README.md');
+assert(runbooks.includes('Pre-launch checklist'), 'runbooks must document pre-launch checklist');
+assert(!/See `DOCUMENTATION_SPEC\.md` section 2\.\s*$/m.test(runbooks), 'runbooks must not be placeholder-only');
+
+const sharedListQuery = readText('crates/sdkwork-routes-mcp-shared/src/list_query.rs');
+assert(sharedListQuery.includes('SdkWorkListQuery'), 'shared list query must expose SdkWorkListQuery');
 
 const sharedResponse = readText('crates/sdkwork-routes-mcp-shared/src/response.rs');
 assert(sharedResponse.includes('finish_api_json'), 'shared response must expose finish_api_json');
@@ -174,10 +196,12 @@ assert(
 const pcCoreService = readText('apps/sdkwork-mcp-pc/packages/sdkwork-mcp-pc-core/src/services/marketplaceService.ts');
 assert(pcCoreService.includes('fetchMarketplaceCatalog'), 'PC marketplaceService must expose fetchMarketplaceCatalog');
 assert(pcCoreService.includes('clients.app.mcp'), 'PC marketplaceService must use generated MCP app SDK');
+assert(pcCoreService.includes('catalogListParams'), 'PC marketplaceService must pass catalog page_size for list APIs');
 
 const pcAdminService = readText('apps/sdkwork-mcp-pc/packages/sdkwork-mcp-pc-core/src/services/adminMcpService.ts');
 assert(pcAdminService.includes('updateAdminServer'), 'PC adminMcpService must expose updateAdminServer');
 assert(pcAdminService.includes('mcpAdmin'), 'PC adminMcpService must use generated MCP backend SDK');
+assert(pcAdminService.includes('catalogListParams'), 'PC adminMcpService must pass catalog page_size for list APIs');
 
 const permissionsCatalog = readJson('specs/mcp-admin.permissions.json');
 assert(permissionsCatalog.permissions?.length >= 4, 'mcp-admin.permissions.json must declare admin permissions');
@@ -301,6 +325,7 @@ assert(!h5CoreSdkClient.includes('agentsAppSdkClient'), 'H5 mcpAppSdkClient must
 const h5MarketplaceService = readText('apps/sdkwork-mcp-h5/packages/sdkwork-mcp-h5-core/src/services/marketplaceService.ts');
 assert(h5MarketplaceService.includes('fetchMarketplaceCatalog'), 'H5 marketplaceService must expose fetchMarketplaceCatalog');
 assert(h5MarketplaceService.includes('client.mcp'), 'H5 marketplaceService must use generated MCP app SDK');
+assert(h5MarketplaceService.includes('catalogListParams'), 'H5 marketplaceService must pass catalog page_size for list APIs');
 
 const h5MarketplacePage = readText('apps/sdkwork-mcp-h5/packages/sdkwork-mcp-h5-mcp/src/pages/MarketplacePage.tsx');
 assert(h5MarketplacePage.includes('fetchMarketplaceCatalog'), 'H5 MarketplacePage must use fetchMarketplaceCatalog');

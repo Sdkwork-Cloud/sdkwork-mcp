@@ -25,6 +25,12 @@
     "sdkClients": [
       "sdkwork-mcp-app-sdk"
     ],
-    "dependencyComposition": "../../../specs/dependency.composition.json"
+    "sdkDependencies": [
+      {
+        "workspace": "sdkwork-mcp-app-sdk",
+        "surface": "app-api",
+        "credentialMode": "authenticated-app-api"
+      }
+    ]
   }
 }

@@ -27,7 +27,13 @@ client.setAuthToken('your-auth-token');
 client.setAccessToken('your-access-token');
 
 // Use the SDK
-const result = await client.mcp.mcpAdmin.listCategories();
+const params = {
+  page: 1,
+  page_size: 2,
+  cursor: 'cursor',
+  q: 'q',
+};
+const result = await client.mcp.mcpAdmin.listCategories(params);
 ```
 
 ## Authentication
@@ -62,7 +68,13 @@ const client = new SdkworkBackendClient({
 
 ```typescript
 // MCP mcpAdmin.listCategories
-const result = await client.mcp.mcpAdmin.listCategories();
+const params = {
+  page: 1,
+  page_size: 2,
+  cursor: 'cursor',
+  q: 'q',
+};
+const result = await client.mcp.mcpAdmin.listCategories(params);
 ```
 
 ## Error Handling
@@ -71,7 +83,13 @@ const result = await client.mcp.mcpAdmin.listCategories();
 import { SdkworkBackendClient, NetworkError, TimeoutError, AuthenticationError } from 'sdkwork-mcp-backend-sdk-generated-typescript';
 
 try {
-  const result = await client.mcp.mcpAdmin.listCategories();
+  const params = {
+    page: 1,
+    page_size: 2,
+    cursor: 'cursor',
+    q: 'q',
+  };
+  const result = await client.mcp.mcpAdmin.listCategories(params);
 } catch (error) {
   if (error instanceof AuthenticationError) {
     console.error('Authentication failed:', error.message);

@@ -18,6 +18,7 @@ version = "0.1.0"
 license = "AGPL-3.0-or-later"
 
 [workspace.dependencies]
+sdkwork-web-bootstrap = { path = "../sdkwork-web-framework/crates/sdkwork-web-bootstrap" }
 async-trait = "0.1"
 axum = { version = "0.8", features = ["json"] }
 serde = { version = "1", features = ["derive"] }

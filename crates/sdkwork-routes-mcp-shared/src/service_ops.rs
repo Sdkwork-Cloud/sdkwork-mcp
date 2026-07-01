@@ -5,7 +5,8 @@ use sdkwork_mcp_contract::{
 };
 use sdkwork_utils_rust::{SdkWorkPageData, SdkWorkResourceData};
 
-use crate::response::{item_data, list_data, ApiProblem, ApiResult};
+use crate::list_query::{McpInvocationListQuery, SdkWorkListQuery};
+use crate::response::{item_data, page_data, paginate_items, ApiProblem, ApiResult};
 
 impl From<McpServiceError> for ApiProblem {
     fn from(error: McpServiceError) -> Self {
@@ -17,20 +18,104 @@ impl From<McpServiceError> for ApiProblem {
     }
 }
 
+fn filter_by_keyword<T, F>(items: Vec<T>, query: &SdkWorkListQuery, matches: F) -> Vec<T>
+where
+    F: Fn(&T, &str) -> bool,
+{
+    let Some(keyword) = query.search_keyword() else {
+        return items;
+    };
+    let keyword = keyword.to_lowercase();
+    items
+        .into_iter()
+        .filter(|item| matches(item, keyword.as_str()))
+        .collect()
+}
+
+fn filter_categories(
+    items: Vec<McpServerCategoryRecord>,
+    query: &SdkWorkListQuery,
+) -> Vec<McpServerCategoryRecord> {
+    filter_by_keyword(items, query, |item, keyword| {
+        item.name.to_lowercase().contains(keyword)
+            || item.category_code.to_lowercase().contains(keyword)
+    })
+}
+
+fn filter_servers(items: Vec<McpServerRecord>, query: &SdkWorkListQuery) -> Vec<McpServerRecord> {
+    filter_by_keyword(items, query, |item, keyword| {
+        item.name.to_lowercase().contains(keyword)
+            || item.server_key.to_lowercase().contains(keyword)
+            || item
+                .description
+                .as_deref()
+                .unwrap_or("")
+                .to_lowercase()
+                .contains(keyword)
+            || item
+                .category_code
+                .as_deref()
+                .unwrap_or("")
+                .to_lowercase()
+                .contains(keyword)
+            || item
+                .tags
+                .iter()
+                .any(|tag| tag.to_lowercase().contains(keyword))
+    })
+}
+
+fn filter_connectors(
+    items: Vec<McpConnectorRecord>,
+    query: &SdkWorkListQuery,
+) -> Vec<McpConnectorRecord> {
+    filter_by_keyword(items, query, |item, keyword| {
+        item.connector_key.to_lowercase().contains(keyword)
+    })
+}
+
+fn filter_tools(items: Vec<McpToolRecord>, query: &SdkWorkListQuery) -> Vec<McpToolRecord> {
+    filter_by_keyword(items, query, |item, keyword| {
+        item.name.to_lowercase().contains(keyword)
+            || item.tool_key.to_lowercase().contains(keyword)
+    })
+}
+
+fn filter_resources(
+    items: Vec<McpResourceRecord>,
+    query: &SdkWorkListQuery,
+) -> Vec<McpResourceRecord> {
+    filter_by_keyword(items, query, |item, keyword| {
+        item.name.to_lowercase().contains(keyword)
+            || item.resource_key.to_lowercase().contains(keyword)
+    })
+}
+
+fn filter_prompts(items: Vec<McpPromptRecord>, query: &SdkWorkListQuery) -> Vec<McpPromptRecord> {
+    filter_by_keyword(items, query, |item, keyword| {
+        item.name.to_lowercase().contains(keyword)
+            || item.prompt_key.to_lowercase().contains(keyword)
+    })
+}
+
 pub async fn list_categories<R: McpRepository>(
     service: &McpService<R>,
     tenant_id: u64,
+    query: &SdkWorkListQuery,
 ) -> ApiResult<SdkWorkPageData<McpServerCategoryRecord>> {
+    query.validate()?;
     let items = service.list_categories(tenant_id).await?;
-    Ok(list_data(items))
+    Ok(paginate_items(filter_categories(items, query), query))
 }
 
 pub async fn list_servers<R: McpRepository>(
     service: &McpService<R>,
     tenant_id: u64,
+    query: &SdkWorkListQuery,
 ) -> ApiResult<SdkWorkPageData<McpServerRecord>> {
+    query.validate()?;
     let items = service.list_servers(tenant_id).await?;
-    Ok(list_data(items))
+    Ok(paginate_items(filter_servers(items, query), query))
 }
 
 pub async fn get_server<R: McpRepository>(
@@ -46,18 +131,22 @@ pub async fn list_connectors<R: McpRepository>(
     service: &McpService<R>,
     tenant_id: u64,
     server_id: u64,
+    query: &SdkWorkListQuery,
 ) -> ApiResult<SdkWorkPageData<McpConnectorRecord>> {
+    query.validate()?;
     let items = service.list_connectors(tenant_id, server_id).await?;
-    Ok(list_data(items))
+    Ok(paginate_items(filter_connectors(items, query), query))
 }
 
 pub async fn list_tools<R: McpRepository>(
     service: &McpService<R>,
     tenant_id: u64,
     server_id: u64,
+    query: &SdkWorkListQuery,
 ) -> ApiResult<SdkWorkPageData<McpToolRecord>> {
+    query.validate()?;
     let items = service.list_tools(tenant_id, server_id).await?;
-    Ok(list_data(items))
+    Ok(paginate_items(filter_tools(items, query), query))
 }
 
 pub async fn get_tool<R: McpRepository>(
@@ -74,28 +163,41 @@ pub async fn list_resources<R: McpRepository>(
     service: &McpService<R>,
     tenant_id: u64,
     server_id: u64,
+    query: &SdkWorkListQuery,
 ) -> ApiResult<SdkWorkPageData<McpResourceRecord>> {
+    query.validate()?;
     let items = service.list_resources(tenant_id, server_id).await?;
-    Ok(list_data(items))
+    Ok(paginate_items(filter_resources(items, query), query))
 }
 
 pub async fn list_prompts<R: McpRepository>(
     service: &McpService<R>,
     tenant_id: u64,
     server_id: u64,
+    query: &SdkWorkListQuery,
 ) -> ApiResult<SdkWorkPageData<McpPromptRecord>> {
+    query.validate()?;
     let items = service.list_prompts(tenant_id, server_id).await?;
-    Ok(list_data(items))
+    Ok(paginate_items(filter_prompts(items, query), query))
 }
 
 pub async fn list_invocations<R: McpRepository>(
     service: &McpService<R>,
     tenant_id: u64,
-    server_id: Option<u64>,
-    limit: u32,
+    query: &McpInvocationListQuery,
 ) -> ApiResult<SdkWorkPageData<McpInvocationRecord>> {
-    let items = service.list_invocations(tenant_id, server_id, limit).await?;
-    Ok(list_data(items))
+    query.validate()?;
+    let page_size = query.list.effective_page_size() as u32;
+    let page = query.list.effective_page() as u32;
+    let offset = (page.saturating_sub(1)) * page_size;
+    let search = query.list.search_keyword();
+    let total = service
+        .count_invocations(tenant_id, query.server_id, search)
+        .await?;
+    let items = service
+        .list_invocations(tenant_id, query.server_id, search, offset, page_size)
+        .await?;
+    Ok(page_data(items, total as usize, &query.list))
 }
 
 pub async fn append_invocation<R: McpRepository>(

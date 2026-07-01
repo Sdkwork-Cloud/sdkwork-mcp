@@ -1102,46 +1102,162 @@ pub async fn upsert_prompt(pool: &PgPool, record: McpPromptRecord) -> McpResult<
     row_to_prompt(&row)
 }
 
+pub async fn count_invocations(
+    pool: &PgPool,
+    tenant_id: u64,
+    server_id: Option<u64>,
+    search: Option<&str>,
+) -> McpResult<u64> {
+    let search_pattern = search.map(|value| format!("%{value}%"));
+    let count: i64 = match (server_id, search_pattern.as_deref()) {
+        (Some(server_id), Some(pattern)) => {
+            sqlx::query_scalar(
+                r#"
+                SELECT COUNT(*)::bigint
+                FROM ai_mcp_invocation_log
+                WHERE tenant_id = $1 AND server_id = $2 AND target_key ILIKE $3
+                "#,
+            )
+            .bind(tenant_id as i64)
+            .bind(server_id as i64)
+            .bind(pattern)
+            .fetch_one(pool)
+            .await
+            .map_err(map_sqlx)?
+        }
+        (Some(server_id), None) => {
+            sqlx::query_scalar(
+                r#"
+                SELECT COUNT(*)::bigint
+                FROM ai_mcp_invocation_log
+                WHERE tenant_id = $1 AND server_id = $2
+                "#,
+            )
+            .bind(tenant_id as i64)
+            .bind(server_id as i64)
+            .fetch_one(pool)
+            .await
+            .map_err(map_sqlx)?
+        }
+        (None, Some(pattern)) => {
+            sqlx::query_scalar(
+                r#"
+                SELECT COUNT(*)::bigint
+                FROM ai_mcp_invocation_log
+                WHERE tenant_id = $1 AND target_key ILIKE $2
+                "#,
+            )
+            .bind(tenant_id as i64)
+            .bind(pattern)
+            .fetch_one(pool)
+            .await
+            .map_err(map_sqlx)?
+        }
+        (None, None) => {
+            sqlx::query_scalar(
+                r#"
+                SELECT COUNT(*)::bigint
+                FROM ai_mcp_invocation_log
+                WHERE tenant_id = $1
+                "#,
+            )
+            .bind(tenant_id as i64)
+            .fetch_one(pool)
+            .await
+            .map_err(map_sqlx)?
+        }
+    };
+    Ok(count.max(0) as u64)
+}
+
 pub async fn list_invocations(
     pool: &PgPool,
     tenant_id: u64,
     server_id: Option<u64>,
+    search: Option<&str>,
+    offset: u32,
     limit: u32,
 ) -> McpResult<Vec<McpInvocationRecord>> {
-    let limit = limit.clamp(1, 500) as i64;
-    let rows = if let Some(server_id) = server_id {
-        let query = format!(
-            r#"
-            SELECT {INVOCATION_SELECT}
-            FROM ai_mcp_invocation_log
-            WHERE tenant_id = $1 AND server_id = $2
-            ORDER BY invoked_at DESC
-            LIMIT $3
-            "#
-        );
-        sqlx::query(&query)
-            .bind(tenant_id as i64)
-            .bind(server_id as i64)
-            .bind(limit)
-            .fetch_all(pool)
-            .await
-            .map_err(map_sqlx)?
-    } else {
-        let query = format!(
-            r#"
-            SELECT {INVOCATION_SELECT}
-            FROM ai_mcp_invocation_log
-            WHERE tenant_id = $1
-            ORDER BY invoked_at DESC
-            LIMIT $2
-            "#
-        );
-        sqlx::query(&query)
-            .bind(tenant_id as i64)
-            .bind(limit)
-            .fetch_all(pool)
-            .await
-            .map_err(map_sqlx)?
+    let limit = limit.clamp(1, 200) as i64;
+    let offset = offset as i64;
+    let search_pattern = search.map(|value| format!("%{value}%"));
+    let rows = match (server_id, search_pattern.as_deref()) {
+        (Some(server_id), Some(pattern)) => {
+            let query = format!(
+                r#"
+                SELECT {INVOCATION_SELECT}
+                FROM ai_mcp_invocation_log
+                WHERE tenant_id = $1 AND server_id = $2 AND target_key ILIKE $3
+                ORDER BY invoked_at DESC
+                LIMIT $4 OFFSET $5
+                "#
+            );
+            sqlx::query(&query)
+                .bind(tenant_id as i64)
+                .bind(server_id as i64)
+                .bind(pattern)
+                .bind(limit)
+                .bind(offset)
+                .fetch_all(pool)
+                .await
+                .map_err(map_sqlx)?
+        }
+        (Some(server_id), None) => {
+            let query = format!(
+                r#"
+                SELECT {INVOCATION_SELECT}
+                FROM ai_mcp_invocation_log
+                WHERE tenant_id = $1 AND server_id = $2
+                ORDER BY invoked_at DESC
+                LIMIT $3 OFFSET $4
+                "#
+            );
+            sqlx::query(&query)
+                .bind(tenant_id as i64)
+                .bind(server_id as i64)
+                .bind(limit)
+                .bind(offset)
+                .fetch_all(pool)
+                .await
+                .map_err(map_sqlx)?
+        }
+        (None, Some(pattern)) => {
+            let query = format!(
+                r#"
+                SELECT {INVOCATION_SELECT}
+                FROM ai_mcp_invocation_log
+                WHERE tenant_id = $1 AND target_key ILIKE $2
+                ORDER BY invoked_at DESC
+                LIMIT $3 OFFSET $4
+                "#
+            );
+            sqlx::query(&query)
+                .bind(tenant_id as i64)
+                .bind(pattern)
+                .bind(limit)
+                .bind(offset)
+                .fetch_all(pool)
+                .await
+                .map_err(map_sqlx)?
+        }
+        (None, None) => {
+            let query = format!(
+                r#"
+                SELECT {INVOCATION_SELECT}
+                FROM ai_mcp_invocation_log
+                WHERE tenant_id = $1
+                ORDER BY invoked_at DESC
+                LIMIT $2 OFFSET $3
+                "#
+            );
+            sqlx::query(&query)
+                .bind(tenant_id as i64)
+                .bind(limit)
+                .bind(offset)
+                .fetch_all(pool)
+                .await
+                .map_err(map_sqlx)?
+        }
     };
     rows.iter().map(row_to_invocation).collect()
 }

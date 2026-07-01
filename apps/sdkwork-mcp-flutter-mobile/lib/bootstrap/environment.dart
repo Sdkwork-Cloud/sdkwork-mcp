@@ -2,13 +2,11 @@ class McpEnvironment {
   const McpEnvironment({
     required this.apiBaseUrl,
     required this.backendApiBaseUrl,
-    required this.driveAppApiBaseUrl,
     required this.appbaseLoginUrl,
   });
 
   final String apiBaseUrl;
   final String backendApiBaseUrl;
-  final String driveAppApiBaseUrl;
   final String appbaseLoginUrl;
 }
 
@@ -41,10 +39,6 @@ McpEnvironment resolveEnvironment() {
     backendApiBaseUrl: _normalizeBaseUrl(
       const String.fromEnvironment('SDKWORK_MCP_FLUTTER_BACKEND_API_BASE_URL'),
       _deriveBackendApiBaseUrl(applicationPublicHttpUrl),
-    ),
-    driveAppApiBaseUrl: _normalizeBaseUrl(
-      const String.fromEnvironment('SDKWORK_MCP_FLUTTER_DRIVE_APP_API_BASE_URL'),
-      _deriveAppApiBaseUrl(applicationPublicHttpUrl),
     ),
     appbaseLoginUrl: _normalizeBaseUrl(
       const String.fromEnvironment('SDKWORK_MCP_FLUTTER_APPBASE_LOGIN_URL'),

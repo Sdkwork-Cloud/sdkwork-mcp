@@ -22,8 +22,7 @@
   "contracts": {
     "sdkDependencies": [
       "sdkwork-mcp-app-sdk"
-    ],
-    "dependencyComposition": "specs/dependency.composition.json"
+    ]
   },
   "verification": {
     "commands": [

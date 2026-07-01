@@ -12,22 +12,30 @@
   "mode": "apply",
   "hasChanges": true,
   "hasDestructiveChanges": false,
-  "changeFingerprint": "0f649f147c330c8eceae42bbb1181508b96ec1fb4d46581d8fbd2ae8f5106bd2",
+  "changeFingerprint": "752f08aadfa63e7b576369c589806eb77749eae6b153a4fdb88917290fde1ee5",
   "changeImpact": {
     "schemaVersion": 1,
     "areas": [
-      "models"
+      "api-surface",
+      "documentation"
     ],
     "details": [
       {
-        "area": "models",
+        "area": "api-surface",
         "paths": [
-          "lib/src/models.dart"
+          "lib/src/api/api.dart",
+          "lib/src/api/mcp.dart"
+        ]
+      },
+      {
+        "area": "documentation",
+        "paths": [
+          "README.md"
         ]
       }
     ],
     "requiresVerification": true,
-    "summary": "Detected impact areas: models. Verification is required."
+    "summary": "Detected impact areas: api-surface, documentation. Verification is required."
   },
   "executionDecision": {
     "schemaVersion": 1,
@@ -48,7 +56,7 @@
         "id": "verify-check",
         "title": "Unified package check",
         "required": true,
-        "rationale": "Validate the generated package with the unified publish helper. Triggered by: models.",
+        "rationale": "Validate the generated package with the unified publish helper. Triggered by: api-surface, documentation.",
         "workingDirectory": "E:\\sdkwork-space\\sdkwork-mcp\\sdks\\sdkwork-mcp-app-sdk\\sdkwork-mcp-app-sdk-flutter\\generated\\server-openapi",
         "command": "node",
         "args": [
@@ -67,13 +75,13 @@
   "verificationPlan": {
     "shouldRun": true,
     "runPhase": "now",
-    "summary": "Detected impact areas: models. Verification is required. Run the required verification commands now against the generated SDK output.",
+    "summary": "Detected impact areas: api-surface, documentation. Verification is required. Run the required verification commands now against the generated SDK output.",
     "steps": [
       {
         "id": "check",
         "title": "Unified package check",
         "required": true,
-        "rationale": "Validate the generated package with the unified publish helper. Triggered by: models.",
+        "rationale": "Validate the generated package with the unified publish helper. Triggered by: api-surface, documentation.",
         "workingDirectory": "E:\\sdkwork-space\\sdkwork-mcp\\sdks\\sdkwork-mcp-app-sdk\\sdkwork-mcp-app-sdk-flutter\\generated\\server-openapi",
         "command": "node",
         "args": [
@@ -112,16 +120,18 @@
   "syncSummary": {
     "dryRun": false,
     "controlPlaneEnabled": true,
-    "writtenFiles": 1,
+    "writtenFiles": 3,
     "skippedScaffoldFiles": 1,
-    "skippedUnchangedGeneratedFiles": 16,
+    "skippedUnchangedGeneratedFiles": 14,
     "deletedGeneratedFiles": 0,
     "changeSummaryPath": ".sdkwork/sdkwork-generator-changes.json",
-    "changeFingerprint": "0f649f147c330c8eceae42bbb1181508b96ec1fb4d46581d8fbd2ae8f5106bd2",
+    "changeFingerprint": "752f08aadfa63e7b576369c589806eb77749eae6b153a4fdb88917290fde1ee5",
     "changes": {
       "createdGeneratedFiles": [],
       "updatedGeneratedFiles": [
-        "lib/src/models.dart"
+        "lib/src/api/api.dart",
+        "lib/src/api/mcp.dart",
+        "README.md"
       ],
       "unchangedGeneratedFiles": [
         "bin/publish-core.mjs",
@@ -130,15 +140,13 @@
         "CHANGELOG.md",
         "lib/app_client.dart",
         "lib/sdkwork_mcp_app_sdk_generated_flutter.dart",
-        "lib/src/api/api.dart",
-        "lib/src/api/mcp.dart",
         "lib/src/api/paths.dart",
         "lib/src/api/response_helpers.dart",
         "lib/src/http/client.dart",
+        "lib/src/models.dart",
         "LICENSE",
         "pubspec_overrides.yaml",
         "pubspec.yaml",
-        "README.md",
         "sdkwork-sdk.json"
       ],
       "deletedGeneratedFiles": [],
@@ -151,29 +159,37 @@
     "impact": {
       "schemaVersion": 1,
       "areas": [
-        "models"
+        "api-surface",
+        "documentation"
       ],
       "details": [
         {
-          "area": "models",
+          "area": "api-surface",
           "paths": [
-            "lib/src/models.dart"
+            "lib/src/api/api.dart",
+            "lib/src/api/mcp.dart"
+          ]
+        },
+        {
+          "area": "documentation",
+          "paths": [
+            "README.md"
           ]
         }
       ],
       "requiresVerification": true,
-      "summary": "Detected impact areas: models. Verification is required."
+      "summary": "Detected impact areas: api-surface, documentation. Verification is required."
     },
     "verificationPlan": {
       "shouldRun": true,
       "runPhase": "now",
-      "summary": "Detected impact areas: models. Verification is required. Run the required verification commands now against the generated SDK output.",
+      "summary": "Detected impact areas: api-surface, documentation. Verification is required. Run the required verification commands now against the generated SDK output.",
       "steps": [
         {
           "id": "check",
           "title": "Unified package check",
           "required": true,
-          "rationale": "Validate the generated package with the unified publish helper. Triggered by: models.",
+          "rationale": "Validate the generated package with the unified publish helper. Triggered by: api-surface, documentation.",
           "workingDirectory": "E:\\sdkwork-space\\sdkwork-mcp\\sdks\\sdkwork-mcp-app-sdk\\sdkwork-mcp-app-sdk-flutter\\generated\\server-openapi",
           "command": "node",
           "args": [

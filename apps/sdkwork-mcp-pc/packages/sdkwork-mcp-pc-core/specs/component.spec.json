@@ -10,13 +10,33 @@
     "domain": "intelligence",
     "capability": "core",
     "surface": "app",
-    "languages": ["typescript"],
+    "languages": [
+      "typescript"
+    ],
     "generated": false,
-    "manifests": ["package.json"]
+    "manifests": [
+      "package.json"
+    ]
   },
   "contracts": {
-    "publicExports": ["."],
-    "sdkClients": ["sdkwork-mcp-app-sdk", "sdkwork-mcp-backend-sdk"],
-    "dependencyComposition": "../../../specs/dependency.composition.json"
+    "publicExports": [
+      "."
+    ],
+    "sdkClients": [
+      "sdkwork-mcp-app-sdk",
+      "sdkwork-mcp-backend-sdk"
+    ],
+    "sdkDependencies": [
+      {
+        "workspace": "sdkwork-drive-app-sdk",
+        "surface": "app-api",
+        "credentialMode": "authenticated-app-api"
+      },
+      {
+        "workspace": "sdkwork-mcp-app-sdk",
+        "surface": "app-api",
+        "credentialMode": "authenticated-app-api"
+      }
+    ]
   }
 }

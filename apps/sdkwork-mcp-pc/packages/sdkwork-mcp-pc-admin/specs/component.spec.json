@@ -10,13 +10,20 @@
     "domain": "intelligence",
     "capability": "admin",
     "surface": "backend-admin",
-    "languages": ["typescript"],
+    "languages": [
+      "typescript"
+    ],
     "generated": false,
-    "manifests": ["package.json"]
+    "manifests": [
+      "package.json"
+    ]
   },
   "contracts": {
-    "publicExports": ["."],
-    "sdkClients": ["sdkwork-mcp-backend-sdk"],
-    "dependencyComposition": "../../../specs/dependency.composition.json"
+    "publicExports": [
+      "."
+    ],
+    "sdkClients": [
+      "sdkwork-mcp-backend-sdk"
+    ]
   }
 }

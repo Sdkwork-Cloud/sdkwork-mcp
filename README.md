@@ -1,4 +1,5 @@
 # SDKWork MCP
+repository-kind: application
 
 Model Context Protocol (MCP) connector registry, server management, tools/resources/prompts catalog, and multi-client surfaces (PC, H5, Flutter).
 
@@ -24,7 +25,8 @@ pnpm start:pc    # http://localhost:5175/mcp-hub
 - PostgreSQL `ai_mcp_*` tables (contract v1.1.0)
 - Admin API: `/backend/v3/api/mcp/*`
 - App read API: `/app/v3/api/mcp/*`
-- Shared route layer: `crates/sdkwork-routes-mcp-shared` (`service_ops`, `SdkWorkApiResponse` envelope, record builders)
+- HTTP success: `SdkWorkApiResponse` (`code`, `data`, `traceId`); lists use `SdkWorkListQuery` (`page`, `page_size`, `q`)
+- Shared route layer: `crates/sdkwork-routes-mcp-shared` (`service_ops`, envelope mapping, record builders)
 
 ## Docs
 
@@ -40,4 +42,5 @@ pnpm start:pc    # http://localhost:5175/mcp-hub
 pnpm verify          # architecture + db + topology + cargo + static tests
 pnpm api:check       # OpenAPI materialization drift
 pnpm sdk:generate:check
+node ../sdkwork-specs/tools/check-api-response-envelope.mjs --workspace .
 ```

@@ -1,5 +1,5 @@
-import type { SdkworkAppClient as MCPAppClient } from 'sdkwork-mcp-app-sdk-generated-typescript/src/sdk';
-import type { SdkworkBackendClient } from 'sdkwork-mcp-backend-sdk-generated-typescript/src/sdk';
+import type { SdkworkAppClient as MCPAppClient } from '@sdkwork/mcp-app-sdk';
+import type { SdkworkBackendClient } from '@sdkwork/mcp-backend-sdk';
 import type { SdkworkDriveAppClient } from '@sdkwork/drive-app-sdk';
 
 export interface SdkworkMCPPcSdkClientInventory {

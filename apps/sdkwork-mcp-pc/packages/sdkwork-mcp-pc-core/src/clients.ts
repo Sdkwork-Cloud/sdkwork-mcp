@@ -1,10 +1,10 @@
 import { createClient as createDriveSdkClient, type SdkworkDriveAppClient } from '@sdkwork/drive-app-sdk';
 import type { AuthTokenManager } from '@sdkwork/sdk-common';
-import { createClient as createAppSdkClient, type SdkworkAppClient } from 'sdkwork-mcp-app-sdk-generated-typescript/src/sdk';
+import { createClient as createAppSdkClient, type SdkworkAppClient } from '@sdkwork/mcp-app-sdk';
 import {
   createClient as createBackendSdkClient,
   type SdkworkBackendClient,
-} from 'sdkwork-mcp-backend-sdk-generated-typescript/src/sdk';
+} from '@sdkwork/mcp-backend-sdk';
 import { isBlank, trim } from '@sdkwork/utils';
 import { normalizeApiBaseUrl, readRuntimeEnv } from '@sdkwork/mcp-pc-commons/runtime';
 

@@ -1,8 +1,8 @@
 import {
   createClient,
   type SdkworkAppClient as GeneratedSdkworkMCPAppClient,
-} from "sdkwork-mcp-app-sdk-generated-typescript/src/sdk";
-import type { SdkworkAppConfig } from "sdkwork-mcp-app-sdk-generated-typescript/src/types/common";
+} from "@sdkwork/mcp-app-sdk";
+import type { SdkworkAppConfig } from "@sdkwork/mcp-app-sdk";
 import type { Interceptors } from "@sdkwork/sdk-common";
 
 import {
@@ -18,7 +18,7 @@ export type SdkworkMCPAppClient = GeneratedSdkworkMCPAppClient;
 export type SdkworkMCPAppClientConfig = SdkworkAppConfig & {
   interceptors?: Interceptors;
 };
-export type { McpServerRecord } from "sdkwork-mcp-app-sdk-generated-typescript/src/types/mcp-server-record";
+export type { McpServerRecord } from "@sdkwork/mcp-app-sdk";
 
 let mcpAppSdkClient: SdkworkMCPAppClient | null = null;
 

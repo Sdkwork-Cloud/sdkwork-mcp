@@ -5,7 +5,7 @@ import type {
   McpServerCategoryRecord,
   McpServerRecord,
   McpToolRecord,
-} from 'sdkwork-mcp-app-sdk-generated-typescript/src/types';
+} from '@sdkwork/mcp-app-sdk';
 
 import type { MCPClients } from '../clients';
 import { unwrapSdkWorkPage } from '../sdk/sdkPage';

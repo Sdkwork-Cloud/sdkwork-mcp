@@ -8,11 +8,11 @@ import { createClient as createDriveSdkClient, type SdkworkDriveAppClient } from
 import type { IamAppContext, IamDeploymentMode, IamEnvironment } from '@sdkwork/iam-contracts';
 import type { IamRuntime } from '@sdkwork/iam-runtime';
 import { normalizeSdkworkApiBaseUrl } from '@sdkwork/runtime-bootstrap';
-import { createClient as createMCPAppSdkClient, type SdkworkAppClient as MCPAppClient } from 'sdkwork-mcp-app-sdk-generated-typescript/src/sdk';
+import { createClient as createMCPAppSdkClient, type SdkworkAppClient as MCPAppClient } from '@sdkwork/mcp-app-sdk';
 import {
   createClient as createMCPBackendSdkClient,
   type SdkworkBackendClient,
-} from 'sdkwork-mcp-backend-sdk-generated-typescript/src/sdk';
+} from '@sdkwork/mcp-backend-sdk';
 
 import {
   resolveAppbaseAppApiBaseUrl,

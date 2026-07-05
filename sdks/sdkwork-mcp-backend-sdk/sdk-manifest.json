@@ -93,5 +93,26 @@
       "path": "/backend/v3/api/mcp/servers/{serverId}/tools"
     }
   ],
-  "managedBy": "tools/mcp_sdk_generator_runner.mjs"
+  "managedBy": "tools/mcp_sdk_generator_runner.mjs",
+  "packageName": "@sdkwork/mcp-backend-sdk",
+  "transportPackageName": "sdkwork-mcp-backend-sdk-generated-typescript",
+  "typescript": {
+    "composedRoot": "sdkwork-mcp-backend-sdk-typescript",
+    "composedEntry": "sdkwork-mcp-backend-sdk-typescript/src/index.ts",
+    "transportRoot": "sdkwork-mcp-backend-sdk-typescript/generated/server-openapi",
+    "transportEntry": "sdkwork-mcp-backend-sdk-typescript/generated/server-openapi/src/index.ts"
+  },
+  "workspace": "sdkwork-mcp-backend-sdk",
+  "authoritySpec": "../../apis/backend-api/mcp/mcp-backend-api.openapi.json",
+  "derivedSpecs": {
+    "default": "../../apis/backend-api/mcp/mcp-backend-api.openapi.json"
+  },
+  "discoverySurface": {
+    "sdkTarget": "backend",
+    "apiPrefix": "/backend/v3/api",
+    "generatedProtocols": [
+      "http-openapi"
+    ],
+    "manualTransports": []
+  }
 }

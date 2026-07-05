@@ -14,7 +14,7 @@ import type {
   UpsertMcpResourceCommand,
   UpsertMcpServerCategoryCommand,
   UpsertMcpToolCommand,
-} from 'sdkwork-mcp-backend-sdk-generated-typescript/src/types';
+} from '@sdkwork/mcp-backend-sdk';
 
 import type { MCPClients } from '../clients';
 import { unwrapSdkWorkPage } from '../sdk/sdkPage';

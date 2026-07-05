@@ -23,7 +23,7 @@ export default defineConfig(({ mode }) => {
     resolve: {
       alias: {
         '@': path.resolve(__dirname, '.'),
-        '@sdkwork/iam-app-sdk': path.resolve(iamRoot, 'sdks/sdkwork-iam-app-sdk/sdkwork-iam-app-sdk-typescript/generated/server-openapi/src/index.ts',
+        '@sdkwork/iam-app-sdk': path.resolve(iamRoot, 'sdks/sdkwork-iam-app-sdk/sdkwork-iam-app-sdk-typescript/src/index.ts',
         ),
         '@sdkwork/auth-pc-react': path.resolve(iamRoot, 'apps/sdkwork-iam-pc/packages/sdkwork-auth-pc-react/src/index.ts',
         ),
@@ -61,13 +61,13 @@ export default defineConfig(({ mode }) => {
           repoRoot,
           '../sdkwork-utils/packages/sdkwork-utils-typescript/src/index.ts',
         ),
-        'sdkwork-mcp-app-sdk-generated-typescript/src': path.resolve(
+        '@sdkwork/mcp-app-sdk/src': path.resolve(
           repoRoot,
-          'sdks/sdkwork-mcp-app-sdk/sdkwork-mcp-app-sdk-typescript/generated/server-openapi/src',
+          'sdks/sdkwork-mcp-app-sdk/sdkwork-mcp-app-sdk-typescript/src/index.ts',
         ),
-        'sdkwork-mcp-backend-sdk-generated-typescript/src': path.resolve(
+        '@sdkwork/mcp-backend-sdk/src': path.resolve(
           repoRoot,
-          'sdks/sdkwork-mcp-backend-sdk/sdkwork-mcp-backend-sdk-typescript/generated/server-openapi/src',
+          'sdks/sdkwork-mcp-backend-sdk/sdkwork-mcp-backend-sdk-typescript/src/index.ts',
         ),
       },
     },

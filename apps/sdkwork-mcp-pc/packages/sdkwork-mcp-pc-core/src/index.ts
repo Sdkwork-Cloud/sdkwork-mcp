@@ -6,7 +6,7 @@ export type {
   McpResourceRecord,
   McpPromptRecord,
   McpInvocationRecord,
-} from 'sdkwork-mcp-app-sdk-generated-typescript/src/types';
+} from '@sdkwork/mcp-app-sdk';
 
 export type {
   CreateMcpServerCommand,
@@ -17,7 +17,7 @@ export type {
   UpsertMcpResourceCommand,
   UpsertMcpPromptCommand,
   AppendMcpInvocationCommand,
-} from 'sdkwork-mcp-backend-sdk-generated-typescript/src/types';
+} from '@sdkwork/mcp-backend-sdk';
 
 export {
   createMCPClients,

@@ -16,9 +16,9 @@ export default defineConfig(({ mode }) => {
     plugins: [react(), tailwindcss()],
     resolve: {
       alias: {
-        "sdkwork-mcp-app-sdk-generated-typescript/src": path.resolve(
+        "@sdkwork/mcp-app-sdk/src": path.resolve(
           repoRoot,
-          "sdks/sdkwork-mcp-app-sdk/sdkwork-mcp-app-sdk-typescript/generated/server-openapi/src",
+          "sdks/sdkwork-mcp-app-sdk/sdkwork-mcp-app-sdk-typescript/src/index.ts",
         ),
         "@sdkwork/mcp-h5-core": path.resolve(appRoot, "packages/sdkwork-mcp-h5-core/src"),
         "@sdkwork/mcp-h5-core/services": path.resolve(appRoot, "packages/sdkwork-mcp-h5-core/src/services/index.ts"),

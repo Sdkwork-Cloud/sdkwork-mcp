@@ -17,8 +17,8 @@
       "@sdkwork/mcp-h5-shell": [
         "./packages/sdkwork-mcp-h5-shell/src/index.ts"
       ],
-      "sdkwork-mcp-app-sdk-generated-typescript/src/*": [
-        "../../sdks/sdkwork-mcp-app-sdk/sdkwork-mcp-app-sdk-typescript/generated/server-openapi/src/*"
+      "@sdkwork/mcp-app-sdk/src/*": [
+        "../../sdks/sdkwork-mcp-app-sdk/sdkwork-mcp-app-sdk-typescript/src/index.ts/*"
       ],
       "@sdkwork/sdk-common": [
         "../../../sdkwork-sdk-commons/sdkwork-sdk-common-typescript/src/index.ts"

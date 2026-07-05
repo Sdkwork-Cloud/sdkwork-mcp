@@ -4,7 +4,7 @@ import type {
   McpServerCategoryRecord,
   McpServerRecord,
   McpToolRecord,
-} from 'sdkwork-mcp-app-sdk-generated-typescript/src/types';
+} from '@sdkwork/mcp-app-sdk';
 
 import { getMCPAppSdkClientWithSession } from '../sdk/mcpAppSdkClient';
 import { unwrapSdkWorkPage } from '../sdk/sdkPage';

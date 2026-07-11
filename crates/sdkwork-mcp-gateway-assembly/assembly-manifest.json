@@ -4,7 +4,7 @@
   "applicationCode": "mcp",
   "packageName": "sdkwork-mcp-gateway-assembly",
   "crateDir": "crates/sdkwork-mcp-gateway-assembly",
-  "generatedAt": "2026-06-27T05:25:12.393Z",
+  "generatedAt": "2026-07-08T01:34:14.774Z",
   "routeCrates": [
     {
       "packageName": "sdkwork-routes-mcp-app-api",

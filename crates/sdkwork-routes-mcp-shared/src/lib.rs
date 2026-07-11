@@ -18,3 +18,9 @@ pub use service_ops::{
     list_connectors, list_invocations, list_prompts, list_resources, list_servers, list_tools,
     upsert_category, upsert_connector, upsert_prompt, upsert_resource, upsert_server, upsert_tool,
 };
+
+use axum::Router;
+
+pub fn gateway_mount() -> axum::Router {
+    axum::Router::new()
+}

@@ -63,14 +63,18 @@ function readPersistedSessionRawValue(): string | null {
   }
 
   migrateLegacySessionStorage();
-  const sessionStorage = getSessionStorage();
-  const fromSession = sessionStorage?.getItem(SDKWORK_MCP_H5_SESSION_KEY);
-  if (fromSession) {
-    persistedSessionRawValueCache = fromSession;
-    return fromSession;
+  const localStorage = getLocalStorage();
+  const durableValue = localStorage?.getItem(SDKWORK_MCP_H5_SESSION_KEY) ?? null;
+  if (durableValue) {
+    persistedSessionRawValueCache = durableValue;
+    return durableValue;
   }
 
-  const legacyValue = getLocalStorage()?.getItem(SDKWORK_MCP_H5_LEGACY_SESSION_STORAGE_KEY) ?? null;
+  const legacyValue = getSessionStorage()?.getItem(SDKWORK_MCP_H5_SESSION_KEY) ?? null;
+  if (legacyValue) {
+    localStorage?.setItem(SDKWORK_MCP_H5_SESSION_KEY, legacyValue);
+    getSessionStorage()?.removeItem(SDKWORK_MCP_H5_SESSION_KEY);
+  }
   persistedSessionRawValueCache = legacyValue;
   return legacyValue;
 }
@@ -89,8 +93,8 @@ function writePersistedSessionRawValue(value: string): void {
     return;
   }
 
-  getSessionStorage()?.setItem(SDKWORK_MCP_H5_SESSION_KEY, value);
-  getLocalStorage()?.removeItem(SDKWORK_MCP_H5_LEGACY_SESSION_STORAGE_KEY);
+  getLocalStorage()?.setItem(SDKWORK_MCP_H5_SESSION_KEY, value);
+  getSessionStorage()?.removeItem(SDKWORK_MCP_H5_SESSION_KEY);
 }
 
 function removePersistedSessionRawValue(): void {
@@ -158,13 +162,13 @@ function migrateLegacySessionStorage(): void {
     return;
   }
 
-  const legacyValue = localStorage.getItem(SDKWORK_MCP_H5_LEGACY_SESSION_STORAGE_KEY);
-  if (!legacyValue || sessionStorage.getItem(SDKWORK_MCP_H5_SESSION_KEY)) {
+  const legacyValue = sessionStorage.getItem(SDKWORK_MCP_H5_SESSION_KEY);
+  if (!legacyValue || localStorage.getItem(SDKWORK_MCP_H5_SESSION_KEY)) {
     return;
   }
 
-  sessionStorage.setItem(SDKWORK_MCP_H5_SESSION_KEY, legacyValue);
-  localStorage.removeItem(SDKWORK_MCP_H5_LEGACY_SESSION_STORAGE_KEY);
+  localStorage.setItem(SDKWORK_MCP_H5_SESSION_KEY, legacyValue);
+  sessionStorage.removeItem(SDKWORK_MCP_H5_SESSION_KEY);
 }
 
 function dispatchAppSdkSessionChanged(session: SdkworkChatSession | null): void {

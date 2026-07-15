@@ -20,6 +20,7 @@ import {
 } from './environment';
 import {
   createSdkworkMCPPcSessionStore,
+  SDKWORK_MCP_PC_SESSION_STORAGE_KEY,
   type SdkworkMCPPcSessionSnapshot,
   type SdkworkMCPPcSessionStore,
 } from './sessionStore';
@@ -228,7 +229,18 @@ function resolveSessionStorage(): Storage | undefined {
   if (typeof window === 'undefined') {
     return undefined;
   }
-  return window.sessionStorage;
+  migrateLegacySessionStorage(SDKWORK_MCP_PC_SESSION_STORAGE_KEY);
+  return window.localStorage;
+}
+
+function migrateLegacySessionStorage(storageKey: string): void {
+  const legacySession = window.sessionStorage.getItem(storageKey);
+  if (legacySession && !window.localStorage.getItem(storageKey)) {
+    window.localStorage.setItem(storageKey, legacySession);
+  }
+  if (legacySession) {
+    window.sessionStorage.removeItem(storageKey);
+  }
 }
 
 function toIamDeploymentMode(value: SdkworkMCPPcRuntimeConfig['deploymentMode']): IamDeploymentMode {

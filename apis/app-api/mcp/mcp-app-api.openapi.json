@@ -25,7 +25,7 @@
           "mcp"
         ],
         "summary": "MCP mcp.listCategories",
-        "operationId": "mcp.listCategories",
+        "operationId": "mcp.list",
         "parameters": [
           {
             "name": "page",
@@ -168,7 +168,7 @@
           "mcp"
         ],
         "summary": "MCP mcp.listServers",
-        "operationId": "mcp.listServers",
+        "operationId": "mcp.list",
         "parameters": [
           {
             "name": "page",
@@ -311,7 +311,7 @@
           "mcp"
         ],
         "summary": "MCP mcp.getServer",
-        "operationId": "mcp.getServer",
+        "operationId": "mcp.retrieve",
         "parameters": [
           {
             "name": "serverKey",
@@ -408,7 +408,7 @@
           "mcp"
         ],
         "summary": "MCP mcp.listTools",
-        "operationId": "mcp.listTools",
+        "operationId": "mcp.list",
         "parameters": [
           {
             "name": "serverId",
@@ -560,7 +560,7 @@
           "mcp"
         ],
         "summary": "MCP mcp.getTool",
-        "operationId": "mcp.getTool",
+        "operationId": "mcp.retrieve",
         "parameters": [
           {
             "name": "serverId",
@@ -666,7 +666,7 @@
           "mcp"
         ],
         "summary": "MCP mcp.listResources",
-        "operationId": "mcp.listResources",
+        "operationId": "mcp.list",
         "parameters": [
           {
             "name": "serverId",
@@ -818,7 +818,7 @@
           "mcp"
         ],
         "summary": "MCP mcp.listPrompts",
-        "operationId": "mcp.listPrompts",
+        "operationId": "mcp.list",
         "parameters": [
           {
             "name": "serverId",
@@ -970,7 +970,7 @@
           "mcp"
         ],
         "summary": "MCP mcp.listInvocations",
-        "operationId": "mcp.listInvocations",
+        "operationId": "mcp.list",
         "parameters": [
           {
             "name": "page",

@@ -9,7 +9,7 @@
     "@sdkwork/utils": "workspace:*"
   },
   "scripts": {
-    "dev": "pnpm --dir apps/sdkwork-mcp-pc dev",
+    "stop": "node ../sdkwork-specs/tools/stop-sdkwork-workspace-processes.mjs --workspace .",    "dev": "pnpm --dir apps/sdkwork-mcp-pc dev",
     "build": "cargo build --workspace --release && pnpm --dir apps/sdkwork-mcp-pc build",
     "test": "cargo test --workspace && node --test tests/static/*.test.mjs tests/contract/*.test.mjs apps/sdkwork-mcp-pc/tests/*.test.mjs apps/sdkwork-mcp-h5/tests/*.test.mjs",
     "check": "pnpm run check:app-composition && pnpm check:architecture-alignment && pnpm check:pnpm-script-standard && pnpm check:agent-workflow-standard && pnpm db:validate && pnpm topology:validate",

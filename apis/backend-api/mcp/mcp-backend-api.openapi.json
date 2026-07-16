@@ -25,7 +25,7 @@
           "mcp"
         ],
         "summary": "MCP mcpAdmin.listCategories",
-        "operationId": "mcpAdmin.listCategories",
+        "operationId": "mcpAdmin.list",
         "parameters": [
           {
             "name": "page",
@@ -166,7 +166,7 @@
           "mcp"
         ],
         "summary": "MCP mcpAdmin.upsertCategory",
-        "operationId": "mcpAdmin.upsertCategory",
+        "operationId": "mcpAdmin.create",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -179,7 +179,7 @@
           }
         },
         "responses": {
-          "200": {
+          "201": {
             "description": "OK",
             "content": {
               "application/json": {
@@ -264,7 +264,7 @@
           "mcp"
         ],
         "summary": "MCP mcpAdmin.listServers",
-        "operationId": "mcpAdmin.listServers",
+        "operationId": "mcpAdmin.list",
         "parameters": [
           {
             "name": "page",
@@ -405,7 +405,7 @@
           "mcp"
         ],
         "summary": "MCP mcpAdmin.createServer",
-        "operationId": "mcpAdmin.createServer",
+        "operationId": "mcpAdmin.create",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -418,7 +418,7 @@
           }
         },
         "responses": {
-          "200": {
+          "201": {
             "description": "OK",
             "content": {
               "application/json": {
@@ -503,7 +503,7 @@
           "mcp"
         ],
         "summary": "MCP mcpAdmin.updateServer",
-        "operationId": "mcpAdmin.updateServer",
+        "operationId": "mcpAdmin.update",
         "parameters": [
           {
             "name": "serverKey",
@@ -608,7 +608,7 @@
           "mcp"
         ],
         "summary": "MCP mcpAdmin.deleteServer",
-        "operationId": "mcpAdmin.deleteServer",
+        "operationId": "mcpAdmin.delete",
         "parameters": [
           {
             "name": "serverKey",
@@ -620,38 +620,8 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/SdkWorkApiResponse"
-                    },
-                    {
-                      "type": "object",
-                      "required": [
-                        "data"
-                      ],
-                      "properties": {
-                        "data": {
-                          "type": "object",
-                          "required": [
-                            "item"
-                          ],
-                          "properties": {
-                            "item": {
-                              "$ref": "#/components/schemas/McpServerRecord"
-                            }
-                          }
-                        }
-                      }
-                    }
-                  ]
-                }
-              }
-            }
+          "204": {
+            "description": "OK"
           },
           "400": {
             "description": "Problem detail",
@@ -705,7 +675,7 @@
           "mcp"
         ],
         "summary": "MCP mcpAdmin.listConnectors",
-        "operationId": "mcpAdmin.listConnectors",
+        "operationId": "mcpAdmin.list",
         "parameters": [
           {
             "name": "serverId",
@@ -855,7 +825,7 @@
           "mcp"
         ],
         "summary": "MCP mcpAdmin.upsertConnector",
-        "operationId": "mcpAdmin.upsertConnector",
+        "operationId": "mcpAdmin.create",
         "parameters": [
           {
             "name": "serverId",
@@ -878,7 +848,7 @@
           }
         },
         "responses": {
-          "200": {
+          "201": {
             "description": "OK",
             "content": {
               "application/json": {
@@ -971,7 +941,7 @@
           "mcp"
         ],
         "summary": "MCP mcpAdmin.deleteConnector",
-        "operationId": "mcpAdmin.deleteConnector",
+        "operationId": "mcpAdmin.delete",
         "parameters": [
           {
             "name": "serverId",
@@ -992,46 +962,8 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/SdkWorkApiResponse"
-                    },
-                    {
-                      "type": "object",
-                      "required": [
-                        "data"
-                      ],
-                      "properties": {
-                        "data": {
-                          "type": "object",
-                          "additionalProperties": false,
-                          "required": [
-                            "items",
-                            "pageInfo"
-                          ],
-                          "properties": {
-                            "items": {
-                              "type": "array",
-                              "items": {
-                                "$ref": "#/components/schemas/McpConnectorRecord"
-                              }
-                            },
-                            "pageInfo": {
-                              "$ref": "#/components/schemas/PageInfo"
-                            }
-                          }
-                        }
-                      }
-                    }
-                  ]
-                }
-              }
-            }
+          "204": {
+            "description": "OK"
           },
           "400": {
             "description": "Problem detail",
@@ -1085,7 +1017,7 @@
           "mcp"
         ],
         "summary": "MCP mcpAdmin.upsertTool",
-        "operationId": "mcpAdmin.upsertTool",
+        "operationId": "mcpAdmin.create",
         "parameters": [
           {
             "name": "serverId",
@@ -1108,7 +1040,7 @@
           }
         },
         "responses": {
-          "200": {
+          "201": {
             "description": "OK",
             "content": {
               "application/json": {
@@ -1201,7 +1133,7 @@
           "mcp"
         ],
         "summary": "MCP mcpAdmin.upsertResource",
-        "operationId": "mcpAdmin.upsertResource",
+        "operationId": "mcpAdmin.create",
         "parameters": [
           {
             "name": "serverId",
@@ -1224,7 +1156,7 @@
           }
         },
         "responses": {
-          "200": {
+          "201": {
             "description": "OK",
             "content": {
               "application/json": {
@@ -1317,7 +1249,7 @@
           "mcp"
         ],
         "summary": "MCP mcpAdmin.upsertPrompt",
-        "operationId": "mcpAdmin.upsertPrompt",
+        "operationId": "mcpAdmin.create",
         "parameters": [
           {
             "name": "serverId",
@@ -1340,7 +1272,7 @@
           }
         },
         "responses": {
-          "200": {
+          "201": {
             "description": "OK",
             "content": {
               "application/json": {
@@ -1433,7 +1365,7 @@
           "mcp"
         ],
         "summary": "MCP mcpAdmin.listInvocations",
-        "operationId": "mcpAdmin.listInvocations",
+        "operationId": "mcpAdmin.list",
         "parameters": [
           {
             "name": "page",
@@ -1583,7 +1515,7 @@
           "mcp"
         ],
         "summary": "MCP mcpAdmin.appendInvocation",
-        "operationId": "mcpAdmin.appendInvocation",
+        "operationId": "mcpAdmin.create",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -1596,7 +1528,7 @@
           }
         },
         "responses": {
-          "200": {
+          "201": {
             "description": "OK",
             "content": {
               "application/json": {

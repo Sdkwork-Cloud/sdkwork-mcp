@@ -1,5 +1,6 @@
 [workspace]
 members = [
+    "crates/sdkwork-api-mcp-assembly",
     "crates/sdkwork-mcp-gateway-assembly",
     "crates/sdkwork-mcp-contract",
     "crates/sdkwork-intelligence-mcp-service",

@@ -1,0 +1,32 @@
+{
+  "kind": "sdkwork.api.assembly",
+  "schemaVersion": 1,
+  "applicationCode": "mcp",
+  "apiMode": "served",
+  "packageName": "sdkwork-api-mcp-assembly",
+  "crateDir": "crates/sdkwork-api-mcp-assembly",
+  "routeCrates": [
+    {
+      "packageName": "sdkwork-routes-mcp-app-api",
+      "memberDir": "crates/sdkwork-routes-mcp-app-api",
+      "libName": "sdkwork_routes_mcp_app_api",
+      "surface": "app-api",
+      "pathPrefix": null,
+      "mountOrder": 0,
+      "componentRef": "crates/sdkwork-routes-mcp-app-api/specs/component.spec.json",
+      "routeManifestRef": "crates/sdkwork-routes-mcp-app-api/sdks/_route-manifests/app-api/sdkwork-routes-mcp-app-api.route-manifest.json",
+      "sourceRef": "crates/sdkwork-routes-mcp-app-api/Cargo.toml"
+    },
+    {
+      "packageName": "sdkwork-routes-mcp-backend-api",
+      "memberDir": "crates/sdkwork-routes-mcp-backend-api",
+      "libName": "sdkwork_routes_mcp_backend_api",
+      "surface": "backend-api",
+      "pathPrefix": null,
+      "mountOrder": 1,
+      "componentRef": "crates/sdkwork-routes-mcp-backend-api/specs/component.spec.json",
+      "routeManifestRef": "crates/sdkwork-routes-mcp-backend-api/sdks/_route-manifests/backend-api/sdkwork-routes-mcp-backend-api.route-manifest.json",
+      "sourceRef": "crates/sdkwork-routes-mcp-backend-api/Cargo.toml"
+    }
+  ]
+}

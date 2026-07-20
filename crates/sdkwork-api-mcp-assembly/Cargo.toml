@@ -1,0 +1,16 @@
+[package]
+name = "sdkwork-api-mcp-assembly"
+edition.workspace = true
+license.workspace = true
+version.workspace = true
+description = "Generated API assembly for sdkwork-mcp application HTTP plane."
+
+[lib]
+name = "sdkwork_api_mcp_assembly"
+path = "src/lib.rs"
+
+[dependencies]
+axum.workspace = true
+tokio.workspace = true
+sdkwork-routes-mcp-app-api = { path = "../sdkwork-routes-mcp-app-api" }
+sdkwork-routes-mcp-backend-api = { path = "../sdkwork-routes-mcp-backend-api" }

@@ -89,7 +89,7 @@
       {
         "name": "Package MCP API server binaries",
         "shell": "pwsh",
-        "run": "cargo build --release -p sdkwork-mcp-standalone-gateway"
+        "run": "cargo build --release -p sdkwork-api-mcp-standalone-gateway"
       },
       {
         "name": "Build MCP PC web bundle",
@@ -119,7 +119,7 @@
       "formats": ["tar.gz"],
       "runner": "ubuntu-24.04",
       "outputGlobs": [
-        "target/release/sdkwork-mcp-standalone-gateway*"
+        "target/release/sdkwork-api-mcp-standalone-gateway*"
       ],
       "deploymentProfile": "standalone",
       "runtimeTarget": "server"

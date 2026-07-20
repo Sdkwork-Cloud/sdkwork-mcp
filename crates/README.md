@@ -12,9 +12,9 @@ Rust workspace members for **sdkwork-mcp** (MCP platform backend).
 | `sdkwork-routes-mcp-shared` | `SdkWorkApiResponse` mapping, `SdkWorkListQuery` pagination, service ops, shared health probes, record builders |
 | `sdkwork-routes-mcp-app-api` | App-facing read routes (`/app/v3/api/mcp/*`) |
 | `sdkwork-routes-mcp-backend-api` | Admin write/read routes (`/backend/v3/api/mcp/*`) |
-| `sdkwork-mcp-standalone-gateway` | Axum server binary / bootstrap |
+| `sdkwork-api-mcp-standalone-gateway` | Axum server binary / bootstrap |
 | `sdkwork-mcp-database-host` | Database host integration |
-| `sdkwork-mcp-gateway-assembly` | Gateway cloud bundle assembly |
+| `sdkwork-api-mcp-assembly` | Gateway cloud bundle assembly |
 
 ## Conventions
 

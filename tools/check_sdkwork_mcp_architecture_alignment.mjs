@@ -183,8 +183,8 @@ assert(
   'sdkwork-mcp-database-host must exist',
 );
 assert(
-  fs.existsSync(path.join(repoRoot, 'crates/sdkwork-mcp-gateway-assembly/src/lib.rs')),
-  'sdkwork-mcp-gateway-assembly must exist',
+  fs.existsSync(path.join(repoRoot, 'crates/sdkwork-api-mcp-assembly/src/lib.rs')),
+  'sdkwork-api-mcp-assembly must exist',
 );
 assert(fs.existsSync(path.join(repoRoot, 'sdks/sdkwork-mcp-app-sdk/bin/generate-sdk.mjs')), 'sdkwork-mcp-app-sdk generator must exist');
 assert(fs.existsSync(path.join(repoRoot, 'sdks/sdkwork-mcp-backend-sdk/bin/generate-sdk.mjs')), 'sdkwork-mcp-backend-sdk generator must exist');

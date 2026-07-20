@@ -14,7 +14,7 @@ Operational procedures for **sdkwork-mcp** before and after production launch.
    - `pnpm db:validate` passes
 
 3. **Gateway**
-   - Build/deploy `crates/sdkwork-mcp-standalone-gateway` or Docker image from `deployments/docker/Dockerfile`
+   - Build/deploy `crates/sdkwork-api-mcp-standalone-gateway` or Docker image from `deployments/docker/Dockerfile`
    - Confirm `/livez` and `/readyz` on both app and backend surfaces
 
 4. **IAM**

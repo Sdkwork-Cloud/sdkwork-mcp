@@ -283,7 +283,7 @@ writeIfMissing(
         manifests: ['sdkwork.app.config.json', 'package.json', 'Cargo.toml'],
       },
       contracts: {
-        runtimeEntrypoints: ['crates/sdkwork-mcp-standalone-gateway'],
+        runtimeEntrypoints: ['crates/sdkwork-api-mcp-standalone-gateway'],
         configKeys: ['MCP_DATABASE_URL', 'SDKWORK_MCP_DRIVE_URL', 'SDKWORK_MCP_ATTACHMENT_DRIVE_SPACE'],
       },
     },
@@ -516,12 +516,12 @@ writeIfMissing(
   `FROM rust:1-bookworm AS builder
 WORKDIR /app
 COPY . .
-RUN cargo build --release -p sdkwork-mcp-standalone-gateway
+RUN cargo build --release -p sdkwork-api-mcp-standalone-gateway
 
 FROM debian:bookworm-slim
-COPY --from=builder /app/target/release/sdkwork-mcp-standalone-gateway /usr/local/bin/
+COPY --from=builder /app/target/release/sdkwork-api-mcp-standalone-gateway /usr/local/bin/
 EXPOSE 18110
-CMD ["sdkwork-mcp-standalone-gateway"]
+CMD ["sdkwork-api-mcp-standalone-gateway"]
 `,
 );
 

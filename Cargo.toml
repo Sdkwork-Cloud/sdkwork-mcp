@@ -1,14 +1,14 @@
 [workspace]
 members = [
     "crates/sdkwork-api-mcp-assembly",
-    "crates/sdkwork-mcp-gateway-assembly",
+    "crates/sdkwork-api-mcp-assembly",
     "crates/sdkwork-mcp-contract",
     "crates/sdkwork-intelligence-mcp-service",
     "crates/sdkwork-intelligence-mcp-repository-sqlx",
     "crates/sdkwork-routes-mcp-shared",
     "crates/sdkwork-routes-mcp-app-api",
     "crates/sdkwork-routes-mcp-backend-api",
-    "crates/sdkwork-mcp-standalone-gateway",
+    "crates/sdkwork-api-mcp-standalone-gateway",
     "crates/sdkwork-mcp-database-host",
 ]
 resolver = "2"

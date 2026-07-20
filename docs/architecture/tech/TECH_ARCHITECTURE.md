@@ -12,7 +12,7 @@ SDKWork MCP is an application-root service that exposes MCP registry and capabil
 ```text
 Clients (PC/H5/Flutter)
   -> platform.api-gateway / application.public-ingress
-  -> sdkwork-mcp-gateway-assembly
+  -> sdkwork-api-mcp-assembly
       -> sdkwork-routes-mcp-app-api (read)
       -> sdkwork-routes-mcp-backend-api (admin)
       ^ shared: sdkwork-routes-mcp-shared (service_ops, SdkWorkApiResponse envelope, record builders)

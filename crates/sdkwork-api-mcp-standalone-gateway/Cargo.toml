@@ -1,5 +1,5 @@
 [package]
-name = "sdkwork-mcp-standalone-gateway"
+name = "sdkwork-api-mcp-standalone-gateway"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
@@ -8,11 +8,11 @@ license.workspace = true
 path = "src/lib.rs"
 
 [[bin]]
-name = "sdkwork-mcp-standalone-gateway"
+name = "sdkwork-api-mcp-standalone-gateway"
 path = "src/bin/app_main.rs"
 
 [dependencies]
-sdkwork_mcp_gateway_assembly = { package = "sdkwork-mcp-gateway-assembly", path = "../sdkwork-mcp-gateway-assembly" }
+sdkwork_api_mcp_assembly = { package = "sdkwork-api-mcp-assembly", path = "../sdkwork-api-mcp-assembly" }
 axum.workspace = true
 tokio.workspace = true
 tracing.workspace = true

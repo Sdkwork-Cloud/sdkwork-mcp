@@ -22,7 +22,7 @@
   },
   "contracts": {
     "runtimeEntrypoints": [
-      "crates/sdkwork-mcp-standalone-gateway"
+      "crates/sdkwork-api-mcp-standalone-gateway"
     ],
     "configKeys": [
       "MCP_DATABASE_URL",

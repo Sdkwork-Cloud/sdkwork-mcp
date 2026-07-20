@@ -361,8 +361,8 @@ writeIfMissing(
           'node ../sdkwork-app-topology/scripts/gateway-cloud-bundle.mjs bundle --root .',
         'gateway:validate:cloud':
           'node ../sdkwork-app-topology/scripts/gateway-cloud-bundle.mjs validate --root .',
-        'gateway:assembly:materialize': 'node scripts/gateway/assembly-materialize.mjs',
-        'gateway:assembly:validate': 'node scripts/gateway/assembly-validate.mjs',
+        'api:assembly:materialize': 'node scripts/gateway/assembly-materialize.mjs',
+        'api:assembly:validate': 'node scripts/gateway/assembly-validate.mjs',
         'start:pc': 'pnpm --dir apps/sdkwork-mcp-pc dev',
         'start:h5': 'pnpm --dir apps/sdkwork-mcp-h5 dev',
         'start:flutter': 'cd apps/sdkwork-mcp-flutter-mobile && flutter run',

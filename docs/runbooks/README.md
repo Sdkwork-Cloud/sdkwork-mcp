@@ -10,7 +10,7 @@ Operational procedures for **sdkwork-mcp** before and after production launch.
 
 2. **Persistence**
    - Apply `database/ddl/baseline/postgres/0001_mcp_baseline.sql` (or managed migrations) to target PostgreSQL
-   - Set `MCP_DATABASE_URL` per `specs/topology.spec.json`
+   - Set the canonical workspace PostgreSQL `SDKWORK_DATABASE_*` profile per `specs/topology.spec.json`
    - `pnpm db:validate` passes
 
 3. **Gateway**
@@ -33,7 +33,7 @@ Operational procedures for **sdkwork-mcp** before and after production launch.
 
 ```powershell
 pnpm verify
-# Start gateway with MCP_DATABASE_URL set, then:
+# Start gateway with SDKWORK_DATABASE_* set, then:
 # GET /app/v3/api/mcp/servers?page_size=5
 # GET /backend/v3/api/mcp/categories?page_size=5  (authenticated admin)
 ```
@@ -44,7 +44,7 @@ Success list responses must include `code: 0`, `data.items`, `data.pageInfo`, an
 
 | Symptom | Check |
 | --- | --- |
-| `readyz` fails | PostgreSQL connectivity, `MCP_DATABASE_URL`, pool limits |
+| `readyz` fails | PostgreSQL connectivity, `SDKWORK_DATABASE_*`, pool limits |
 | Empty marketplace | Tenant filter, server `lifecycle_status`, visibility / `data_scope` |
 | Admin 403 | IAM permission binding for `mcp.admin.*` codes |
 | Icon rejected on save | `icon_ref` must validate via `sdkwork-drive-contract` (`drive://spaces/.../nodes/...`) |

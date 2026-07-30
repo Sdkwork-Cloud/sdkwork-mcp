@@ -25,7 +25,8 @@
       "crates/sdkwork-api-mcp-standalone-gateway"
     ],
     "configKeys": [
-      "MCP_DATABASE_URL",
+      "SDKWORK_DATABASE_URL",
+      "SDKWORK_DATABASE_SCHEMA",
       "SDKWORK_MCP_DRIVE_URL",
       "SDKWORK_MCP_ATTACHMENT_DRIVE_SPACE"
     ]

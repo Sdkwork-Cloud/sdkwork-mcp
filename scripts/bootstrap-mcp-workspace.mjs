@@ -101,12 +101,15 @@ const dbTemplate = path.join(specsRoot, 'templates/database');
 const dbDest = path.join(repoRoot, 'database');
 for (const entry of fs.readdirSync(dbTemplate, { withFileTypes: true })) {
   const name = entry.name;
-  if (name === 'ddl' && fs.existsSync(path.join(dbDest, 'ddl/baseline/postgres/0001_mcp_baseline.sql'))) {
-    const templateDdl = path.join(dbTemplate, 'ddl');
-    for (const sub of fs.readdirSync(templateDdl, { withFileTypes: true })) {
-      const subDest = path.join(dbDest, 'ddl', sub.name);
-      if (!fs.existsSync(subDest)) {
-        fs.cpSync(path.join(templateDdl, sub.name), subDest, { recursive: true });
+  if (name === 'ddl' || name === 'migrations') {
+    const authoritativePaths = name === 'ddl'
+      ? ['ddl/baseline/postgres', 'ddl/generated']
+      : ['migrations/postgres'];
+    for (const relativePath of authoritativePaths) {
+      const source = path.join(dbTemplate, relativePath);
+      const destination = path.join(dbDest, relativePath);
+      if (!fs.existsSync(destination)) {
+        fs.cpSync(source, destination, { recursive: true });
       }
     }
     continue;
@@ -134,10 +137,14 @@ if (fs.existsSync(manifestPath)) {
   manifest.displayName = 'SDKWork MCP Database';
   manifest.owner = 'mcp-platform';
   manifest.tablePrefix = 'ai_mcp_';
+  manifest.schemaVersion = 2;
+  manifest.databaseRole = 'authoritative-server';
   manifest.engines = ['postgres'];
   manifest.defaultEngine = 'postgres';
-  manifest.contractVersion = '1.0.0';
+  manifest.contractVersion = '1.1.0';
   manifest.baselineStrategy = 'baseline-plus-migrations';
+  manifest.baselineAnchorTable = 'ai_mcp_server';
+  manifest.lifecycle.autoMigrate = false;
   fs.writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
 }
 
@@ -284,7 +291,7 @@ writeIfMissing(
       },
       contracts: {
         runtimeEntrypoints: ['crates/sdkwork-api-mcp-standalone-gateway'],
-        configKeys: ['MCP_DATABASE_URL', 'SDKWORK_MCP_DRIVE_URL', 'SDKWORK_MCP_ATTACHMENT_DRIVE_SPACE'],
+        configKeys: ['SDKWORK_DATABASE_URL', 'SDKWORK_DATABASE_SCHEMA', 'SDKWORK_MCP_DRIVE_URL', 'SDKWORK_MCP_ATTACHMENT_DRIVE_SPACE'],
       },
     },
     null,
@@ -414,7 +421,7 @@ for (const profile of [
 
 writeIfMissing(
   '.env.example',
-  `# SDKWork MCP environment\nMCP_DATABASE_URL=postgres://sdkwork:sdkwork@127.0.0.1:5432/sdkwork_mcp\nSDKWORK_MCP_APP_BIND=127.0.0.1:18110\nSDKWORK_MCP_BACKEND_BIND=127.0.0.1:18111\nSDKWORK_MCP_DRIVE_URL=\nSDKWORK_MCP_WEB_FRAMEWORK=1\n`,
+  `# SDKWork MCP environment\nSDKWORK_DATABASE_URL=postgresql://sdkwork_ai_dev:sdkworkdev123@127.0.0.1:5432/sdkwork_ai_dev\nSDKWORK_DATABASE_SCHEMA=sdkwork_ai_dev\nSDKWORK_MCP_APP_BIND=127.0.0.1:18110\nSDKWORK_MCP_BACKEND_BIND=127.0.0.1:18111\nSDKWORK_MCP_DRIVE_URL=\nSDKWORK_MCP_WEB_FRAMEWORK=1\n`,
 );
 
 writeIfMissing(

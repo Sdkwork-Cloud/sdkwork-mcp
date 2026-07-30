@@ -83,7 +83,7 @@ Planned tables (registry only, no DDL yet):
 
 ## 7. Deployment And Runtime Topology
 
-See `specs/topology.spec.json` for standalone vs cloud profiles. Database URL via `MCP_DATABASE_URL`.
+See `specs/topology.spec.json` for standalone vs cloud profiles. Database identity resolves exclusively through `SDKWORK_DATABASE_*`.
 
 PC client (`apps/sdkwork-mcp-pc`):
 

@@ -16,7 +16,7 @@ Health probes return simple JSON (`{ "status": "ok" }`) and are exempt from busi
 
 ## Runtime configuration
 
-- Database URL: `MCP_DATABASE_URL` (see `specs/topology.spec.json`)
+- Database profile: canonical workspace PostgreSQL `SDKWORK_DATABASE_*` (see `specs/topology.spec.json`)
 - Gateway assembly: `crates/sdkwork-api-mcp-assembly`
 - Standalone binary: `crates/sdkwork-api-mcp-standalone-gateway`
 

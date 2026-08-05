@@ -15,13 +15,13 @@ use axum::{
     Json, Router,
 };
 use sdkwork_intelligence_mcp_service::McpService;
-use sdkwork_routes_mcp_shared::record_builders::{
-    category_record, connector_record, invocation_record, prompt_record, resource_record,
-    tool_record, EntityWriteContext,
-};
 use sdkwork_mcp_contract::{
     McpAuthKind, McpInvocationKind, McpLifecycleStatus, McpPublishStatus, McpTransportKind,
     McpVisibility,
+};
+use sdkwork_routes_mcp_shared::record_builders::{
+    category_record, connector_record, invocation_record, prompt_record, resource_record,
+    tool_record, EntityWriteContext,
 };
 use sdkwork_web_core::{HttpRouteManifest, WebRequestContext};
 use serde::Deserialize;
@@ -163,7 +163,10 @@ where
         .route(paths::ADMIN_SERVER_UPDATE, put(update_server_handler))
         .route(paths::ADMIN_SERVER_DELETE, delete(delete_server_handler))
         .route(paths::ADMIN_CONNECTORS_LIST, get(list_connectors_handler))
-        .route(paths::ADMIN_CONNECTOR_UPSERT, post(upsert_connector_handler))
+        .route(
+            paths::ADMIN_CONNECTOR_UPSERT,
+            post(upsert_connector_handler),
+        )
         .route(
             paths::ADMIN_CONNECTOR_DELETE,
             delete(delete_connector_handler),
@@ -259,7 +262,8 @@ where
     finish_api_json(
         &ctx,
         async {
-            let write_ctx = resolve_write_context(context.as_ref(), &headers, state.default_tenant_id);
+            let write_ctx =
+                resolve_write_context(context.as_ref(), &headers, state.default_tenant_id);
             let owner_user_id = context
                 .as_ref()
                 .and_then(|value| value.0.operator_id)
@@ -364,9 +368,7 @@ fn resolve_write_context(
 ) -> EntityWriteContext {
     EntityWriteContext {
         tenant_id: resolve_request_tenant_id(context, headers, default_tenant_id),
-        operator_id: context
-            .and_then(|value| value.0.operator_id)
-            .unwrap_or(0),
+        operator_id: context.and_then(|value| value.0.operator_id).unwrap_or(0),
     }
 }
 
@@ -383,7 +385,8 @@ where
     finish_api_json(
         &ctx,
         async {
-            let write_ctx = resolve_write_context(context.as_ref(), &headers, state.default_tenant_id);
+            let write_ctx =
+                resolve_write_context(context.as_ref(), &headers, state.default_tenant_id);
             let record = category_record(
                 write_ctx,
                 body.category_code,
@@ -414,9 +417,7 @@ where
         async {
             let tenant_id =
                 resolve_request_tenant_id(context.as_ref(), &headers, state.default_tenant_id);
-            ok_json(
-                delete_server(state.service.as_ref(), tenant_id, server_key.as_str()).await?,
-            )
+            ok_json(delete_server(state.service.as_ref(), tenant_id, server_key.as_str()).await?)
         }
         .await,
     )
@@ -458,7 +459,8 @@ where
     finish_api_json(
         &ctx,
         async {
-            let write_ctx = resolve_write_context(context.as_ref(), &headers, state.default_tenant_id);
+            let write_ctx =
+                resolve_write_context(context.as_ref(), &headers, state.default_tenant_id);
             let record = connector_record(
                 write_ctx,
                 server_id,
@@ -524,7 +526,8 @@ where
     finish_api_json(
         &ctx,
         async {
-            let write_ctx = resolve_write_context(context.as_ref(), &headers, state.default_tenant_id);
+            let write_ctx =
+                resolve_write_context(context.as_ref(), &headers, state.default_tenant_id);
             let record = tool_record(
                 write_ctx,
                 server_id,
@@ -559,7 +562,8 @@ where
     finish_api_json(
         &ctx,
         async {
-            let write_ctx = resolve_write_context(context.as_ref(), &headers, state.default_tenant_id);
+            let write_ctx =
+                resolve_write_context(context.as_ref(), &headers, state.default_tenant_id);
             let record = resource_record(
                 write_ctx,
                 server_id,
@@ -591,7 +595,8 @@ where
     finish_api_json(
         &ctx,
         async {
-            let write_ctx = resolve_write_context(context.as_ref(), &headers, state.default_tenant_id);
+            let write_ctx =
+                resolve_write_context(context.as_ref(), &headers, state.default_tenant_id);
             let record = prompt_record(
                 write_ctx,
                 server_id,
@@ -599,7 +604,8 @@ where
                 body.prompt_key,
                 body.name,
                 body.description,
-                body.arguments_schema_json.unwrap_or_else(|| "[]".to_string()),
+                body.arguments_schema_json
+                    .unwrap_or_else(|| "[]".to_string()),
                 body.enabled.unwrap_or(true),
             );
             ok_json(upsert_prompt(state.service.as_ref(), record).await?)
@@ -642,7 +648,8 @@ where
     finish_api_json(
         &ctx,
         async {
-            let write_ctx = resolve_write_context(context.as_ref(), &headers, state.default_tenant_id);
+            let write_ctx =
+                resolve_write_context(context.as_ref(), &headers, state.default_tenant_id);
             let user_id = context
                 .as_ref()
                 .and_then(|value| value.0.operator_id)

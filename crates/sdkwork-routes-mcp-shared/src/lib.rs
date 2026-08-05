@@ -19,8 +19,6 @@ pub use service_ops::{
     upsert_category, upsert_connector, upsert_prompt, upsert_resource, upsert_server, upsert_tool,
 };
 
-use axum::Router;
-
 pub fn gateway_mount() -> axum::Router {
     axum::Router::new()
 }

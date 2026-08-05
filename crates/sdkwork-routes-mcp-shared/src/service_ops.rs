@@ -76,8 +76,7 @@ fn filter_connectors(
 
 fn filter_tools(items: Vec<McpToolRecord>, query: &SdkWorkListQuery) -> Vec<McpToolRecord> {
     filter_by_keyword(items, query, |item, keyword| {
-        item.name.to_lowercase().contains(keyword)
-            || item.tool_key.to_lowercase().contains(keyword)
+        item.name.to_lowercase().contains(keyword) || item.tool_key.to_lowercase().contains(keyword)
     })
 }
 

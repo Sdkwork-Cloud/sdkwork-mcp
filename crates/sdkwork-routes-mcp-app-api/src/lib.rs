@@ -27,7 +27,8 @@ pub use health::DbReadinessCheck;
 pub use http_route_manifest::app_route_manifest;
 pub use ports::McpAppRequestContext;
 pub use web_bootstrap::{
-    mcp_public_path_prefixes, wrap_router_with_web_framework, wrap_router_with_web_framework_from_env,
+    mcp_public_path_prefixes, wrap_router_with_web_framework,
+    wrap_router_with_web_framework_from_env,
 };
 
 #[derive(Clone)]
@@ -156,9 +157,7 @@ where
         async {
             let tenant_id =
                 resolve_request_tenant_id(context.as_ref(), &headers, state.default_tenant_id);
-            ok_json(
-                get_server(state.service.as_ref(), tenant_id, server_key.as_str()).await?,
-            )
+            ok_json(get_server(state.service.as_ref(), tenant_id, server_key.as_str()).await?)
         }
         .await,
     )

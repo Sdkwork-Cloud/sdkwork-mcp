@@ -8,10 +8,7 @@ fn transport_kind_roundtrip() {
         McpTransportKind::parse("streamable-http"),
         Some(McpTransportKind::StreamableHttp)
     );
-    assert_eq!(
-        McpTransportKind::StreamableHttp.as_str(),
-        "streamable-http"
-    );
+    assert_eq!(McpTransportKind::StreamableHttp.as_str(), "streamable-http");
 }
 
 #[test]

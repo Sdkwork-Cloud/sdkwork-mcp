@@ -82,7 +82,8 @@ fn resolve_entity_uuid(uuid: &str) -> String {
 
 fn read_json_string(row: &sqlx::postgres::PgRow, field: &str) -> McpResult<String> {
     json_value_to_string(
-        row.try_get::<serde_json::Value, _>(field).map_err(map_sqlx)?,
+        row.try_get::<serde_json::Value, _>(field)
+            .map_err(map_sqlx)?,
         field,
     )
 }
@@ -537,7 +538,11 @@ pub async fn list_servers(pool: &PgPool, tenant_id: u64) -> McpResult<Vec<McpSer
     rows.iter().map(row_to_server).collect()
 }
 
-pub async fn get_server(pool: &PgPool, tenant_id: u64, server_key: &str) -> McpResult<McpServerRecord> {
+pub async fn get_server(
+    pool: &PgPool,
+    tenant_id: u64,
+    server_key: &str,
+) -> McpResult<McpServerRecord> {
     let query = format!(
         r#"
         SELECT {SERVER_SELECT}
@@ -794,7 +799,11 @@ pub async fn delete_connector(
         .ok_or_else(|| McpServiceError::NotFound(connector_key.to_string()))
 }
 
-pub async fn list_tools(pool: &PgPool, tenant_id: u64, server_id: u64) -> McpResult<Vec<McpToolRecord>> {
+pub async fn list_tools(
+    pool: &PgPool,
+    tenant_id: u64,
+    server_id: u64,
+) -> McpResult<Vec<McpToolRecord>> {
     let query = format!(
         r#"
         SELECT {TOOL_SELECT}
@@ -1110,62 +1119,54 @@ pub async fn count_invocations(
 ) -> McpResult<u64> {
     let search_pattern = search.map(|value| format!("%{value}%"));
     let count: i64 = match (server_id, search_pattern.as_deref()) {
-        (Some(server_id), Some(pattern)) => {
-            sqlx::query_scalar(
-                r#"
+        (Some(server_id), Some(pattern)) => sqlx::query_scalar(
+            r#"
                 SELECT COUNT(*)::bigint
                 FROM ai_mcp_invocation_log
                 WHERE tenant_id = $1 AND server_id = $2 AND target_key ILIKE $3
                 "#,
-            )
-            .bind(tenant_id as i64)
-            .bind(server_id as i64)
-            .bind(pattern)
-            .fetch_one(pool)
-            .await
-            .map_err(map_sqlx)?
-        }
-        (Some(server_id), None) => {
-            sqlx::query_scalar(
-                r#"
+        )
+        .bind(tenant_id as i64)
+        .bind(server_id as i64)
+        .bind(pattern)
+        .fetch_one(pool)
+        .await
+        .map_err(map_sqlx)?,
+        (Some(server_id), None) => sqlx::query_scalar(
+            r#"
                 SELECT COUNT(*)::bigint
                 FROM ai_mcp_invocation_log
                 WHERE tenant_id = $1 AND server_id = $2
                 "#,
-            )
-            .bind(tenant_id as i64)
-            .bind(server_id as i64)
-            .fetch_one(pool)
-            .await
-            .map_err(map_sqlx)?
-        }
-        (None, Some(pattern)) => {
-            sqlx::query_scalar(
-                r#"
+        )
+        .bind(tenant_id as i64)
+        .bind(server_id as i64)
+        .fetch_one(pool)
+        .await
+        .map_err(map_sqlx)?,
+        (None, Some(pattern)) => sqlx::query_scalar(
+            r#"
                 SELECT COUNT(*)::bigint
                 FROM ai_mcp_invocation_log
                 WHERE tenant_id = $1 AND target_key ILIKE $2
                 "#,
-            )
-            .bind(tenant_id as i64)
-            .bind(pattern)
-            .fetch_one(pool)
-            .await
-            .map_err(map_sqlx)?
-        }
-        (None, None) => {
-            sqlx::query_scalar(
-                r#"
+        )
+        .bind(tenant_id as i64)
+        .bind(pattern)
+        .fetch_one(pool)
+        .await
+        .map_err(map_sqlx)?,
+        (None, None) => sqlx::query_scalar(
+            r#"
                 SELECT COUNT(*)::bigint
                 FROM ai_mcp_invocation_log
                 WHERE tenant_id = $1
                 "#,
-            )
-            .bind(tenant_id as i64)
-            .fetch_one(pool)
-            .await
-            .map_err(map_sqlx)?
-        }
+        )
+        .bind(tenant_id as i64)
+        .fetch_one(pool)
+        .await
+        .map_err(map_sqlx)?,
     };
     Ok(count.max(0) as u64)
 }

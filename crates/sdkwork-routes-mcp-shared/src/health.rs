@@ -42,15 +42,12 @@ pub async fn readyz_with_state(
     readiness: Option<DbReadinessCheck>,
 ) -> Result<Json<Value>, (axum::http::StatusCode, String)> {
     if let Some(readiness) = readiness {
-        readiness
-            .check()
-            .await
-            .map_err(|error| {
-                (
-                    axum::http::StatusCode::SERVICE_UNAVAILABLE,
-                    format!("dependencies unavailable: {error}"),
-                )
-            })?;
+        readiness.check().await.map_err(|error| {
+            (
+                axum::http::StatusCode::SERVICE_UNAVAILABLE,
+                format!("dependencies unavailable: {error}"),
+            )
+        })?;
     }
     Ok(Json(json!({ "status": "ok" })))
 }

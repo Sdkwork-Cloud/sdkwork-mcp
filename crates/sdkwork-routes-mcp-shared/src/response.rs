@@ -79,10 +79,9 @@ fn success_response<T: Serialize>(
     let envelope = SdkWorkApiResponse::success(data, trace_id.clone());
     let mut response = (status, Json(envelope)).into_response();
     if let Ok(value) = HeaderValue::from_str(&trace_id) {
-        response.headers_mut().insert(
-            HeaderName::from_static("x-sdkwork-trace-id"),
-            value,
-        );
+        response
+            .headers_mut()
+            .insert(HeaderName::from_static("x-sdkwork-trace-id"), value);
     }
     Ok(response)
 }

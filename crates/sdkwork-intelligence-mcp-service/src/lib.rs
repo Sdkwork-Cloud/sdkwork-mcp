@@ -29,10 +29,7 @@ pub trait McpRepository: Send + Sync {
     async fn upsert_server(&self, record: McpServerRecord) -> McpResult<McpServerRecord>;
     async fn delete_server(&self, tenant_id: u64, server_key: &str) -> McpResult<McpServerRecord>;
 
-    async fn list_categories(
-        &self,
-        tenant_id: u64,
-    ) -> McpResult<Vec<McpServerCategoryRecord>>;
+    async fn list_categories(&self, tenant_id: u64) -> McpResult<Vec<McpServerCategoryRecord>>;
     async fn get_category(
         &self,
         tenant_id: u64,
@@ -84,11 +81,8 @@ pub trait McpRepository: Send + Sync {
     ) -> McpResult<McpResourceRecord>;
     async fn upsert_resource(&self, record: McpResourceRecord) -> McpResult<McpResourceRecord>;
 
-    async fn list_prompts(
-        &self,
-        tenant_id: u64,
-        server_id: u64,
-    ) -> McpResult<Vec<McpPromptRecord>>;
+    async fn list_prompts(&self, tenant_id: u64, server_id: u64)
+        -> McpResult<Vec<McpPromptRecord>>;
     async fn get_prompt(
         &self,
         tenant_id: u64,
@@ -111,7 +105,10 @@ pub trait McpRepository: Send + Sync {
         offset: u32,
         limit: u32,
     ) -> McpResult<Vec<McpInvocationRecord>>;
-    async fn append_invocation(&self, record: McpInvocationRecord) -> McpResult<McpInvocationRecord>;
+    async fn append_invocation(
+        &self,
+        record: McpInvocationRecord,
+    ) -> McpResult<McpInvocationRecord>;
 }
 
 pub struct McpService<R: McpRepository> {
@@ -146,10 +143,7 @@ impl<R: McpRepository> McpService<R> {
         self.repository.delete_server(tenant_id, server_key).await
     }
 
-    pub async fn list_categories(
-        &self,
-        tenant_id: u64,
-    ) -> McpResult<Vec<McpServerCategoryRecord>> {
+    pub async fn list_categories(&self, tenant_id: u64) -> McpResult<Vec<McpServerCategoryRecord>> {
         self.repository.list_categories(tenant_id).await
     }
 
@@ -210,7 +204,11 @@ impl<R: McpRepository> McpService<R> {
             .await
     }
 
-    pub async fn list_tools(&self, tenant_id: u64, server_id: u64) -> McpResult<Vec<McpToolRecord>> {
+    pub async fn list_tools(
+        &self,
+        tenant_id: u64,
+        server_id: u64,
+    ) -> McpResult<Vec<McpToolRecord>> {
         self.repository.list_tools(tenant_id, server_id).await
     }
 
@@ -221,7 +219,9 @@ impl<R: McpRepository> McpService<R> {
         tool_key: &str,
     ) -> McpResult<McpToolRecord> {
         validation::validate_entity_key(tool_key, "tool_key")?;
-        self.repository.get_tool(tenant_id, server_id, tool_key).await
+        self.repository
+            .get_tool(tenant_id, server_id, tool_key)
+            .await
     }
 
     pub async fn upsert_tool(&self, record: McpToolRecord) -> McpResult<McpToolRecord> {

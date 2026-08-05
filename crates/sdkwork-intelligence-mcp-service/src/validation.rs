@@ -10,7 +10,6 @@ use crate::{McpResult, McpServiceError};
 const SERVER_KEY_PATTERN: &str = r"^mcp\.[a-z0-9_-]+(\.[a-z0-9_-]+)*$";
 const ENTITY_KEY_PATTERN: &str = r"^[a-z0-9][a-z0-9_-]{1,127}$";
 
-
 pub fn validate_category_code(category_code: &str) -> McpResult<()> {
     validate_entity_key(category_code, "category_code")
 }
@@ -152,7 +151,10 @@ pub fn validate_prompt_record(record: &McpPromptRecord) -> McpResult<()> {
             "prompt name must not be empty".to_string(),
         ));
     }
-    validate_json_array(record.arguments_schema_json.as_str(), "arguments_schema_json")?;
+    validate_json_array(
+        record.arguments_schema_json.as_str(),
+        "arguments_schema_json",
+    )?;
     Ok(())
 }
 
@@ -202,16 +204,11 @@ pub fn validate_visibility(visibility: sdkwork_mcp_contract::McpVisibility) -> M
 
 pub fn validate_invocation_kind(kind: McpInvocationKind) -> McpResult<()> {
     match kind {
-        McpInvocationKind::Tool | McpInvocationKind::Resource | McpInvocationKind::Prompt => {
-            Ok(())
-        }
+        McpInvocationKind::Tool | McpInvocationKind::Resource | McpInvocationKind::Prompt => Ok(()),
     }
 }
 
-pub fn validate_invocation_target_key(
-    kind: McpInvocationKind,
-    target_key: &str,
-) -> McpResult<()> {
+pub fn validate_invocation_target_key(kind: McpInvocationKind, target_key: &str) -> McpResult<()> {
     match kind {
         McpInvocationKind::Tool | McpInvocationKind::Prompt => {
             validate_entity_key(target_key, "target_key")

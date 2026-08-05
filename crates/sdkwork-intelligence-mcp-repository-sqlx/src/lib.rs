@@ -39,11 +39,7 @@ impl McpRepository for SqlxMcpRepository {
         postgres::upsert_server(&self.pool, record).await
     }
 
-    async fn delete_server(
-        &self,
-        tenant_id: u64,
-        server_key: &str,
-    ) -> McpResult<McpServerRecord> {
+    async fn delete_server(&self, tenant_id: u64, server_key: &str) -> McpResult<McpServerRecord> {
         postgres::delete_server(&self.pool, tenant_id, server_key).await
     }
 
@@ -172,18 +168,13 @@ impl McpRepository for SqlxMcpRepository {
         offset: u32,
         limit: u32,
     ) -> McpResult<Vec<McpInvocationRecord>> {
-        postgres::list_invocations(
-            &self.pool,
-            tenant_id,
-            server_id,
-            search,
-            offset,
-            limit,
-        )
-        .await
+        postgres::list_invocations(&self.pool, tenant_id, server_id, search, offset, limit).await
     }
 
-    async fn append_invocation(&self, record: McpInvocationRecord) -> McpResult<McpInvocationRecord> {
+    async fn append_invocation(
+        &self,
+        record: McpInvocationRecord,
+    ) -> McpResult<McpInvocationRecord> {
         postgres::append_invocation(&self.pool, record).await
     }
 }

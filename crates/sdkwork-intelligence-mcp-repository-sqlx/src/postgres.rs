@@ -437,7 +437,7 @@ pub async fn list_categories(
         ORDER BY sort_order ASC, category_code ASC
         "#
     );
-    let rows = sqlx::query(&query)
+    let rows = sqlx::query(sqlx::AssertSqlSafe(query.as_str()))
         .bind(tenant_id as i64)
         .fetch_all(pool)
         .await
@@ -458,7 +458,7 @@ pub async fn get_category(
         LIMIT 1
         "#
     );
-    let row = sqlx::query(&query)
+    let row = sqlx::query(sqlx::AssertSqlSafe(query.as_str()))
         .bind(tenant_id as i64)
         .bind(category_code)
         .fetch_optional(pool)
@@ -499,7 +499,7 @@ pub async fn upsert_category(
         RETURNING {CATEGORY_SELECT}
         "#
     );
-    let row = sqlx::query(&query)
+    let row = sqlx::query(sqlx::AssertSqlSafe(query.as_str()))
         .bind(id)
         .bind(uuid)
         .bind(record.tenant_id as i64)
@@ -529,7 +529,7 @@ pub async fn list_servers(pool: &PgPool, tenant_id: u64) -> McpResult<Vec<McpSer
         ORDER BY updated_at DESC, server_key ASC
         "#
     );
-    let rows = sqlx::query(&query)
+    let rows = sqlx::query(sqlx::AssertSqlSafe(query.as_str()))
         .bind(tenant_id as i64)
         .fetch_all(pool)
         .await
@@ -546,7 +546,7 @@ pub async fn get_server(pool: &PgPool, tenant_id: u64, server_key: &str) -> McpR
         LIMIT 1
         "#
     );
-    let row = sqlx::query(&query)
+    let row = sqlx::query(sqlx::AssertSqlSafe(query.as_str()))
         .bind(tenant_id as i64)
         .bind(server_key)
         .fetch_optional(pool)
@@ -596,7 +596,7 @@ pub async fn upsert_server(pool: &PgPool, record: McpServerRecord) -> McpResult<
         RETURNING {SERVER_SELECT}
         "#
     );
-    let row = sqlx::query(&query)
+    let row = sqlx::query(sqlx::AssertSqlSafe(query.as_str()))
         .bind(id)
         .bind(uuid)
         .bind(record.tenant_id as i64)
@@ -638,7 +638,7 @@ pub async fn delete_server(
         RETURNING {SERVER_SELECT}
         "#
     );
-    let row = sqlx::query(&query)
+    let row = sqlx::query(sqlx::AssertSqlSafe(query.as_str()))
         .bind(tenant_id as i64)
         .bind(server_key)
         .fetch_optional(pool)
@@ -663,7 +663,7 @@ pub async fn list_connectors(
         ORDER BY updated_at DESC, connector_key ASC
         "#
     );
-    let rows = sqlx::query(&query)
+    let rows = sqlx::query(sqlx::AssertSqlSafe(query.as_str()))
         .bind(tenant_id as i64)
         .bind(server_id as i64)
         .fetch_all(pool)
@@ -686,7 +686,7 @@ pub async fn get_connector(
         LIMIT 1
         "#
     );
-    let row = sqlx::query(&query)
+    let row = sqlx::query(sqlx::AssertSqlSafe(query.as_str()))
         .bind(tenant_id as i64)
         .bind(server_id as i64)
         .bind(connector_key)
@@ -739,7 +739,7 @@ pub async fn upsert_connector(
         RETURNING {CONNECTOR_SELECT}
         "#
     );
-    let row = sqlx::query(&query)
+    let row = sqlx::query(sqlx::AssertSqlSafe(query.as_str()))
         .bind(id)
         .bind(uuid)
         .bind(record.tenant_id as i64)
@@ -781,7 +781,7 @@ pub async fn delete_connector(
         RETURNING {CONNECTOR_SELECT}
         "#
     );
-    let row = sqlx::query(&query)
+    let row = sqlx::query(sqlx::AssertSqlSafe(query.as_str()))
         .bind(tenant_id as i64)
         .bind(server_id as i64)
         .bind(connector_key)
@@ -803,7 +803,7 @@ pub async fn list_tools(pool: &PgPool, tenant_id: u64, server_id: u64) -> McpRes
         ORDER BY sort_weight ASC, tool_key ASC
         "#
     );
-    let rows = sqlx::query(&query)
+    let rows = sqlx::query(sqlx::AssertSqlSafe(query.as_str()))
         .bind(tenant_id as i64)
         .bind(server_id as i64)
         .fetch_all(pool)
@@ -826,7 +826,7 @@ pub async fn get_tool(
         LIMIT 1
         "#
     );
-    let row = sqlx::query(&query)
+    let row = sqlx::query(sqlx::AssertSqlSafe(query.as_str()))
         .bind(tenant_id as i64)
         .bind(server_id as i64)
         .bind(tool_key)
@@ -877,7 +877,7 @@ pub async fn upsert_tool(pool: &PgPool, record: McpToolRecord) -> McpResult<McpT
         RETURNING {TOOL_SELECT}
         "#
     );
-    let row = sqlx::query(&query)
+    let row = sqlx::query(sqlx::AssertSqlSafe(query.as_str()))
         .bind(id)
         .bind(uuid)
         .bind(record.tenant_id as i64)
@@ -918,7 +918,7 @@ pub async fn list_resources(
         ORDER BY resource_key ASC
         "#
     );
-    let rows = sqlx::query(&query)
+    let rows = sqlx::query(sqlx::AssertSqlSafe(query.as_str()))
         .bind(tenant_id as i64)
         .bind(server_id as i64)
         .fetch_all(pool)
@@ -941,7 +941,7 @@ pub async fn get_resource(
         LIMIT 1
         "#
     );
-    let row = sqlx::query(&query)
+    let row = sqlx::query(sqlx::AssertSqlSafe(query.as_str()))
         .bind(tenant_id as i64)
         .bind(server_id as i64)
         .bind(resource_key)
@@ -982,7 +982,7 @@ pub async fn upsert_resource(
         RETURNING {RESOURCE_SELECT}
         "#
     );
-    let row = sqlx::query(&query)
+    let row = sqlx::query(sqlx::AssertSqlSafe(query.as_str()))
         .bind(id)
         .bind(uuid)
         .bind(record.tenant_id as i64)
@@ -1018,7 +1018,7 @@ pub async fn list_prompts(
         ORDER BY prompt_key ASC
         "#
     );
-    let rows = sqlx::query(&query)
+    let rows = sqlx::query(sqlx::AssertSqlSafe(query.as_str()))
         .bind(tenant_id as i64)
         .bind(server_id as i64)
         .fetch_all(pool)
@@ -1041,7 +1041,7 @@ pub async fn get_prompt(
         LIMIT 1
         "#
     );
-    let row = sqlx::query(&query)
+    let row = sqlx::query(sqlx::AssertSqlSafe(query.as_str()))
         .bind(tenant_id as i64)
         .bind(server_id as i64)
         .bind(prompt_key)
@@ -1080,7 +1080,7 @@ pub async fn upsert_prompt(pool: &PgPool, record: McpPromptRecord) -> McpResult<
         RETURNING {PROMPT_SELECT}
         "#
     );
-    let row = sqlx::query(&query)
+    let row = sqlx::query(sqlx::AssertSqlSafe(query.as_str()))
         .bind(id)
         .bind(uuid)
         .bind(record.tenant_id as i64)
@@ -1192,7 +1192,7 @@ pub async fn list_invocations(
                 LIMIT $4 OFFSET $5
                 "#
             );
-            sqlx::query(&query)
+            sqlx::query(sqlx::AssertSqlSafe(query.as_str()))
                 .bind(tenant_id as i64)
                 .bind(server_id as i64)
                 .bind(pattern)
@@ -1212,7 +1212,7 @@ pub async fn list_invocations(
                 LIMIT $3 OFFSET $4
                 "#
             );
-            sqlx::query(&query)
+            sqlx::query(sqlx::AssertSqlSafe(query.as_str()))
                 .bind(tenant_id as i64)
                 .bind(server_id as i64)
                 .bind(limit)
@@ -1231,7 +1231,7 @@ pub async fn list_invocations(
                 LIMIT $3 OFFSET $4
                 "#
             );
-            sqlx::query(&query)
+            sqlx::query(sqlx::AssertSqlSafe(query.as_str()))
                 .bind(tenant_id as i64)
                 .bind(pattern)
                 .bind(limit)
@@ -1250,7 +1250,7 @@ pub async fn list_invocations(
                 LIMIT $2 OFFSET $3
                 "#
             );
-            sqlx::query(&query)
+            sqlx::query(sqlx::AssertSqlSafe(query.as_str()))
                 .bind(tenant_id as i64)
                 .bind(limit)
                 .bind(offset)
@@ -1275,7 +1275,7 @@ pub async fn get_invocation_by_idempotency(
         LIMIT 1
         "#
     );
-    let row = sqlx::query(&query)
+    let row = sqlx::query(sqlx::AssertSqlSafe(query.as_str()))
         .bind(tenant_id as i64)
         .bind(idempotency_key)
         .fetch_optional(pool)
@@ -1313,7 +1313,7 @@ pub async fn append_invocation(
         RETURNING {INVOCATION_SELECT}
         "#
     );
-    let row = sqlx::query(&query)
+    let row = sqlx::query(sqlx::AssertSqlSafe(query.as_str()))
         .bind(id)
         .bind(uuid)
         .bind(record.tenant_id as i64)

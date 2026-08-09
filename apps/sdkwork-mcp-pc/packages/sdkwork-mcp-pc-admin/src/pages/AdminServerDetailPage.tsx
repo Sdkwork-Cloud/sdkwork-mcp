@@ -25,6 +25,7 @@ import {
 
 import { AdminCapabilityPanel } from '../components/AdminCapabilityPanel';
 import { AdminServerSettingsPanel } from '../components/AdminServerSettingsPanel';
+import { useMcpAdminServersBasePath } from '../routeContext';
 
 const defaultConnector: UpsertMcpConnectorCommand = {
   connector_key: 'default',
@@ -41,6 +42,7 @@ type AdminTab = 'connectors' | 'capabilities' | 'settings';
 
 export function AdminServerDetailPage() {
   const clients = useMCPClients();
+  const serversBasePath = useMcpAdminServersBasePath();
   const { serverKey = '' } = useParams();
   const [tab, setTab] = useState<AdminTab>('connectors');
   const [error, setError] = useState<string | null>(null);
@@ -96,7 +98,10 @@ export function AdminServerDetailPage() {
   return (
     <div>
       <div className="mb-4">
-        <Link to="/admin/servers" className="text-sm font-medium text-blue-600 hover:text-blue-700">
+        <Link
+          to={serversBasePath}
+          className="text-sm font-medium text-blue-600 hover:text-blue-700"
+        >
           ← Back to servers
         </Link>
       </div>

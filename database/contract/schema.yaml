@@ -37,15 +37,3 @@ tables:
     lifecycle_status: active
     owner: mcp-platform
     module: observability
-  - name: ai_mcp_server_binding
-    lifecycle_status: planned
-    owner: mcp-platform
-    module: registry
-  - name: ai_mcp_tool_approval
-    lifecycle_status: planned
-    owner: mcp-platform
-    module: capability
-  - name: ai_mcp_capability_sync_job
-    lifecycle_status: planned
-    owner: mcp-platform
-    module: capability

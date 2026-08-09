@@ -2,3 +2,8 @@ export { AdminServersPage, AdminServersPage as AdminMCPPage } from './pages/Admi
 export { AdminServerDetailPage } from './pages/AdminServerDetailPage';
 export { AdminCategoriesPage } from './pages/AdminCategoriesPage';
 export { AdminInvocationsPage } from './pages/AdminInvocationsPage';
+export {
+  McpAdminRouteProvider,
+  useMcpAdminServersBasePath,
+  type McpAdminRouteContextValue,
+} from './routeContext';

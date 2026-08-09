@@ -26,6 +26,7 @@ import {
 } from '@sdkwork/mcp-pc-core';
 
 import { uploadServerIcon } from '../services/driveAssetUploadService';
+import { useMcpAdminServersBasePath } from '../routeContext';
 
 const defaultForm: CreateMcpServerCommand = {
   server_key: 'mcp.demo.sample',
@@ -40,6 +41,7 @@ const defaultForm: CreateMcpServerCommand = {
 
 export function AdminServersPage() {
   const clients = useMCPClients();
+  const serversBasePath = useMcpAdminServersBasePath();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [form, setForm] = useState<CreateMcpServerCommand>(defaultForm);
   const [error, setError] = useState<string | null>(null);
@@ -184,7 +186,7 @@ export function AdminServersPage() {
                     <tr key={server.id}>
                       <td className="px-4 py-3">
                         <Link
-                          to={`/admin/servers/${encodeURIComponent(server.server_key)}`}
+                          to={`${serversBasePath}/${encodeURIComponent(server.server_key)}`}
                           className="font-medium text-blue-600 hover:text-blue-700"
                         >
                           {server.name}

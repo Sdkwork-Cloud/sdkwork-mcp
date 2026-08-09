@@ -14,7 +14,7 @@ impl DbReadinessCheck {
     }
 
     pub async fn check(&self) -> Result<(), sqlx::Error> {
-        sqlx::query_scalar::<_, i64>("SELECT 1")
+        sqlx::query_scalar::<_, i64>("SELECT 1::bigint")
             .fetch_one(&self.pool)
             .await
             .map(|_| ())
@@ -25,7 +25,7 @@ impl ReadinessCheck for DbReadinessCheck {
     fn check(&self) -> ReadinessFuture<'_> {
         let pool = self.pool.clone();
         Box::pin(async move {
-            sqlx::query_scalar::<_, i64>("SELECT 1")
+            sqlx::query_scalar::<_, i64>("SELECT 1::bigint")
                 .fetch_one(&pool)
                 .await
                 .map(|_| ())

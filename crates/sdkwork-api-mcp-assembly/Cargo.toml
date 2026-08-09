@@ -15,6 +15,7 @@ tokio.workspace = true
 sdkwork-web-bootstrap.workspace = true
 sdkwork-web-core.workspace = true
 sqlx.workspace = true
+sdkwork-database-sqlx.workspace = true
 sdkwork-intelligence-mcp-repository-sqlx = { path = "../sdkwork-intelligence-mcp-repository-sqlx" }
 sdkwork-intelligence-mcp-service = { path = "../sdkwork-intelligence-mcp-service" }
 sdkwork-mcp-database-host = { path = "../sdkwork-mcp-database-host" }

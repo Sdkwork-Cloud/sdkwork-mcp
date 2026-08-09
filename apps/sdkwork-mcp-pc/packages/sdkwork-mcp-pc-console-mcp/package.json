@@ -1,0 +1,28 @@
+{
+  "name": "@sdkwork/mcp-pc-console-mcp",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "src/index.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./src/index.ts",
+      "default": "./src/index.ts"
+    }
+  },
+  "dependencies": {
+    "@sdkwork/mcp-pc-core": "workspace:*",
+    "@sdkwork/mcp-pc-commons": "workspace:*",
+    "react": "^19.1.0",
+    "react-router-dom": "^7.6.0"
+  },
+  "sdkwork": {
+    "applicationCode": "mcp",
+    "architecture": "pc-react",
+    "capability": "mcp",
+    "surface": "app-console",
+    "managedBy": "manual"
+  }
+}

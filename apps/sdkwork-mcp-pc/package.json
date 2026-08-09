@@ -38,7 +38,8 @@
     "@sdkwork/mcp-app-sdk": "workspace:*",
     "@sdkwork/mcp-backend-sdk": "workspace:*",
     "tailwind-merge": "^3.5.0",
-    "tailwindcss": "^4.1.14"
+    "tailwindcss": "^4.1.14",
+    "@sdkwork/mcp-pc-console-mcp": "workspace:*"
   },
   "devDependencies": {
     "@types/react": "^19.1.0",

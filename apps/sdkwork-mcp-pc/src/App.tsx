@@ -8,6 +8,7 @@ import {
   AdminServersPage,
 } from '@sdkwork/mcp-pc-admin';
 import { ConsoleMCPPage } from '@sdkwork/mcp-pc-console';
+import { MyMcpServersPage, RegisterMcpServerPage } from '@sdkwork/mcp-pc-console-mcp';
 import { MCPHubPage, MCPServerDetailPage } from '@sdkwork/mcp-pc-hub';
 import { MCPShell } from '@sdkwork/mcp-pc-shell';
 
@@ -27,6 +28,8 @@ export function App() {
             <Route path="/mcp-hub" element={<MCPHubPage />} />
             <Route path="/mcp-hub/:serverKey" element={<MCPServerDetailPage />} />
             <Route path="/console/mcp" element={<ConsoleMCPPage />} />
+            <Route path="/console/mcp/mine" element={<MyMcpServersPage />} />
+            <Route path="/console/mcp/register" element={<RegisterMcpServerPage />} />
             <Route
               path="/admin/servers"
               element={

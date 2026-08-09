@@ -1,20 +1,26 @@
 //! Gateway bootstrap for sdkwork-mcp.
 //! Multi-surface merges mount shared infrastructure routes once at the assembly layer.
+//!
+//! The assembly exports the indivisible `ApiAssemblyContribution` contract
+//! (API_ASSEMBLY_SPEC.md section 4); the platform cloud gateway composes the
+//! contribution with its process-shared PostgreSQL pool.
+
+use std::sync::Arc;
 
 use axum::Router;
+use sdkwork_database_sqlx::DatabasePool;
 use sdkwork_intelligence_mcp_repository_sqlx::SqlxMcpRepository;
 use sdkwork_intelligence_mcp_service::McpService;
-use sdkwork_mcp_database_host::bootstrap_mcp_database_from_env;
+use sdkwork_mcp_database_host::bootstrap_mcp_database;
 use sdkwork_routes_mcp_app_api::DbReadinessCheck;
 use sdkwork_web_bootstrap::{
     assemble_multi_surface_router, ApiAssemblyContribution, ServiceRouterConfig,
 };
+use sdkwork_web_core::HttpRouteManifest;
 use sqlx::PgPool;
-use std::sync::Arc;
 
-pub struct ApiAssembly {
-    pub router: Router,
-}
+/// Indivisible host-neutral API assembly contribution (web-bootstrap contract).
+pub type ApiAssembly = ApiAssemblyContribution;
 
 struct McpRuntime {
     service: Arc<McpService<SqlxMcpRepository>>,
@@ -23,8 +29,27 @@ struct McpRuntime {
 }
 
 impl McpRuntime {
+    async fn bootstrap_from_database(pool: DatabasePool) -> Result<Self, String> {
+        let host = bootstrap_mcp_database(pool).await?;
+        let pool = host
+            .postgres_pool()
+            .ok_or_else(|| "mcp runtime requires postgres database pool".to_string())?
+            .clone();
+        let repository = SqlxMcpRepository::new(pool.clone());
+        let service = Arc::new(McpService::new(repository));
+        let default_tenant_id = std::env::var("SDKWORK_MCP_TENANT_ID")
+            .ok()
+            .and_then(|value| value.parse::<u64>().ok())
+            .unwrap_or(100_001);
+        Ok(Self {
+            service,
+            default_tenant_id,
+            pool,
+        })
+    }
+
     async fn bootstrap_from_env() -> Result<Self, String> {
-        let host = bootstrap_mcp_database_from_env().await?;
+        let host = sdkwork_mcp_database_host::bootstrap_mcp_database_from_env().await?;
         let pool = host
             .postgres_pool()
             .ok_or_else(|| "mcp runtime requires postgres database pool".to_string())?
@@ -43,23 +68,70 @@ impl McpRuntime {
     }
 }
 
-pub async fn assemble_api_router() -> Result<ApiAssembly, String> {
-    let runtime = McpRuntime::bootstrap_from_env().await?;
+fn combined_route_manifest() -> HttpRouteManifest {
+    let routes = sdkwork_routes_mcp_app_api::gateway_route_manifest()
+        .routes()
+        .iter()
+        .chain(sdkwork_routes_mcp_backend_api::gateway_route_manifest().routes())
+        .copied()
+        .collect();
+    HttpRouteManifest::from_owned_routes(routes)
+}
+
+async fn assemble_api_router_from_runtime(
+    runtime: McpRuntime,
+    mount_infra: bool,
+) -> Result<ApiAssembly, String> {
     let service = runtime.service.clone();
     let tenant_id = runtime.default_tenant_id;
     let pool = runtime.pool.clone();
 
-    let app_router =
-        sdkwork_routes_mcp_app_api::gateway_mount_business(service.clone(), tenant_id).await;
-    let backend_router =
-        sdkwork_routes_mcp_backend_api::gateway_mount_business(service, tenant_id).await;
-
-    let router = assemble_multi_surface_router(
-        [app_router, backend_router],
-        ServiceRouterConfig::default().with_readiness_check(Arc::new(DbReadinessCheck::new(pool))),
+    let app_router = sdkwork_routes_mcp_app_api::business_router(
+        sdkwork_routes_mcp_app_api::AppState {
+            service: service.clone(),
+            default_tenant_id: tenant_id,
+            readiness: None,
+        },
     );
+    let backend_router = sdkwork_routes_mcp_backend_api::business_router(
+        sdkwork_routes_mcp_backend_api::BackendState {
+            service,
+            default_tenant_id: tenant_id,
+            readiness: None,
+        },
+    );
+    let router = if mount_infra {
+        assemble_multi_surface_router(
+            [app_router, backend_router],
+            ServiceRouterConfig::default()
+                .with_readiness_check(Arc::new(DbReadinessCheck::new(pool.clone()))),
+        )
+    } else {
+        Router::new().merge(app_router).merge(backend_router)
+    };
+    ApiAssemblyContribution::from_manifest(
+        "sdkwork-mcp",
+        "SDKWork MCP API",
+        router,
+        combined_route_manifest(),
+        vec![
+            Arc::new(sdkwork_routes_mcp_app_api::McpAppContextInjector),
+            Arc::new(sdkwork_routes_mcp_backend_api::McpBackendContextInjector),
+        ],
+        Arc::new(DbReadinessCheck::new(pool)),
+    )
+}
 
-    Ok(ApiAssembly { router })
+pub async fn assemble_api_router() -> Result<ApiAssembly, String> {
+    let runtime = McpRuntime::bootstrap_from_env().await?;
+    assemble_api_router_from_runtime(runtime, true).await
+}
+
+/// Assemble the MCP contribution against a caller-provided database pool so the
+/// platform cloud gateway can share its process-wide PostgreSQL pool.
+pub async fn assemble_api_router_with_pool(pool: DatabasePool) -> Result<ApiAssembly, String> {
+    let runtime = McpRuntime::bootstrap_from_database(pool).await?;
+    assemble_api_router_from_runtime(runtime, false).await
 }
 
 /// Builds the MCP App API as a composing-owner contribution. The returned

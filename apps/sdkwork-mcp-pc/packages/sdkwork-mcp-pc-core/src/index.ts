@@ -6,6 +6,9 @@ export type {
   McpResourceRecord,
   McpPromptRecord,
   McpInvocationRecord,
+  CreateOwnMcpServerCommand,
+  UpdateOwnMcpServerCommand,
+  UpsertOwnMcpConnectorCommand,
 } from '@sdkwork/mcp-app-sdk';
 
 export type {
@@ -58,5 +61,20 @@ export {
   listAdminInvocations,
   appendAdminInvocation,
 } from './services/adminMcpService';
+
+export {
+  createOwnMcpServer,
+  deleteOwnMcpConnector,
+  deleteOwnMcpServer,
+  listOwnedMcpServers,
+  updateOwnMcpServer,
+  upsertOwnMcpConnector,
+} from './services/selfServiceService';
+
+export {
+  uploadDriveAsset,
+  uploadServerIcon,
+  type DriveAssetUploadOptions,
+} from './services/driveAssetUploadService';
 
 export { useAsyncResource } from './hooks/useAsyncResource';

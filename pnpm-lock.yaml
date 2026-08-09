@@ -113,6 +113,9 @@ importers:
 
   ../sdkwork-appbase/packages/pc-react/foundation/sdkwork-appbase-pc-react:
     dependencies:
+      '@sdkwork/base-data-backend-sdk':
+        specifier: workspace:*
+        version: link:../../../../sdks/sdkwork-base-data-backend-sdk/sdkwork-base-data-backend-sdk-typescript
       '@sdkwork/runtime-bootstrap':
         specifier: workspace:*
         version: link:../../../common/foundation/sdkwork-runtime-bootstrap
@@ -209,6 +212,15 @@ importers:
       typescript:
         specifier: ^6.0.2
         version: 6.0.3
+
+  ../sdkwork-appbase/sdks/sdkwork-base-data-backend-sdk/sdkwork-base-data-backend-sdk-typescript:
+    dependencies:
+      '@sdkwork/sdk-common':
+        specifier: workspace:*
+        version: link:../../../../sdkwork-sdk-commons/sdkwork-sdk-common-typescript
+      '@sdkwork/utils':
+        specifier: workspace:*
+        version: link:../../../../sdkwork-utils/packages/sdkwork-utils-typescript
 
   ../sdkwork-core/sdkwork-core-pc-react:
     dependencies:
@@ -513,12 +525,18 @@ importers:
       '@sdkwork/sdk-common':
         specifier: workspace:*
         version: link:../../../../sdkwork-sdk-commons/sdkwork-sdk-common-typescript
+      '@sdkwork/utils':
+        specifier: workspace:*
+        version: link:../../../../sdkwork-utils/packages/sdkwork-utils-typescript
 
   ../sdkwork-iam/sdks/sdkwork-iam-backend-sdk/sdkwork-iam-backend-sdk-typescript:
     dependencies:
       '@sdkwork/sdk-common':
         specifier: workspace:*
         version: link:../../../../sdkwork-sdk-commons/sdkwork-sdk-common-typescript
+      '@sdkwork/utils':
+        specifier: workspace:*
+        version: link:../../../../sdkwork-utils/packages/sdkwork-utils-typescript
 
   ../sdkwork-iam/sdks/sdkwork-iam-open-sdk/sdkwork-iam-open-sdk-typescript:
     dependencies:
@@ -895,6 +913,9 @@ importers:
       '@sdkwork/mcp-pc-console':
         specifier: workspace:*
         version: link:packages/sdkwork-mcp-pc-console
+      '@sdkwork/mcp-pc-console-mcp':
+        specifier: workspace:*
+        version: link:packages/sdkwork-mcp-pc-console-mcp
       '@sdkwork/mcp-pc-core':
         specifier: workspace:*
         version: link:packages/sdkwork-mcp-pc-core
@@ -1003,6 +1024,21 @@ importers:
         version: 19.2.4(react@19.2.4)
 
   apps/sdkwork-mcp-pc/packages/sdkwork-mcp-pc-console:
+    dependencies:
+      '@sdkwork/mcp-pc-commons':
+        specifier: workspace:*
+        version: link:../sdkwork-mcp-pc-commons
+      '@sdkwork/mcp-pc-core':
+        specifier: workspace:*
+        version: link:../sdkwork-mcp-pc-core
+      react:
+        specifier: ^19.1.0
+        version: 19.2.4
+      react-router-dom:
+        specifier: ^7.6.0
+        version: 7.18.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+
+  apps/sdkwork-mcp-pc/packages/sdkwork-mcp-pc-console-mcp:
     dependencies:
       '@sdkwork/mcp-pc-commons':
         specifier: workspace:*

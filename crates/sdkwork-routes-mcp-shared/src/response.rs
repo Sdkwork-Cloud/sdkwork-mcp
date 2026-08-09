@@ -115,6 +115,13 @@ impl ApiProblem {
         }
     }
 
+    pub fn forbidden(message: impl Into<String>) -> Self {
+        Self {
+            message: message.into(),
+            status: StatusCode::FORBIDDEN,
+        }
+    }
+
     pub fn internal_server_error(message: impl Into<String>) -> Self {
         Self {
             message: message.into(),
@@ -126,6 +133,7 @@ impl ApiProblem {
         let kind = match self.status {
             StatusCode::BAD_REQUEST => WebFrameworkErrorKind::BadRequest,
             StatusCode::NOT_FOUND => WebFrameworkErrorKind::NotFound,
+            StatusCode::FORBIDDEN => WebFrameworkErrorKind::Forbidden,
             StatusCode::INTERNAL_SERVER_ERROR => WebFrameworkErrorKind::InternalServerError,
             _ => WebFrameworkErrorKind::InternalServerError,
         };

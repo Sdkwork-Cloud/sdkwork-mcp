@@ -25,8 +25,23 @@
   "baseUrl": "http://127.0.0.1:18100",
   "standardProfile": "sdkwork-v3",
   "fixedSdkVersion": "0.1.0",
-  "ownerOnlyOperationCount": 8,
+  "ownerOnlyOperationCount": 14,
   "operations": [
+    {
+      "method": "POST",
+      "operationId": "mcp.createOwnServer",
+      "path": "/app/v3/api/mcp/servers"
+    },
+    {
+      "method": "DELETE",
+      "operationId": "mcp.deleteOwnConnector",
+      "path": "/app/v3/api/mcp/servers/{serverId}/connectors/{connectorKey}"
+    },
+    {
+      "method": "DELETE",
+      "operationId": "mcp.deleteOwnServer",
+      "path": "/app/v3/api/mcp/servers/{serverKey}"
+    },
     {
       "method": "GET",
       "operationId": "mcp.getServer",
@@ -49,6 +64,11 @@
     },
     {
       "method": "GET",
+      "operationId": "mcp.listOwnedServers",
+      "path": "/app/v3/api/mcp/servers/owned"
+    },
+    {
+      "method": "GET",
       "operationId": "mcp.listPrompts",
       "path": "/app/v3/api/mcp/servers/{serverId}/prompts"
     },
@@ -66,6 +86,16 @@
       "method": "GET",
       "operationId": "mcp.listTools",
       "path": "/app/v3/api/mcp/servers/{serverId}/tools"
+    },
+    {
+      "method": "PATCH",
+      "operationId": "mcp.updateOwnServer",
+      "path": "/app/v3/api/mcp/servers/{serverKey}"
+    },
+    {
+      "method": "POST",
+      "operationId": "mcp.upsertOwnConnector",
+      "path": "/app/v3/api/mcp/servers/{serverId}/connectors"
     }
   ],
   "managedBy": "tools/mcp_sdk_generator_runner.mjs",

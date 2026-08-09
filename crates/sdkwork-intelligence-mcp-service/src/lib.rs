@@ -25,7 +25,17 @@ pub type McpResult<T> = Result<T, McpServiceError>;
 #[async_trait]
 pub trait McpRepository: Send + Sync {
     async fn list_servers(&self, tenant_id: u64) -> McpResult<Vec<McpServerRecord>>;
+    async fn list_owned_servers(
+        &self,
+        tenant_id: u64,
+        owner_user_id: u64,
+    ) -> McpResult<Vec<McpServerRecord>>;
     async fn get_server(&self, tenant_id: u64, server_key: &str) -> McpResult<McpServerRecord>;
+    async fn get_server_by_id(
+        &self,
+        tenant_id: u64,
+        server_id: u64,
+    ) -> McpResult<McpServerRecord>;
     async fn upsert_server(&self, record: McpServerRecord) -> McpResult<McpServerRecord>;
     async fn delete_server(&self, tenant_id: u64, server_key: &str) -> McpResult<McpServerRecord>;
 
@@ -124,9 +134,27 @@ impl<R: McpRepository> McpService<R> {
         self.repository.list_servers(tenant_id).await
     }
 
+    pub async fn list_owned_servers(
+        &self,
+        tenant_id: u64,
+        owner_user_id: u64,
+    ) -> McpResult<Vec<McpServerRecord>> {
+        self.repository
+            .list_owned_servers(tenant_id, owner_user_id)
+            .await
+    }
+
     pub async fn get_server(&self, tenant_id: u64, server_key: &str) -> McpResult<McpServerRecord> {
         validation::validate_server_key(server_key)?;
         self.repository.get_server(tenant_id, server_key).await
+    }
+
+    pub async fn get_server_by_id(
+        &self,
+        tenant_id: u64,
+        server_id: u64,
+    ) -> McpResult<McpServerRecord> {
+        self.repository.get_server_by_id(tenant_id, server_id).await
     }
 
     pub async fn upsert_server(&self, record: McpServerRecord) -> McpResult<McpServerRecord> {

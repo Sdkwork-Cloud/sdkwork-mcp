@@ -9,10 +9,35 @@
     "protocol": "http",
     "packageName": "sdkwork-mcp-app-sdk-generated-typescript"
   },
-  "changeFingerprint": "685b72901f4bc1fec55f37171cf2cc3a7607f4a0cc4118f871e5adf49d6e50d8",
+  "changeFingerprint": "f25603d15b9cb916606740d5be768e0c61aa8dc4f8a31095c2524dd214b731d3",
   "changes": {
-    "createdGeneratedFiles": [],
-    "updatedGeneratedFiles": [],
+    "createdGeneratedFiles": [
+      "src/types/create-own-mcp-server-command.ts",
+      "src/types/mcp-create-own-server-response.ts",
+      "src/types/mcp-delete-own-connector-response.ts",
+      "src/types/mcp-delete-own-server-response.ts",
+      "src/types/mcp-list-owned-servers-response.ts",
+      "src/types/mcp-update-own-server-response.ts",
+      "src/types/mcp-upsert-own-connector-response.ts",
+      "src/types/update-own-mcp-server-command.ts",
+      "src/types/upsert-own-mcp-connector-command.ts"
+    ],
+    "updatedGeneratedFiles": [
+      "package.json",
+      "src/api/mcp.ts",
+      "src/http/client.ts",
+      "src/types/field-error.ts",
+      "src/types/index.ts",
+      "src/types/mcp-get-server-response.ts",
+      "src/types/mcp-get-tool-response.ts",
+      "src/types/mcp-list-categories-response.ts",
+      "src/types/mcp-list-invocations-response.ts",
+      "src/types/mcp-list-prompts-response.ts",
+      "src/types/mcp-list-resources-response.ts",
+      "src/types/mcp-list-servers-response.ts",
+      "src/types/mcp-list-tools-response.ts",
+      "src/types/problem-detail.ts"
+    ],
     "unchangedGeneratedFiles": [
       "bin/publish-core.mjs",
       "bin/publish.ps1",
@@ -21,40 +46,26 @@
       "bin/sdk-gen.sh",
       "CHANGELOG.md",
       "LICENSE",
-      "package.json",
       "README.md",
       "sdkwork-sdk.json",
       "src/api/base.ts",
       "src/api/index.ts",
-      "src/api/mcp.ts",
       "src/api/paths.ts",
       "src/auth/index.ts",
-      "src/http/client.ts",
       "src/http/index.ts",
       "src/index.ts",
       "src/sdk.ts",
       "src/types/append-mcp-invocation-command.ts",
       "src/types/common.ts",
       "src/types/create-mcp-server-command.ts",
-      "src/types/field-error.ts",
-      "src/types/index.ts",
       "src/types/mcp-connector-record.ts",
-      "src/types/mcp-get-server-response.ts",
-      "src/types/mcp-get-tool-response.ts",
       "src/types/mcp-invocation-record.ts",
-      "src/types/mcp-list-categories-response.ts",
-      "src/types/mcp-list-invocations-response.ts",
-      "src/types/mcp-list-prompts-response.ts",
-      "src/types/mcp-list-resources-response.ts",
-      "src/types/mcp-list-servers-response.ts",
-      "src/types/mcp-list-tools-response.ts",
       "src/types/mcp-prompt-record.ts",
       "src/types/mcp-resource-record.ts",
       "src/types/mcp-server-category-record.ts",
       "src/types/mcp-server-record.ts",
       "src/types/mcp-tool-record.ts",
       "src/types/page-info.ts",
-      "src/types/problem-detail.ts",
       "src/types/sdk-work-api-response.ts",
       "src/types/sdk-work-command-data.ts",
       "src/types/sdk-work-command-response.ts",
@@ -81,26 +92,113 @@
   },
   "impact": {
     "schemaVersion": 1,
-    "areas": [],
-    "details": [],
-    "requiresVerification": false,
-    "summary": "No generated, scaffold, or backup changes detected. Verification can be skipped."
+    "areas": [
+      "api-surface",
+      "models",
+      "runtime",
+      "build-metadata"
+    ],
+    "details": [
+      {
+        "area": "api-surface",
+        "paths": [
+          "src/api/mcp.ts",
+          "src/http/client.ts"
+        ]
+      },
+      {
+        "area": "models",
+        "paths": [
+          "src/types/create-own-mcp-server-command.ts",
+          "src/types/field-error.ts",
+          "src/types/index.ts",
+          "src/types/mcp-create-own-server-response.ts",
+          "src/types/mcp-delete-own-connector-response.ts",
+          "src/types/mcp-delete-own-server-response.ts",
+          "src/types/mcp-get-server-response.ts",
+          "src/types/mcp-get-tool-response.ts",
+          "src/types/mcp-list-categories-response.ts",
+          "src/types/mcp-list-invocations-response.ts",
+          "src/types/mcp-list-owned-servers-response.ts",
+          "src/types/mcp-list-prompts-response.ts",
+          "src/types/mcp-list-resources-response.ts",
+          "src/types/mcp-list-servers-response.ts",
+          "src/types/mcp-list-tools-response.ts",
+          "src/types/mcp-update-own-server-response.ts",
+          "src/types/mcp-upsert-own-connector-response.ts",
+          "src/types/problem-detail.ts",
+          "src/types/update-own-mcp-server-command.ts",
+          "src/types/upsert-own-mcp-connector-command.ts"
+        ]
+      },
+      {
+        "area": "runtime",
+        "paths": [
+          "src/http/client.ts"
+        ]
+      },
+      {
+        "area": "build-metadata",
+        "paths": [
+          "package.json"
+        ]
+      }
+    ],
+    "requiresVerification": true,
+    "summary": "Detected impact areas: api-surface, models, runtime, build-metadata. Verification is required."
   },
   "verificationPlan": {
-    "shouldRun": false,
-    "runPhase": "skip",
-    "summary": "No generated, scaffold, or backup changes detected. Verification can be skipped.",
-    "steps": []
+    "shouldRun": true,
+    "runPhase": "now",
+    "summary": "Detected impact areas: api-surface, models, runtime, build-metadata. Verification is required. Run the required verification commands now against the generated SDK output.",
+    "steps": [
+      {
+        "id": "check",
+        "title": "Unified package check",
+        "required": true,
+        "rationale": "Validate the generated package with the unified publish helper. Triggered by: api-surface, models, runtime, build-metadata.",
+        "workingDirectory": "E:\\sdkwork-space\\sdkwork-mcp\\sdks\\sdkwork-mcp-app-sdk\\sdkwork-mcp-app-sdk-typescript\\generated\\server-openapi",
+        "command": "node",
+        "args": [
+          "./bin/publish-core.mjs",
+          "--language",
+          "typescript",
+          "--project-dir",
+          ".",
+          "--action",
+          "check"
+        ],
+        "displayCommand": "node ./bin/publish-core.mjs --language typescript --project-dir . --action check"
+      },
+      {
+        "id": "build",
+        "title": "Unified package build",
+        "required": true,
+        "rationale": "Run the full package build because this language uses a lighter check path than the final build. Triggered by: api-surface, models, runtime, build-metadata.",
+        "workingDirectory": "E:\\sdkwork-space\\sdkwork-mcp\\sdks\\sdkwork-mcp-app-sdk\\sdkwork-mcp-app-sdk-typescript\\generated\\server-openapi",
+        "command": "node",
+        "args": [
+          "./bin/publish-core.mjs",
+          "--language",
+          "typescript",
+          "--project-dir",
+          ".",
+          "--action",
+          "build"
+        ],
+        "displayCommand": "node ./bin/publish-core.mjs --language typescript --project-dir . --action build"
+      }
+    ]
   },
   "executionDecision": {
     "schemaVersion": 1,
-    "riskLevel": "low",
-    "nextAction": "skip",
+    "riskLevel": "medium",
+    "nextAction": "verify",
     "requiresManualReview": false,
     "applyRequiresExpectedFingerprint": false,
-    "summary": "No actionable changes were detected. No apply or verification step is required.",
+    "summary": "Changes have been applied. Run the required verification plan now.",
     "reasons": [
-      "no-actionable-changes"
+      "verification-required"
     ]
   },
   "preservedLegacyFiles": false

@@ -265,6 +265,51 @@ const domainSchemas = {
       lifecycle_status: { type: "string" },
     },
   },
+  CreateOwnMcpServerCommand: {
+    type: "object",
+    additionalProperties: true,
+    required: ["server_key", "name", "transport"],
+    properties: {
+      server_key: { type: "string" },
+      name: { type: "string" },
+      description: { type: "string" },
+      transport: { type: "string" },
+      category_id: { type: "integer", format: "int64" },
+      category_code: { type: "string" },
+      tags: { type: "array", items: { type: "string" } },
+      icon_ref: { type: "string", pattern: "^drive://spaces/[^/]+/nodes/[^/]+$" },
+    },
+  },
+  UpdateOwnMcpServerCommand: {
+    type: "object",
+    additionalProperties: true,
+    properties: {
+      name: { type: "string" },
+      description: { type: "string" },
+      transport: { type: "string" },
+      category_id: { type: "integer", format: "int64" },
+      category_code: { type: "string" },
+      tags: { type: "array", items: { type: "string" } },
+      icon_ref: { type: "string", pattern: "^drive://spaces/[^/]+/nodes/[^/]+$" },
+    },
+  },
+  UpsertOwnMcpConnectorCommand: {
+    type: "object",
+    additionalProperties: true,
+    required: ["connector_key", "transport"],
+    properties: {
+      connector_key: { type: "string" },
+      transport: { type: "string" },
+      endpoint_url: { type: "string" },
+      command_ref: { type: "string" },
+      args_json: { type: "string" },
+      env_schema_json: { type: "string" },
+      auth_type: { type: "string" },
+      secret_ref: { type: "string" },
+      timeout_ms: { type: "integer" },
+      retry_policy_json: { type: "string" },
+    },
+  },
   UpsertMcpToolCommand: {
     type: "object",
     additionalProperties: true,
@@ -393,31 +438,37 @@ function invocationListParameters() {
 }
 
 const appRoutes = [
-  route("get", "/app/v3/api/mcp/categories", "mcp.listCategories", listResponse("#/components/schemas/McpServerCategoryRecord"), listQueryParameters()),
-  route("get", "/app/v3/api/mcp/servers", "mcp.listServers", listResponse("#/components/schemas/McpServerRecord"), listQueryParameters()),
-  route("get", "/app/v3/api/mcp/servers/{serverKey}", "mcp.getServer", resourceResponse("#/components/schemas/McpServerRecord"), [pathParam("serverKey")]),
-  route("get", "/app/v3/api/mcp/servers/{serverId}/tools", "mcp.listTools", listResponse("#/components/schemas/McpToolRecord"), [pathParamInt("serverId"), ...listQueryParameters()]),
-  route("get", "/app/v3/api/mcp/servers/{serverId}/tools/{toolKey}", "mcp.getTool", resourceResponse("#/components/schemas/McpToolRecord"), [pathParamInt("serverId"), pathParam("toolKey")]),
-  route("get", "/app/v3/api/mcp/servers/{serverId}/resources", "mcp.listResources", listResponse("#/components/schemas/McpResourceRecord"), [pathParamInt("serverId"), ...listQueryParameters()]),
-  route("get", "/app/v3/api/mcp/servers/{serverId}/prompts", "mcp.listPrompts", listResponse("#/components/schemas/McpPromptRecord"), [pathParamInt("serverId"), ...listQueryParameters()]),
-  route("get", "/app/v3/api/mcp/invocations", "mcp.listInvocations", listResponse("#/components/schemas/McpInvocationRecord"), invocationListParameters()),
+  route("get", "/app/v3/api/mcp/categories", "mcp.listCategories", listResponse("#/components/schemas/McpServerCategoryRecord"), listQueryParameters(), null, "mcp.marketplace.read"),
+  route("get", "/app/v3/api/mcp/servers", "mcp.listServers", listResponse("#/components/schemas/McpServerRecord"), listQueryParameters(), null, "mcp.marketplace.read"),
+  route("post", "/app/v3/api/mcp/servers", "mcp.createOwnServer", resourceResponse("#/components/schemas/McpServerRecord"), [], "CreateOwnMcpServerCommand", "mcp.servers.create"),
+  route("get", "/app/v3/api/mcp/servers/owned", "mcp.listOwnedServers", listResponse("#/components/schemas/McpServerRecord"), listQueryParameters(), null, "mcp.marketplace.read"),
+  route("get", "/app/v3/api/mcp/servers/{serverKey}", "mcp.getServer", resourceResponse("#/components/schemas/McpServerRecord"), [pathParam("serverKey")], null, "mcp.marketplace.read"),
+  route("patch", "/app/v3/api/mcp/servers/{serverKey}", "mcp.updateOwnServer", resourceResponse("#/components/schemas/McpServerRecord"), [pathParam("serverKey")], "UpdateOwnMcpServerCommand", "mcp.servers.update"),
+  route("delete", "/app/v3/api/mcp/servers/{serverKey}", "mcp.deleteOwnServer", resourceResponse("#/components/schemas/McpServerRecord"), [pathParam("serverKey")], null, "mcp.servers.delete"),
+  route("get", "/app/v3/api/mcp/servers/{serverId}/tools", "mcp.listTools", listResponse("#/components/schemas/McpToolRecord"), [pathParamInt("serverId"), ...listQueryParameters()], null, "mcp.marketplace.read"),
+  route("get", "/app/v3/api/mcp/servers/{serverId}/tools/{toolKey}", "mcp.getTool", resourceResponse("#/components/schemas/McpToolRecord"), [pathParamInt("serverId"), pathParam("toolKey")], null, "mcp.marketplace.read"),
+  route("get", "/app/v3/api/mcp/servers/{serverId}/resources", "mcp.listResources", listResponse("#/components/schemas/McpResourceRecord"), [pathParamInt("serverId"), ...listQueryParameters()], null, "mcp.marketplace.read"),
+  route("get", "/app/v3/api/mcp/servers/{serverId}/prompts", "mcp.listPrompts", listResponse("#/components/schemas/McpPromptRecord"), [pathParamInt("serverId"), ...listQueryParameters()], null, "mcp.marketplace.read"),
+  route("post", "/app/v3/api/mcp/servers/{serverId}/connectors", "mcp.upsertOwnConnector", resourceResponse("#/components/schemas/McpConnectorRecord"), [pathParamInt("serverId")], "UpsertOwnMcpConnectorCommand", "mcp.connectors.create"),
+  route("delete", "/app/v3/api/mcp/servers/{serverId}/connectors/{connectorKey}", "mcp.deleteOwnConnector", resourceResponse("#/components/schemas/McpConnectorRecord"), [pathParamInt("serverId"), pathParam("connectorKey")], null, "mcp.connectors.delete"),
+  route("get", "/app/v3/api/mcp/invocations", "mcp.listInvocations", listResponse("#/components/schemas/McpInvocationRecord"), invocationListParameters(), null, "mcp.invocations.read"),
 ];
 
 const backendRoutes = [
-  route("get", "/backend/v3/api/mcp/categories", "mcpAdmin.listCategories", listResponse("#/components/schemas/McpServerCategoryRecord"), listQueryParameters()),
-  route("post", "/backend/v3/api/mcp/categories", "mcpAdmin.upsertCategory", resourceResponse("#/components/schemas/McpServerCategoryRecord"), [], "UpsertMcpServerCategoryCommand"),
-  route("get", "/backend/v3/api/mcp/servers", "mcpAdmin.listServers", listResponse("#/components/schemas/McpServerRecord"), listQueryParameters()),
-  route("post", "/backend/v3/api/mcp/servers", "mcpAdmin.createServer", resourceResponse("#/components/schemas/McpServerRecord"), [], "CreateMcpServerCommand"),
-  route("put", "/backend/v3/api/mcp/servers/{serverKey}", "mcpAdmin.updateServer", resourceResponse("#/components/schemas/McpServerRecord"), [pathParam("serverKey")], "UpdateMcpServerCommand"),
-  route("delete", "/backend/v3/api/mcp/servers/{serverKey}", "mcpAdmin.deleteServer", resourceResponse("#/components/schemas/McpServerRecord"), [pathParam("serverKey")]),
-  route("get", "/backend/v3/api/mcp/servers/{serverId}/connectors", "mcpAdmin.listConnectors", listResponse("#/components/schemas/McpConnectorRecord"), [pathParamInt("serverId"), ...listQueryParameters()]),
-  route("post", "/backend/v3/api/mcp/servers/{serverId}/connectors", "mcpAdmin.upsertConnector", listResponse("#/components/schemas/McpConnectorRecord"), [pathParamInt("serverId")], "UpsertMcpConnectorCommand"),
-  route("delete", "/backend/v3/api/mcp/servers/{serverId}/connectors/{connectorKey}", "mcpAdmin.deleteConnector", listResponse("#/components/schemas/McpConnectorRecord"), [pathParamInt("serverId"), pathParam("connectorKey")]),
-  route("post", "/backend/v3/api/mcp/servers/{serverId}/tools", "mcpAdmin.upsertTool", listResponse("#/components/schemas/McpToolRecord"), [pathParamInt("serverId")], "UpsertMcpToolCommand"),
-  route("post", "/backend/v3/api/mcp/servers/{serverId}/resources", "mcpAdmin.upsertResource", listResponse("#/components/schemas/McpResourceRecord"), [pathParamInt("serverId")], "UpsertMcpResourceCommand"),
-  route("post", "/backend/v3/api/mcp/servers/{serverId}/prompts", "mcpAdmin.upsertPrompt", listResponse("#/components/schemas/McpPromptRecord"), [pathParamInt("serverId")], "UpsertMcpPromptCommand"),
-  route("get", "/backend/v3/api/mcp/invocations", "mcpAdmin.listInvocations", listResponse("#/components/schemas/McpInvocationRecord"), invocationListParameters()),
-  route("post", "/backend/v3/api/mcp/invocations", "mcpAdmin.appendInvocation", resourceResponse("#/components/schemas/McpInvocationRecord"), [], "AppendMcpInvocationCommand"),
+  route("get", "/backend/v3/api/mcp/categories", "mcpAdmin.listCategories", listResponse("#/components/schemas/McpServerCategoryRecord"), listQueryParameters(), null, "mcp.admin.marketplace.read"),
+  route("post", "/backend/v3/api/mcp/categories", "mcpAdmin.upsertCategory", resourceResponse("#/components/schemas/McpServerCategoryRecord"), [], "UpsertMcpServerCategoryCommand", "mcp.admin.category.manage"),
+  route("get", "/backend/v3/api/mcp/servers", "mcpAdmin.listServers", listResponse("#/components/schemas/McpServerRecord"), listQueryParameters(), null, "mcp.admin.marketplace.read"),
+  route("post", "/backend/v3/api/mcp/servers", "mcpAdmin.createServer", resourceResponse("#/components/schemas/McpServerRecord"), [], "CreateMcpServerCommand", "mcp.admin.server.manage"),
+  route("put", "/backend/v3/api/mcp/servers/{serverKey}", "mcpAdmin.updateServer", resourceResponse("#/components/schemas/McpServerRecord"), [pathParam("serverKey")], "UpdateMcpServerCommand", "mcp.admin.server.manage"),
+  route("delete", "/backend/v3/api/mcp/servers/{serverKey}", "mcpAdmin.deleteServer", resourceResponse("#/components/schemas/McpServerRecord"), [pathParam("serverKey")], null, "mcp.admin.server.manage"),
+  route("get", "/backend/v3/api/mcp/servers/{serverId}/connectors", "mcpAdmin.listConnectors", listResponse("#/components/schemas/McpConnectorRecord"), [pathParamInt("serverId"), ...listQueryParameters()], null, "mcp.admin.marketplace.read"),
+  route("post", "/backend/v3/api/mcp/servers/{serverId}/connectors", "mcpAdmin.upsertConnector", listResponse("#/components/schemas/McpConnectorRecord"), [pathParamInt("serverId")], "UpsertMcpConnectorCommand", "mcp.admin.server.manage"),
+  route("delete", "/backend/v3/api/mcp/servers/{serverId}/connectors/{connectorKey}", "mcpAdmin.deleteConnector", listResponse("#/components/schemas/McpConnectorRecord"), [pathParamInt("serverId"), pathParam("connectorKey")], null, "mcp.admin.server.manage"),
+  route("post", "/backend/v3/api/mcp/servers/{serverId}/tools", "mcpAdmin.upsertTool", listResponse("#/components/schemas/McpToolRecord"), [pathParamInt("serverId")], "UpsertMcpToolCommand", "mcp.admin.server.manage"),
+  route("post", "/backend/v3/api/mcp/servers/{serverId}/resources", "mcpAdmin.upsertResource", listResponse("#/components/schemas/McpResourceRecord"), [pathParamInt("serverId")], "UpsertMcpResourceCommand", "mcp.admin.server.manage"),
+  route("post", "/backend/v3/api/mcp/servers/{serverId}/prompts", "mcpAdmin.upsertPrompt", listResponse("#/components/schemas/McpPromptRecord"), [pathParamInt("serverId")], "UpsertMcpPromptCommand", "mcp.admin.server.manage"),
+  route("get", "/backend/v3/api/mcp/invocations", "mcpAdmin.listInvocations", listResponse("#/components/schemas/McpInvocationRecord"), invocationListParameters(), null, "mcp.admin.invocation.read"),
+  route("post", "/backend/v3/api/mcp/invocations", "mcpAdmin.appendInvocation", resourceResponse("#/components/schemas/McpInvocationRecord"), [], "AppendMcpInvocationCommand", "mcp.admin.invocation.read"),
 ];
 
 function ref(name) {
@@ -443,7 +494,15 @@ function problemResponse() {
   };
 }
 
-function route(method, pathKey, operationId, responseSchema, parameters = [], bodySchemaName = null) {
+function route(
+  method,
+  pathKey,
+  operationId,
+  responseSchema,
+  parameters = [],
+  bodySchemaName = null,
+  permission = null,
+) {
   return {
     method,
     path: pathKey,
@@ -475,6 +534,7 @@ function route(method, pathKey, operationId, responseSchema, parameters = [], bo
         },
         400: problemResponse(),
         401: problemResponse(),
+        403: problemResponse(),
         404: problemResponse(),
       },
       security: [{ AuthToken: [], AccessToken: [] }],
@@ -485,6 +545,7 @@ function route(method, pathKey, operationId, responseSchema, parameters = [], bo
       "x-sdkwork-public": false,
       "x-sdkwork-api-surface": "",
       "x-sdkwork-request-context": "WebRequestContext",
+      ...(permission ? { "x-sdkwork-permission": permission } : {}),
     },
   };
 }

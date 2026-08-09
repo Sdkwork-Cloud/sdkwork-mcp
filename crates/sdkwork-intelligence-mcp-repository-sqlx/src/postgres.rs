@@ -538,6 +538,28 @@ pub async fn list_servers(pool: &PgPool, tenant_id: u64) -> McpResult<Vec<McpSer
     rows.iter().map(row_to_server).collect()
 }
 
+pub async fn list_owned_servers(
+    pool: &PgPool,
+    tenant_id: u64,
+    owner_user_id: u64,
+) -> McpResult<Vec<McpServerRecord>> {
+    let query = format!(
+        r#"
+        SELECT {SERVER_SELECT}
+        FROM ai_mcp_server
+        WHERE tenant_id = $1 AND owner_user_id = $2 AND {ACTIVE_ENTITY_FILTER}
+        ORDER BY updated_at DESC, server_key ASC
+        "#
+    );
+    let rows = sqlx::query(sqlx::AssertSqlSafe(query.as_str()))
+        .bind(tenant_id as i64)
+        .bind(owner_user_id as i64)
+        .fetch_all(pool)
+        .await
+        .map_err(map_sqlx)?;
+    rows.iter().map(row_to_server).collect()
+}
+
 pub async fn get_server(
     pool: &PgPool,
     tenant_id: u64,
@@ -561,6 +583,31 @@ pub async fn get_server(
         .map(row_to_server)
         .transpose()?
         .ok_or_else(|| McpServiceError::NotFound(server_key.to_string()))
+}
+
+pub async fn get_server_by_id(
+    pool: &PgPool,
+    tenant_id: u64,
+    server_id: u64,
+) -> McpResult<McpServerRecord> {
+    let query = format!(
+        r#"
+        SELECT {SERVER_SELECT}
+        FROM ai_mcp_server
+        WHERE tenant_id = $1 AND id = $2 AND deleted_at IS NULL
+        LIMIT 1
+        "#
+    );
+    let row = sqlx::query(sqlx::AssertSqlSafe(query.as_str()))
+        .bind(tenant_id as i64)
+        .bind(server_id as i64)
+        .fetch_optional(pool)
+        .await
+        .map_err(map_sqlx)?;
+    row.as_ref()
+        .map(row_to_server)
+        .transpose()?
+        .ok_or_else(|| McpServiceError::NotFound(format!("mcp server {server_id}")))
 }
 
 pub async fn upsert_server(pool: &PgPool, record: McpServerRecord) -> McpResult<McpServerRecord> {

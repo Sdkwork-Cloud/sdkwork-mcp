@@ -21,7 +21,7 @@ pub fn mcp_backend_public_path_prefixes() -> Vec<String> {
 }
 
 #[derive(Clone, Default)]
-struct McpBackendContextInjector;
+pub struct McpBackendContextInjector;
 
 impl DomainContextInjector for McpBackendContextInjector {
     fn inject(&self, request: &mut axum::extract::Request, context: &WebRequestContext) {

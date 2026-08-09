@@ -1,5 +1,5 @@
 import { backendApiPath } from './paths';
-import type { HttpClient } from '../http/client';
+import type { ApiRequestOptions, HttpClient } from '../http/client';
 
 import type { AppendMcpInvocationCommand, CreateMcpServerCommand, McpConnectorRecord, McpInvocationRecord, McpPromptRecord, McpResourceRecord, McpServerCategoryRecord, McpServerRecord, McpToolRecord, PageInfo, UpdateMcpServerCommand, UpsertMcpConnectorCommand, UpsertMcpPromptCommand, UpsertMcpResourceCommand, UpsertMcpServerCategoryCommand, UpsertMcpToolCommand } from '../types';
 
@@ -42,85 +42,85 @@ export class McpMcpAdminApi {
 
 
 /** MCP mcpAdmin.listCategories */
-  async listCategories(params?: McpMcpAdminListCategoriesParams): Promise<Record<string, unknown>> {
+  async listCategories(params?: McpMcpAdminListCategoriesParams, requestOptions?: ApiRequestOptions): Promise<{ items: McpServerCategoryRecord[]; pageInfo: PageInfo; }> {
     const query = buildQueryString([
       { name: 'page', value: params?.page, style: 'form', explode: true, allowReserved: false },
       { name: 'page_size', value: params?.pageSize, style: 'form', explode: true, allowReserved: false },
       { name: 'cursor', value: params?.cursor, style: 'form', explode: true, allowReserved: false },
       { name: 'q', value: params?.q, style: 'form', explode: true, allowReserved: false },
     ]);
-    return this.client.get<Record<string, unknown>>(appendQueryString(backendApiPath(`/mcp/categories`), query));
+    return this.client.request<{ items: McpServerCategoryRecord[]; pageInfo: PageInfo; }>(appendQueryString(backendApiPath(`/mcp/categories`), query), { signal: requestOptions?.signal, timeout: requestOptions?.timeout, method: 'GET' as any, sdkworkUnwrapKind: 'page' });
   }
 
 /** MCP mcpAdmin.upsertCategory */
-  async upsertCategory(body: UpsertMcpServerCategoryCommand): Promise<McpServerCategoryRecord> {
-    return this.client.post<McpServerCategoryRecord>(backendApiPath(`/mcp/categories`), body, undefined, undefined, 'application/json');
+  async upsertCategory(body: UpsertMcpServerCategoryCommand, requestOptions?: ApiRequestOptions): Promise<McpServerCategoryRecord> {
+    return this.client.request<McpServerCategoryRecord>(backendApiPath(`/mcp/categories`), { signal: requestOptions?.signal, timeout: requestOptions?.timeout, method: 'POST' as any, body, contentType: 'application/json', sdkworkUnwrapKind: 'item' });
   }
 
 /** MCP mcpAdmin.listServers */
-  async listServers(params?: McpMcpAdminListServersParams): Promise<Record<string, unknown>> {
+  async listServers(params?: McpMcpAdminListServersParams, requestOptions?: ApiRequestOptions): Promise<{ items: McpServerRecord[]; pageInfo: PageInfo; }> {
     const query = buildQueryString([
       { name: 'page', value: params?.page, style: 'form', explode: true, allowReserved: false },
       { name: 'page_size', value: params?.pageSize, style: 'form', explode: true, allowReserved: false },
       { name: 'cursor', value: params?.cursor, style: 'form', explode: true, allowReserved: false },
       { name: 'q', value: params?.q, style: 'form', explode: true, allowReserved: false },
     ]);
-    return this.client.get<Record<string, unknown>>(appendQueryString(backendApiPath(`/mcp/servers`), query));
+    return this.client.request<{ items: McpServerRecord[]; pageInfo: PageInfo; }>(appendQueryString(backendApiPath(`/mcp/servers`), query), { signal: requestOptions?.signal, timeout: requestOptions?.timeout, method: 'GET' as any, sdkworkUnwrapKind: 'page' });
   }
 
 /** MCP mcpAdmin.createServer */
-  async createServer(body: CreateMcpServerCommand): Promise<McpServerRecord> {
-    return this.client.post<McpServerRecord>(backendApiPath(`/mcp/servers`), body, undefined, undefined, 'application/json');
+  async createServer(body: CreateMcpServerCommand, requestOptions?: ApiRequestOptions): Promise<McpServerRecord> {
+    return this.client.request<McpServerRecord>(backendApiPath(`/mcp/servers`), { signal: requestOptions?.signal, timeout: requestOptions?.timeout, method: 'POST' as any, body, contentType: 'application/json', sdkworkUnwrapKind: 'item' });
   }
 
 /** MCP mcpAdmin.updateServer */
-  async updateServer(serverKey: string, body: UpdateMcpServerCommand): Promise<McpServerRecord> {
-    return this.client.put<McpServerRecord>(backendApiPath(`/mcp/servers/${serializePathParameter(serverKey, { name: 'serverKey', style: 'simple', explode: false })}`), body, undefined, undefined, 'application/json');
+  async updateServer(serverKey: string, body: UpdateMcpServerCommand, requestOptions?: ApiRequestOptions): Promise<McpServerRecord> {
+    return this.client.request<McpServerRecord>(backendApiPath(`/mcp/servers/${serializePathParameter(serverKey, { name: 'serverKey', style: 'simple', explode: false })}`), { signal: requestOptions?.signal, timeout: requestOptions?.timeout, method: 'PUT' as any, body, contentType: 'application/json', sdkworkUnwrapKind: 'item' });
   }
 
 /** MCP mcpAdmin.deleteServer */
-  async deleteServer(serverKey: string): Promise<McpServerRecord> {
-    return this.client.delete<McpServerRecord>(backendApiPath(`/mcp/servers/${serializePathParameter(serverKey, { name: 'serverKey', style: 'simple', explode: false })}`));
+  async deleteServer(serverKey: string, requestOptions?: ApiRequestOptions): Promise<McpServerRecord> {
+    return this.client.request<McpServerRecord>(backendApiPath(`/mcp/servers/${serializePathParameter(serverKey, { name: 'serverKey', style: 'simple', explode: false })}`), { signal: requestOptions?.signal, timeout: requestOptions?.timeout, method: 'DELETE' as any, sdkworkUnwrapKind: 'item' });
   }
 
 /** MCP mcpAdmin.listConnectors */
-  async listConnectors(serverId: string, params?: McpMcpAdminListConnectorsParams): Promise<Record<string, unknown>> {
+  async listConnectors(serverId: string, params?: McpMcpAdminListConnectorsParams, requestOptions?: ApiRequestOptions): Promise<{ items: McpConnectorRecord[]; pageInfo: PageInfo; }> {
     const query = buildQueryString([
       { name: 'page', value: params?.page, style: 'form', explode: true, allowReserved: false },
       { name: 'page_size', value: params?.pageSize, style: 'form', explode: true, allowReserved: false },
       { name: 'cursor', value: params?.cursor, style: 'form', explode: true, allowReserved: false },
       { name: 'q', value: params?.q, style: 'form', explode: true, allowReserved: false },
     ]);
-    return this.client.get<Record<string, unknown>>(appendQueryString(backendApiPath(`/mcp/servers/${serializePathParameter(serverId, { name: 'serverId', style: 'simple', explode: false })}/connectors`), query));
+    return this.client.request<{ items: McpConnectorRecord[]; pageInfo: PageInfo; }>(appendQueryString(backendApiPath(`/mcp/servers/${serializePathParameter(serverId, { name: 'serverId', style: 'simple', explode: false })}/connectors`), query), { signal: requestOptions?.signal, timeout: requestOptions?.timeout, method: 'GET' as any, sdkworkUnwrapKind: 'page' });
   }
 
 /** MCP mcpAdmin.upsertConnector */
-  async upsertConnector(serverId: string, body: UpsertMcpConnectorCommand): Promise<Record<string, unknown>> {
-    return this.client.post<Record<string, unknown>>(backendApiPath(`/mcp/servers/${serializePathParameter(serverId, { name: 'serverId', style: 'simple', explode: false })}/connectors`), body, undefined, undefined, 'application/json');
+  async upsertConnector(serverId: string, body: UpsertMcpConnectorCommand, requestOptions?: ApiRequestOptions): Promise<{ items: McpConnectorRecord[]; pageInfo: PageInfo; }> {
+    return this.client.request<{ items: McpConnectorRecord[]; pageInfo: PageInfo; }>(backendApiPath(`/mcp/servers/${serializePathParameter(serverId, { name: 'serverId', style: 'simple', explode: false })}/connectors`), { signal: requestOptions?.signal, timeout: requestOptions?.timeout, method: 'POST' as any, body, contentType: 'application/json', sdkworkUnwrapKind: 'page' });
   }
 
 /** MCP mcpAdmin.deleteConnector */
-  async deleteConnector(serverId: string, connectorKey: string): Promise<Record<string, unknown>> {
-    return this.client.delete<Record<string, unknown>>(backendApiPath(`/mcp/servers/${serializePathParameter(serverId, { name: 'serverId', style: 'simple', explode: false })}/connectors/${serializePathParameter(connectorKey, { name: 'connectorKey', style: 'simple', explode: false })}`));
+  async deleteConnector(serverId: string, connectorKey: string, requestOptions?: ApiRequestOptions): Promise<{ items: McpConnectorRecord[]; pageInfo: PageInfo; }> {
+    return this.client.request<{ items: McpConnectorRecord[]; pageInfo: PageInfo; }>(backendApiPath(`/mcp/servers/${serializePathParameter(serverId, { name: 'serverId', style: 'simple', explode: false })}/connectors/${serializePathParameter(connectorKey, { name: 'connectorKey', style: 'simple', explode: false })}`), { signal: requestOptions?.signal, timeout: requestOptions?.timeout, method: 'DELETE' as any, sdkworkUnwrapKind: 'page' });
   }
 
 /** MCP mcpAdmin.upsertTool */
-  async upsertTool(serverId: string, body: UpsertMcpToolCommand): Promise<Record<string, unknown>> {
-    return this.client.post<Record<string, unknown>>(backendApiPath(`/mcp/servers/${serializePathParameter(serverId, { name: 'serverId', style: 'simple', explode: false })}/tools`), body, undefined, undefined, 'application/json');
+  async upsertTool(serverId: string, body: UpsertMcpToolCommand, requestOptions?: ApiRequestOptions): Promise<{ items: McpToolRecord[]; pageInfo: PageInfo; }> {
+    return this.client.request<{ items: McpToolRecord[]; pageInfo: PageInfo; }>(backendApiPath(`/mcp/servers/${serializePathParameter(serverId, { name: 'serverId', style: 'simple', explode: false })}/tools`), { signal: requestOptions?.signal, timeout: requestOptions?.timeout, method: 'POST' as any, body, contentType: 'application/json', sdkworkUnwrapKind: 'page' });
   }
 
 /** MCP mcpAdmin.upsertResource */
-  async upsertResource(serverId: string, body: UpsertMcpResourceCommand): Promise<Record<string, unknown>> {
-    return this.client.post<Record<string, unknown>>(backendApiPath(`/mcp/servers/${serializePathParameter(serverId, { name: 'serverId', style: 'simple', explode: false })}/resources`), body, undefined, undefined, 'application/json');
+  async upsertResource(serverId: string, body: UpsertMcpResourceCommand, requestOptions?: ApiRequestOptions): Promise<{ items: McpResourceRecord[]; pageInfo: PageInfo; }> {
+    return this.client.request<{ items: McpResourceRecord[]; pageInfo: PageInfo; }>(backendApiPath(`/mcp/servers/${serializePathParameter(serverId, { name: 'serverId', style: 'simple', explode: false })}/resources`), { signal: requestOptions?.signal, timeout: requestOptions?.timeout, method: 'POST' as any, body, contentType: 'application/json', sdkworkUnwrapKind: 'page' });
   }
 
 /** MCP mcpAdmin.upsertPrompt */
-  async upsertPrompt(serverId: string, body: UpsertMcpPromptCommand): Promise<Record<string, unknown>> {
-    return this.client.post<Record<string, unknown>>(backendApiPath(`/mcp/servers/${serializePathParameter(serverId, { name: 'serverId', style: 'simple', explode: false })}/prompts`), body, undefined, undefined, 'application/json');
+  async upsertPrompt(serverId: string, body: UpsertMcpPromptCommand, requestOptions?: ApiRequestOptions): Promise<{ items: McpPromptRecord[]; pageInfo: PageInfo; }> {
+    return this.client.request<{ items: McpPromptRecord[]; pageInfo: PageInfo; }>(backendApiPath(`/mcp/servers/${serializePathParameter(serverId, { name: 'serverId', style: 'simple', explode: false })}/prompts`), { signal: requestOptions?.signal, timeout: requestOptions?.timeout, method: 'POST' as any, body, contentType: 'application/json', sdkworkUnwrapKind: 'page' });
   }
 
 /** MCP mcpAdmin.listInvocations */
-  async listInvocations(params?: McpMcpAdminListInvocationsParams): Promise<Record<string, unknown>> {
+  async listInvocations(params?: McpMcpAdminListInvocationsParams, requestOptions?: ApiRequestOptions): Promise<{ items: McpInvocationRecord[]; pageInfo: PageInfo; }> {
     const query = buildQueryString([
       { name: 'page', value: params?.page, style: 'form', explode: true, allowReserved: false },
       { name: 'page_size', value: params?.pageSize, style: 'form', explode: true, allowReserved: false },
@@ -128,12 +128,12 @@ export class McpMcpAdminApi {
       { name: 'q', value: params?.q, style: 'form', explode: true, allowReserved: false },
       { name: 'server_id', value: params?.serverId, style: 'form', explode: true, allowReserved: false },
     ]);
-    return this.client.get<Record<string, unknown>>(appendQueryString(backendApiPath(`/mcp/invocations`), query));
+    return this.client.request<{ items: McpInvocationRecord[]; pageInfo: PageInfo; }>(appendQueryString(backendApiPath(`/mcp/invocations`), query), { signal: requestOptions?.signal, timeout: requestOptions?.timeout, method: 'GET' as any, sdkworkUnwrapKind: 'page' });
   }
 
 /** MCP mcpAdmin.appendInvocation */
-  async appendInvocation(body: AppendMcpInvocationCommand): Promise<McpInvocationRecord> {
-    return this.client.post<McpInvocationRecord>(backendApiPath(`/mcp/invocations`), body, undefined, undefined, 'application/json');
+  async appendInvocation(body: AppendMcpInvocationCommand, requestOptions?: ApiRequestOptions): Promise<McpInvocationRecord> {
+    return this.client.request<McpInvocationRecord>(backendApiPath(`/mcp/invocations`), { signal: requestOptions?.signal, timeout: requestOptions?.timeout, method: 'POST' as any, body, contentType: 'application/json', sdkworkUnwrapKind: 'item' });
   }
 }
 

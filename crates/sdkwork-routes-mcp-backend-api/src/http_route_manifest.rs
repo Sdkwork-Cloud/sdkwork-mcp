@@ -1,99 +1,114 @@
+use sdkwork_mcp_contract::{
+    PERM_ADMIN_CATEGORY_MANAGE, PERM_ADMIN_INVOCATION_READ, PERM_ADMIN_MARKETPLACE_READ,
+    PERM_ADMIN_SERVER_MANAGE,
+};
 use sdkwork_web_core::{HttpMethod, HttpRoute, HttpRouteManifest, RateLimitTier};
 
-const fn abuse_sensitive_route(
+const fn admin_route(
     method: HttpMethod,
     path: &'static str,
-    tag: &'static str,
     operation_id: &'static str,
+    permission: &'static str,
 ) -> HttpRoute {
-    HttpRoute::dual_token(method, path, tag, operation_id)
+    HttpRoute::dual_token(method, path, "mcp-admin", operation_id)
+        .with_required_permission(permission)
+}
+
+const fn abuse_sensitive_admin_route(
+    method: HttpMethod,
+    path: &'static str,
+    operation_id: &'static str,
+    permission: &'static str,
+) -> HttpRoute {
+    HttpRoute::dual_token(method, path, "mcp-admin", operation_id)
         .with_rate_limit_tier(RateLimitTier::AuthCritical)
+        .with_required_permission(permission)
 }
 
 const HTTP_ROUTES: &[HttpRoute] = &[
-    HttpRoute::dual_token(
+    admin_route(
         HttpMethod::Get,
         "/backend/v3/api/mcp/categories",
-        "mcp-admin",
         "mcpAdmin.listCategories",
+        PERM_ADMIN_MARKETPLACE_READ,
     ),
-    HttpRoute::dual_token(
+    admin_route(
         HttpMethod::Post,
         "/backend/v3/api/mcp/categories",
-        "mcp-admin",
         "mcpAdmin.upsertCategory",
+        PERM_ADMIN_CATEGORY_MANAGE,
     ),
-    HttpRoute::dual_token(
+    admin_route(
         HttpMethod::Get,
         "/backend/v3/api/mcp/servers",
-        "mcp-admin",
         "mcpAdmin.listServers",
+        PERM_ADMIN_MARKETPLACE_READ,
     ),
-    HttpRoute::dual_token(
+    admin_route(
         HttpMethod::Post,
         "/backend/v3/api/mcp/servers",
-        "mcp-admin",
         "mcpAdmin.createServer",
+        PERM_ADMIN_SERVER_MANAGE,
     ),
-    HttpRoute::dual_token(
+    admin_route(
         HttpMethod::Put,
         "/backend/v3/api/mcp/servers/{serverKey}",
-        "mcp-admin",
         "mcpAdmin.updateServer",
+        PERM_ADMIN_SERVER_MANAGE,
     ),
-    abuse_sensitive_route(
+    abuse_sensitive_admin_route(
         HttpMethod::Delete,
         "/backend/v3/api/mcp/servers/{serverKey}",
-        "mcp-admin",
         "mcpAdmin.deleteServer",
+        PERM_ADMIN_SERVER_MANAGE,
     ),
-    HttpRoute::dual_token(
+    admin_route(
         HttpMethod::Get,
         "/backend/v3/api/mcp/servers/{serverId}/connectors",
-        "mcp-admin",
         "mcpAdmin.listConnectors",
+        PERM_ADMIN_MARKETPLACE_READ,
     ),
-    HttpRoute::dual_token(
+    admin_route(
         HttpMethod::Post,
         "/backend/v3/api/mcp/servers/{serverId}/connectors",
-        "mcp-admin",
         "mcpAdmin.upsertConnector",
+        PERM_ADMIN_SERVER_MANAGE,
     ),
-    abuse_sensitive_route(
+    abuse_sensitive_admin_route(
         HttpMethod::Delete,
         "/backend/v3/api/mcp/servers/{serverId}/connectors/{connectorKey}",
-        "mcp-admin",
         "mcpAdmin.deleteConnector",
+        PERM_ADMIN_SERVER_MANAGE,
     ),
-    HttpRoute::dual_token(
+    admin_route(
         HttpMethod::Post,
         "/backend/v3/api/mcp/servers/{serverId}/tools",
-        "mcp-admin",
         "mcpAdmin.upsertTool",
+        PERM_ADMIN_SERVER_MANAGE,
     ),
-    HttpRoute::dual_token(
+    admin_route(
         HttpMethod::Post,
         "/backend/v3/api/mcp/servers/{serverId}/resources",
-        "mcp-admin",
         "mcpAdmin.upsertResource",
+        PERM_ADMIN_SERVER_MANAGE,
     ),
-    HttpRoute::dual_token(
+    admin_route(
         HttpMethod::Post,
         "/backend/v3/api/mcp/servers/{serverId}/prompts",
-        "mcp-admin",
         "mcpAdmin.upsertPrompt",
+        PERM_ADMIN_SERVER_MANAGE,
     ),
-    HttpRoute::dual_token(
+    admin_route(
         HttpMethod::Get,
         "/backend/v3/api/mcp/invocations",
-        "mcp-admin",
         "mcpAdmin.listInvocations",
+        PERM_ADMIN_INVOCATION_READ,
     ),
-    abuse_sensitive_route(
+    abuse_sensitive_admin_route(
         HttpMethod::Post,
         "/backend/v3/api/mcp/invocations",
-        "mcp-admin",
         "mcpAdmin.appendInvocation",
+        PERM_ADMIN_INVOCATION_READ,
     ),
 ];
 

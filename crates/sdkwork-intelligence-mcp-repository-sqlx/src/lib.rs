@@ -31,8 +31,24 @@ impl McpRepository for SqlxMcpRepository {
         postgres::list_servers(&self.pool, tenant_id).await
     }
 
+    async fn list_owned_servers(
+        &self,
+        tenant_id: u64,
+        owner_user_id: u64,
+    ) -> McpResult<Vec<McpServerRecord>> {
+        postgres::list_owned_servers(&self.pool, tenant_id, owner_user_id).await
+    }
+
     async fn get_server(&self, tenant_id: u64, server_key: &str) -> McpResult<McpServerRecord> {
         postgres::get_server(&self.pool, tenant_id, server_key).await
+    }
+
+    async fn get_server_by_id(
+        &self,
+        tenant_id: u64,
+        server_id: u64,
+    ) -> McpResult<McpServerRecord> {
+        postgres::get_server_by_id(&self.pool, tenant_id, server_id).await
     }
 
     async fn upsert_server(&self, record: McpServerRecord) -> McpResult<McpServerRecord> {

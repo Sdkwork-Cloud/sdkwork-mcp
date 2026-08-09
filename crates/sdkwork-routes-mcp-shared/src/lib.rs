@@ -15,8 +15,9 @@ pub use response::{
 };
 pub use service_ops::{
     append_invocation, delete_connector, delete_server, get_server, get_tool, list_categories,
-    list_connectors, list_invocations, list_prompts, list_resources, list_servers, list_tools,
-    upsert_category, upsert_connector, upsert_prompt, upsert_resource, upsert_server, upsert_tool,
+    list_connectors, list_invocations, list_owned_servers, list_prompts, list_resources,
+    list_servers, list_tools, upsert_category, upsert_connector, upsert_prompt, upsert_resource,
+    upsert_server, upsert_tool,
 };
 
 pub fn gateway_mount() -> axum::Router {

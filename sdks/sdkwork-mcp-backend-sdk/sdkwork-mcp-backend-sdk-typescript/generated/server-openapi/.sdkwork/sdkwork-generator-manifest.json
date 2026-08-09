@@ -40,7 +40,7 @@
     },
     {
       "path": "package.json",
-      "sha256": "e7f2f245fc4bfd67758d2fa6bf192c2a91aa4f87fc3689217c8780ad2c6d7210"
+      "sha256": "915d3498df0742a464927c12170147703e7fbb27ce9992b5b24ae46f4dbb950a"
     },
     {
       "path": "README.md",
@@ -60,7 +60,7 @@
     },
     {
       "path": "src/api/mcp.ts",
-      "sha256": "e97328c22c4e28052c52f06d1db9e49d92207b1ef8e9d605cd523e3c68b24429"
+      "sha256": "e64acc15b13ee2cac6211e2eba469f0e762641a2f160b3c80f2c6cbb1bb3399f"
     },
     {
       "path": "src/api/paths.ts",
@@ -72,7 +72,7 @@
     },
     {
       "path": "src/http/client.ts",
-      "sha256": "6e389d5c14fb5845365972b6776af185d8af8eb8da7bb398e59be6c29e394ddf"
+      "sha256": "8232d087b029fcd6897617116ca4f8609a728915cc0ca2f1796c66c00c8d89d9"
     },
     {
       "path": "src/http/index.ts",
@@ -99,68 +99,72 @@
       "sha256": "5114146dea9a9216e126983cd3c1ddb98c2a1b7d4ab12fb91a6750dfc4b1340f"
     },
     {
+      "path": "src/types/create-own-mcp-server-command.ts",
+      "sha256": "4869607f1a3fbdb9f43bc74736a1d2a60f0d3fa1f6ce99ddc5616568a801ba8a"
+    },
+    {
       "path": "src/types/field-error.ts",
-      "sha256": "df70e331e6bff0817bc35428286fa8de5d7274ab83a6c60d7184759bf680a088"
+      "sha256": "7688827a804d5c888fdf626b89e3356832f858e24f0657069b6b842a31ae6907"
     },
     {
       "path": "src/types/index.ts",
-      "sha256": "bc2feeb163639987cf230337c2a7caba09a280b2733997160d5c15fb251345a2"
+      "sha256": "21a188f9aee02f8451f34a8a73df5cca6c7592ba5774dab1acb52acb1a61002b"
     },
     {
       "path": "src/types/mcp-admin-append-invocation-response.ts",
-      "sha256": "405c02109cc44376ef69cfe0e44174b7e01c41c15646ebeccb7704c0e916a887"
+      "sha256": "8c52190d1e7a7d0712207cb372546e8234859462f999a764cc28e6909b815fba"
     },
     {
       "path": "src/types/mcp-admin-create-server-response.ts",
-      "sha256": "ec02567de5c92a439837cb2a306ed483f7121bdfd7d6097f55cb86b4bc33d9c7"
+      "sha256": "4f9cc4656b881d7f0f8063a4156933b05ac066a9818980959a0a5d1f5c0e1238"
     },
     {
       "path": "src/types/mcp-admin-delete-connector-response.ts",
-      "sha256": "e8fab68eacf59eabad603047598d5541274dcbd0b514d822de99dd244d2de669"
+      "sha256": "565ff37028ca1c06cf869c90c2d9c0921fa5d8d04fb0ae6ac41f0b980e6679a5"
     },
     {
       "path": "src/types/mcp-admin-delete-server-response.ts",
-      "sha256": "1b407f8804f4486376dfdc3fb062d45b11f0bc4bd2c3106cbf1423de1194edf8"
+      "sha256": "8a97b3c7c0fe0d3ba0d743a0fe12d49b7abebe799f36191291fc6739e2911cc4"
     },
     {
       "path": "src/types/mcp-admin-list-categories-response.ts",
-      "sha256": "2d283ed109efa289065e7bc5a09a5fa21ed31634e4cd40b364282400f55dde15"
+      "sha256": "184e235d0dce6ffab0190f8aa61472187e36f606f29d574511b9e3aab243147c"
     },
     {
       "path": "src/types/mcp-admin-list-connectors-response.ts",
-      "sha256": "a99c4cc2c029961fec889160bbe724551f0bd92e877108700022646aa529faf8"
+      "sha256": "d7139b6a04257b014e8cc0350c1ad520cf73d0dc8c5e084a7d29d82efb5c9e91"
     },
     {
       "path": "src/types/mcp-admin-list-invocations-response.ts",
-      "sha256": "10db48c430aa3ec7328d6bb46b1b5738b14e5333d9aed2203a1d96173e5d89b7"
+      "sha256": "116debbe18e4bea66ec197c4aa337784be00067b9b8410a1bd41f5797aa95303"
     },
     {
       "path": "src/types/mcp-admin-list-servers-response.ts",
-      "sha256": "69f52351d677a30fdebd5cc6e57cc144a94f4bb2e530a8a109a338f2f31176f8"
+      "sha256": "0a23d62692bcf6656297da97b763115341fc9872c1f49cf528b10459eb2df12d"
     },
     {
       "path": "src/types/mcp-admin-update-server-response.ts",
-      "sha256": "f47aa3bd11d9e1273460c9494fc70ad29e40976e03449a6327aa100e55924b64"
+      "sha256": "50dbcded491faeb23a8201280cb10ceeafcd9446a9d675b6942ffbab68470a93"
     },
     {
       "path": "src/types/mcp-admin-upsert-category-response.ts",
-      "sha256": "ffebf3c35310e20b94270c0fc1e6c331ecc851b6deba0d4016489eceb60b2d6d"
+      "sha256": "792e88b8f1aa1a4623fef5a1ffefb8ea060175c7d74fe7f101aa1a3dee4642dc"
     },
     {
       "path": "src/types/mcp-admin-upsert-connector-response.ts",
-      "sha256": "40fa352ed1f854a0f78ccb21011f4547a4738618f5cb968565c3bc76d001f7b6"
+      "sha256": "8785a066e9a5b8c86649bca5c1494660f9cbfebb56d3a469f60313d631f47496"
     },
     {
       "path": "src/types/mcp-admin-upsert-prompt-response.ts",
-      "sha256": "587f01e20dbab4aacab603bd217bde102c285e1e6823105d8c7f1357e41d8448"
+      "sha256": "369d3790341507fbc8295d541f07713937aa9aa7679ee532f2866b175194ad08"
     },
     {
       "path": "src/types/mcp-admin-upsert-resource-response.ts",
-      "sha256": "b5166817db3d76c3a262713f6add02c3b75baa2ed907337d6e86f968a31600c3"
+      "sha256": "353d7cdce7450fa5a538816c50aca9a4c84836d0f52e35bbfddd8ee2d54c0c97"
     },
     {
       "path": "src/types/mcp-admin-upsert-tool-response.ts",
-      "sha256": "a454ae9a2ebb4ca894095447c0e2d316c50d94a90ba7b2ca7154079d4f05b7a8"
+      "sha256": "5b7873b54eab2fd14e31d140e8726b0e1754be85a09b8f60fd185e0610ae5b50"
     },
     {
       "path": "src/types/mcp-connector-record.ts",
@@ -196,7 +200,7 @@
     },
     {
       "path": "src/types/problem-detail.ts",
-      "sha256": "deca621176487754cbfa2012aa3eab046131ced5829ddf7cff64de692f8bcb0e"
+      "sha256": "c41fdf6433e1167d2fb1f3ac38fd13eb77178f4c0633c9e27824f1e1687ee4f6"
     },
     {
       "path": "src/types/sdk-work-api-response.ts",
@@ -235,6 +239,10 @@
       "sha256": "59f17ec97f7c2d12b4003439095deb039e8cae86480bd563494a8533efb2d17c"
     },
     {
+      "path": "src/types/update-own-mcp-server-command.ts",
+      "sha256": "d1b2ca636027bf770317451e1a61f1948523a6f0781240f6266d025ac2f1d4e8"
+    },
+    {
       "path": "src/types/upsert-mcp-connector-command.ts",
       "sha256": "36be3065901da9d5cab61d38245bc9832756d23e1a2a13c24f09ec9576585ae7"
     },
@@ -253,6 +261,10 @@
     {
       "path": "src/types/upsert-mcp-tool-command.ts",
       "sha256": "0f0f1ae2e8aa9e403d29227863058f28d3bc2b46ee657737abbc1ff4e1fd7002"
+    },
+    {
+      "path": "src/types/upsert-own-mcp-connector-command.ts",
+      "sha256": "c0d7f1a550d18050cc10189cd93acee2458a296b24927864cbc3a16e4fcd0982"
     },
     {
       "path": "tsconfig.json",

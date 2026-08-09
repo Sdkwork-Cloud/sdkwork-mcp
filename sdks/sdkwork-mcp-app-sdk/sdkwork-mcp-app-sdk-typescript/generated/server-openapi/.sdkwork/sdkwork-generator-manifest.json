@@ -40,7 +40,7 @@
     },
     {
       "path": "package.json",
-      "sha256": "e8359e1786038f5be0cd6fe15e1f4aa1f4332e29807a462317bca1123a2aa05b"
+      "sha256": "45d79ae060a46dbe2f22ebb73105c26f69b87fd76c37f84cd1e30ad5549f1ef2"
     },
     {
       "path": "README.md",
@@ -60,7 +60,7 @@
     },
     {
       "path": "src/api/mcp.ts",
-      "sha256": "53e49f7768c45d3b2465c17f4210687e6f1f2a016dd82d2f42f9fc6691dafaec"
+      "sha256": "cca5fd5cb3c53fd0cefe23cbae4b52d4cead313e6f3e1422c1e57111b7f08ef2"
     },
     {
       "path": "src/api/paths.ts",
@@ -72,7 +72,7 @@
     },
     {
       "path": "src/http/client.ts",
-      "sha256": "902ecbf9b15072c147ac9716f22209cd50b770e517b55d1ce1583671ab4d2c3e"
+      "sha256": "9349831b44a1a7336bdb8963379ad2ee616c48a4ae7c6d2540737780810ee8bc"
     },
     {
       "path": "src/http/index.ts",
@@ -99,24 +99,40 @@
       "sha256": "5114146dea9a9216e126983cd3c1ddb98c2a1b7d4ab12fb91a6750dfc4b1340f"
     },
     {
+      "path": "src/types/create-own-mcp-server-command.ts",
+      "sha256": "4869607f1a3fbdb9f43bc74736a1d2a60f0d3fa1f6ce99ddc5616568a801ba8a"
+    },
+    {
       "path": "src/types/field-error.ts",
-      "sha256": "df70e331e6bff0817bc35428286fa8de5d7274ab83a6c60d7184759bf680a088"
+      "sha256": "7688827a804d5c888fdf626b89e3356832f858e24f0657069b6b842a31ae6907"
     },
     {
       "path": "src/types/index.ts",
-      "sha256": "a7d1f8921afc773040c5f65bf2e799c8a06c5aa7f02b2a29e8d9855cedaee943"
+      "sha256": "054e83bf04b1a81f7a4620560339aef4184eb9b8c795d48993b27fe3cce8042d"
     },
     {
       "path": "src/types/mcp-connector-record.ts",
       "sha256": "9be571eb645d16835e07ade33801e92cafbb11a9b0aef4806cf046b188dc3168"
     },
     {
+      "path": "src/types/mcp-create-own-server-response.ts",
+      "sha256": "ccd54950ccb7cf944e6e05517dc8f1baac85ebb44406daa095aff8c391b53b61"
+    },
+    {
+      "path": "src/types/mcp-delete-own-connector-response.ts",
+      "sha256": "6434acaf0eec80686ca282c5cc03090c2afbe46d565853622bab45b2604cbcb3"
+    },
+    {
+      "path": "src/types/mcp-delete-own-server-response.ts",
+      "sha256": "7def3741218b5c6ddfd8987a73740072a3bac81a6fdf6b0f5f73953accef5043"
+    },
+    {
       "path": "src/types/mcp-get-server-response.ts",
-      "sha256": "1678429550621d1f0f5246d2db498e3be76437445bd048b1e8a52eb004b42570"
+      "sha256": "1874e1f75400f45ecf5bdf15cab532273dc90e12f3b55048b6ea6fc795f8301e"
     },
     {
       "path": "src/types/mcp-get-tool-response.ts",
-      "sha256": "585cefda0dddbf714d22803ac8dadad09ffdab0f681b6cd9b3b872d18fc2bbe5"
+      "sha256": "d4bcd95178edde5b03d4738f395646a0cc21aeb2d07506200b9d9db959bd9ca7"
     },
     {
       "path": "src/types/mcp-invocation-record.ts",
@@ -124,27 +140,31 @@
     },
     {
       "path": "src/types/mcp-list-categories-response.ts",
-      "sha256": "a41522f3d1535503572849770779fbb19359dfd763b4b3269b1313fd197267ab"
+      "sha256": "2d327b76d0e94621a08f56028629a74f5bc5a25d37b30a4acdad5f82ab19ce55"
     },
     {
       "path": "src/types/mcp-list-invocations-response.ts",
-      "sha256": "1c1f636039d32eeb18f43ff77b8810e99e5490cf9a222636cc94f0f10c703cb5"
+      "sha256": "768eeec8020120ad57431052dbb44948bc90687d8de72fd657959bd05fba04fd"
+    },
+    {
+      "path": "src/types/mcp-list-owned-servers-response.ts",
+      "sha256": "c7a732e97f67710188f52a4372c7b86cfb8239798f9fd65214c6edbd126ca653"
     },
     {
       "path": "src/types/mcp-list-prompts-response.ts",
-      "sha256": "dd22eaf3814c3d9ee41c5959aa117976c9d28b7a14fb97b67def5109d5492226"
+      "sha256": "245e8aaf04956b9f07a0206b8e2b9089764cb63e482a3193374f5dc2062130c4"
     },
     {
       "path": "src/types/mcp-list-resources-response.ts",
-      "sha256": "5c52a20349929ddc59aae4e30b94b5ba5874af0c01a41b74558e0546b75ec668"
+      "sha256": "6830b6167f599a94e8f49c44577d9850b76269e4dcc45f624459e7170e65c113"
     },
     {
       "path": "src/types/mcp-list-servers-response.ts",
-      "sha256": "6771b37e533d87556028065dec2c9dba7f38ca313dc0c04259101b60ef65cc0d"
+      "sha256": "8bdc285bf18b453c19ef1739fdb629e74862ae46d0e45ec2e57bdc0daf287aad"
     },
     {
       "path": "src/types/mcp-list-tools-response.ts",
-      "sha256": "321ec4eecf3f7d31070517435fd14bba912d26c5ee2bae310e5b99de900734eb"
+      "sha256": "b2f70954d886a8d70aac5c20ba591eb19858de72469ffee3472d1ae5f17cb462"
     },
     {
       "path": "src/types/mcp-prompt-record.ts",
@@ -167,12 +187,20 @@
       "sha256": "cadcab0741558dda9b8353a2a80ddc7e79bdd67921b4fdbbe1f400aa3a2187c1"
     },
     {
+      "path": "src/types/mcp-update-own-server-response.ts",
+      "sha256": "2d070b0eb830d7efc7e1ccfe9582e1423666ca23ae7647aa85dd3477f934f1b7"
+    },
+    {
+      "path": "src/types/mcp-upsert-own-connector-response.ts",
+      "sha256": "3566db0327a3381157012800c28b34e18f902a99aab8d0fd19e622273602bbf7"
+    },
+    {
       "path": "src/types/page-info.ts",
       "sha256": "0bf2b44313bc24851eb9ffb6063c1b9eb043e1e5721c8ace8882a3cfa21c932a"
     },
     {
       "path": "src/types/problem-detail.ts",
-      "sha256": "deca621176487754cbfa2012aa3eab046131ced5829ddf7cff64de692f8bcb0e"
+      "sha256": "c41fdf6433e1167d2fb1f3ac38fd13eb77178f4c0633c9e27824f1e1687ee4f6"
     },
     {
       "path": "src/types/sdk-work-api-response.ts",
@@ -211,6 +239,10 @@
       "sha256": "59f17ec97f7c2d12b4003439095deb039e8cae86480bd563494a8533efb2d17c"
     },
     {
+      "path": "src/types/update-own-mcp-server-command.ts",
+      "sha256": "d1b2ca636027bf770317451e1a61f1948523a6f0781240f6266d025ac2f1d4e8"
+    },
+    {
       "path": "src/types/upsert-mcp-connector-command.ts",
       "sha256": "36be3065901da9d5cab61d38245bc9832756d23e1a2a13c24f09ec9576585ae7"
     },
@@ -229,6 +261,10 @@
     {
       "path": "src/types/upsert-mcp-tool-command.ts",
       "sha256": "0f0f1ae2e8aa9e403d29227863058f28d3bc2b46ee657737abbc1ff4e1fd7002"
+    },
+    {
+      "path": "src/types/upsert-own-mcp-connector-command.ts",
+      "sha256": "c0d7f1a550d18050cc10189cd93acee2458a296b24927864cbc3a16e4fcd0982"
     },
     {
       "path": "tsconfig.json",

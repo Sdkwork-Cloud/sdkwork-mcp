@@ -41,12 +41,56 @@ class McpApi {
     })();
   }
 
+  /// MCP mcp.createOwnServer
+  Future<McpCreateOwnServerResponse?> createOwnServer(CreateOwnMcpServerCommand body) async {
+    final payload = body.toJson();
+    final response = await _client.post(ApiPaths.appPath('/mcp/servers'), body: payload, contentType: 'application/json');
+    return (() {
+      final map = sdkworkResponseAsMap(response);
+      return map == null ? null : McpCreateOwnServerResponse.fromJson(map);
+    })();
+  }
+
+  /// MCP mcp.listOwnedServers
+  Future<McpListOwnedServersResponse?> listOwnedServers([int? page, int? pageSize, String? cursor, String? q]) async {
+    final query = buildQueryString([
+      QueryParameterSpec('page', page, 'form', true, false, null),
+      QueryParameterSpec('page_size', pageSize, 'form', true, false, null),
+      QueryParameterSpec('cursor', cursor, 'form', true, false, null),
+      QueryParameterSpec('q', q, 'form', true, false, null)
+    ]);
+    final response = await _client.get(ApiPaths.appendQueryString(ApiPaths.appPath('/mcp/servers/owned'), query));
+    return (() {
+      final map = sdkworkResponseAsMap(response);
+      return map == null ? null : McpListOwnedServersResponse.fromJson(map);
+    })();
+  }
+
   /// MCP mcp.getServer
   Future<McpGetServerResponse?> getServer(String serverKey) async {
     final response = await _client.get(ApiPaths.appPath('/mcp/servers/${serializePathParameter(serverKey, const PathParameterSpec('serverKey', 'simple', false))}'));
     return (() {
       final map = sdkworkResponseAsMap(response);
       return map == null ? null : McpGetServerResponse.fromJson(map);
+    })();
+  }
+
+  /// MCP mcp.updateOwnServer
+  Future<McpUpdateOwnServerResponse?> updateOwnServer(String serverKey, UpdateOwnMcpServerCommand body) async {
+    final payload = body.toJson();
+    final response = await _client.patch(ApiPaths.appPath('/mcp/servers/${serializePathParameter(serverKey, const PathParameterSpec('serverKey', 'simple', false))}'), body: payload, contentType: 'application/json');
+    return (() {
+      final map = sdkworkResponseAsMap(response);
+      return map == null ? null : McpUpdateOwnServerResponse.fromJson(map);
+    })();
+  }
+
+  /// MCP mcp.deleteOwnServer
+  Future<McpDeleteOwnServerResponse?> deleteOwnServer(String serverKey) async {
+    final response = await _client.delete(ApiPaths.appPath('/mcp/servers/${serializePathParameter(serverKey, const PathParameterSpec('serverKey', 'simple', false))}'));
+    return (() {
+      final map = sdkworkResponseAsMap(response);
+      return map == null ? null : McpDeleteOwnServerResponse.fromJson(map);
     })();
   }
 
@@ -101,6 +145,25 @@ class McpApi {
     return (() {
       final map = sdkworkResponseAsMap(response);
       return map == null ? null : McpListPromptsResponse.fromJson(map);
+    })();
+  }
+
+  /// MCP mcp.upsertOwnConnector
+  Future<McpUpsertOwnConnectorResponse?> upsertOwnConnector(int serverId, UpsertOwnMcpConnectorCommand body) async {
+    final payload = body.toJson();
+    final response = await _client.post(ApiPaths.appPath('/mcp/servers/${serializePathParameter(serverId, const PathParameterSpec('serverId', 'simple', false))}/connectors'), body: payload, contentType: 'application/json');
+    return (() {
+      final map = sdkworkResponseAsMap(response);
+      return map == null ? null : McpUpsertOwnConnectorResponse.fromJson(map);
+    })();
+  }
+
+  /// MCP mcp.deleteOwnConnector
+  Future<McpDeleteOwnConnectorResponse?> deleteOwnConnector(int serverId, String connectorKey) async {
+    final response = await _client.delete(ApiPaths.appPath('/mcp/servers/${serializePathParameter(serverId, const PathParameterSpec('serverId', 'simple', false))}/connectors/${serializePathParameter(connectorKey, const PathParameterSpec('connectorKey', 'simple', false))}'));
+    return (() {
+      final map = sdkworkResponseAsMap(response);
+      return map == null ? null : McpDeleteOwnConnectorResponse.fromJson(map);
     })();
   }
 

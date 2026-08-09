@@ -19,10 +19,7 @@ impl McpDatabaseHost {
     }
 
     pub fn postgres_pool(&self) -> Option<sqlx::PgPool> {
-        match self.pool.clone() {
-            DatabasePool::Postgres(pool, _) => Some(pool),
-            DatabasePool::Sqlite(_, _) => None,
-        }
+        self.pool.as_postgres().cloned()
     }
 
     pub fn module(&self) -> Arc<DefaultDatabaseModule> {

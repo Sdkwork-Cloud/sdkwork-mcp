@@ -209,6 +209,8 @@ class ProblemDetail {
   final String? instance;
   final int code;
   final String traceId;
+  final String? i18nKey;
+  final String? locale;
   final List<FieldError>? errors;
 
   ProblemDetail({
@@ -219,6 +221,8 @@ class ProblemDetail {
     this.instance,
     required this.code,
     required this.traceId,
+    this.i18nKey,
+    this.locale,
     this.errors
   });
 
@@ -261,6 +265,8 @@ class ProblemDetail {
         }
         return value;
       })(),
+      i18nKey: json['i18nKey']?.toString(),
+      locale: json['locale']?.toString(),
       errors: (() {
         final list = _sdkworkAsList(json['errors']);
         if (list == null) {
@@ -286,6 +292,8 @@ class ProblemDetail {
       'instance': instance,
       'code': code,
       'traceId': traceId,
+      'i18nKey': i18nKey,
+      'locale': locale,
       'errors': errors?.map((item) => item.toJson()).toList(),
     };
   }
@@ -295,11 +303,15 @@ class FieldError {
   final String field;
   final String message;
   final int? code;
+  final String? i18nKey;
+  final Map<String, dynamic>? params;
 
   FieldError({
     required this.field,
     required this.message,
-    this.code
+    this.code,
+    this.i18nKey,
+    this.params
   });
 
   factory FieldError.fromJson(Map<String, dynamic> json) {
@@ -318,7 +330,22 @@ class FieldError {
         }
         return value;
       })(),
-      code: json['code'] is int ? json['code'] : null
+      code: json['code'] is int ? json['code'] : null,
+      i18nKey: json['i18nKey']?.toString(),
+      params: (() {
+        final map = _sdkworkAsMap(json['params']);
+        if (map == null) {
+          return null;
+        }
+        final result = <String, String>{};
+        map.forEach((key, item) {
+          final deserialized = item?.toString();
+          if (deserialized is String) {
+            result[key] = deserialized;
+          }
+        });
+        return result;
+      })()
     );
   }
 
@@ -327,6 +354,8 @@ class FieldError {
       'field': field,
       'message': message,
       'code': code,
+      'i18nKey': i18nKey,
+      'params': params?.map((key, item) => MapEntry(key, item)),
     };
   }
 }
@@ -1516,6 +1545,202 @@ class UpsertMcpConnectorCommand {
   }
 }
 
+class CreateOwnMcpServerCommand {
+  final String serverKey;
+  final String name;
+  final String? description;
+  final String transport;
+  final int? categoryId;
+  final String? categoryCode;
+  final List<String>? tags;
+  final String? iconRef;
+
+  CreateOwnMcpServerCommand({
+    required this.serverKey,
+    required this.name,
+    this.description,
+    required this.transport,
+    this.categoryId,
+    this.categoryCode,
+    this.tags,
+    this.iconRef
+  });
+
+  factory CreateOwnMcpServerCommand.fromJson(Map<String, dynamic> json) {
+    return CreateOwnMcpServerCommand(
+      serverKey: (() {
+        final value = json['server_key']?.toString();
+        if (value == null) {
+          throw FormatException('CreateOwnMcpServerCommand.server_key is required');
+        }
+        return value;
+      })(),
+      name: (() {
+        final value = json['name']?.toString();
+        if (value == null) {
+          throw FormatException('CreateOwnMcpServerCommand.name is required');
+        }
+        return value;
+      })(),
+      description: json['description']?.toString(),
+      transport: (() {
+        final value = json['transport']?.toString();
+        if (value == null) {
+          throw FormatException('CreateOwnMcpServerCommand.transport is required');
+        }
+        return value;
+      })(),
+      categoryId: json['category_id'] is int ? json['category_id'] : null,
+      categoryCode: json['category_code']?.toString(),
+      tags: (() {
+        final list = _sdkworkAsList(json['tags']);
+        if (list == null) {
+          return null;
+        }
+        return list
+            .map((item) => item?.toString())
+            .whereType<String>()
+            .toList();
+      })(),
+      iconRef: json['icon_ref']?.toString()
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return <String, dynamic>{
+      'server_key': serverKey,
+      'name': name,
+      'description': description,
+      'transport': transport,
+      'category_id': categoryId,
+      'category_code': categoryCode,
+      'tags': tags?.map((item) => item).toList(),
+      'icon_ref': iconRef,
+    };
+  }
+}
+
+class UpdateOwnMcpServerCommand {
+  final String? name;
+  final String? description;
+  final String? transport;
+  final int? categoryId;
+  final String? categoryCode;
+  final List<String>? tags;
+  final String? iconRef;
+
+  UpdateOwnMcpServerCommand({
+    this.name,
+    this.description,
+    this.transport,
+    this.categoryId,
+    this.categoryCode,
+    this.tags,
+    this.iconRef
+  });
+
+  factory UpdateOwnMcpServerCommand.fromJson(Map<String, dynamic> json) {
+    return UpdateOwnMcpServerCommand(
+      name: json['name']?.toString(),
+      description: json['description']?.toString(),
+      transport: json['transport']?.toString(),
+      categoryId: json['category_id'] is int ? json['category_id'] : null,
+      categoryCode: json['category_code']?.toString(),
+      tags: (() {
+        final list = _sdkworkAsList(json['tags']);
+        if (list == null) {
+          return null;
+        }
+        return list
+            .map((item) => item?.toString())
+            .whereType<String>()
+            .toList();
+      })(),
+      iconRef: json['icon_ref']?.toString()
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return <String, dynamic>{
+      'name': name,
+      'description': description,
+      'transport': transport,
+      'category_id': categoryId,
+      'category_code': categoryCode,
+      'tags': tags?.map((item) => item).toList(),
+      'icon_ref': iconRef,
+    };
+  }
+}
+
+class UpsertOwnMcpConnectorCommand {
+  final String connectorKey;
+  final String transport;
+  final String? endpointUrl;
+  final String? commandRef;
+  final String? argsJson;
+  final String? envSchemaJson;
+  final String? authType;
+  final String? secretRef;
+  final int? timeoutMs;
+  final String? retryPolicyJson;
+
+  UpsertOwnMcpConnectorCommand({
+    required this.connectorKey,
+    required this.transport,
+    this.endpointUrl,
+    this.commandRef,
+    this.argsJson,
+    this.envSchemaJson,
+    this.authType,
+    this.secretRef,
+    this.timeoutMs,
+    this.retryPolicyJson
+  });
+
+  factory UpsertOwnMcpConnectorCommand.fromJson(Map<String, dynamic> json) {
+    return UpsertOwnMcpConnectorCommand(
+      connectorKey: (() {
+        final value = json['connector_key']?.toString();
+        if (value == null) {
+          throw FormatException('UpsertOwnMcpConnectorCommand.connector_key is required');
+        }
+        return value;
+      })(),
+      transport: (() {
+        final value = json['transport']?.toString();
+        if (value == null) {
+          throw FormatException('UpsertOwnMcpConnectorCommand.transport is required');
+        }
+        return value;
+      })(),
+      endpointUrl: json['endpoint_url']?.toString(),
+      commandRef: json['command_ref']?.toString(),
+      argsJson: json['args_json']?.toString(),
+      envSchemaJson: json['env_schema_json']?.toString(),
+      authType: json['auth_type']?.toString(),
+      secretRef: json['secret_ref']?.toString(),
+      timeoutMs: json['timeout_ms'] is int ? json['timeout_ms'] : null,
+      retryPolicyJson: json['retry_policy_json']?.toString()
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return <String, dynamic>{
+      'connector_key': connectorKey,
+      'transport': transport,
+      'endpoint_url': endpointUrl,
+      'command_ref': commandRef,
+      'args_json': argsJson,
+      'env_schema_json': envSchemaJson,
+      'auth_type': authType,
+      'secret_ref': secretRef,
+      'timeout_ms': timeoutMs,
+      'retry_policy_json': retryPolicyJson,
+    };
+  }
+}
+
 class UpsertMcpToolCommand {
   final int connectorId;
   final String toolKey;
@@ -1808,6 +2033,98 @@ class McpListServersResponse {
   }
 }
 
+class McpCreateOwnServerResponse {
+  final int code;
+  final dynamic data;
+  final String traceId;
+
+  McpCreateOwnServerResponse({
+    required this.code,
+    required this.data,
+    required this.traceId
+  });
+
+  factory McpCreateOwnServerResponse.fromJson(Map<String, dynamic> json) {
+    return McpCreateOwnServerResponse(
+      code: (() {
+        final value = json['code'];
+        if (value is! int) {
+          throw FormatException('McpCreateOwnServerResponse.code is required');
+        }
+        return value;
+      })(),
+      data: (() {
+        final map = _sdkworkAsMap(json['data']);
+        if (map == null) {
+          throw FormatException('McpCreateOwnServerResponse.data is required');
+        }
+        return map;
+      })(),
+      traceId: (() {
+        final value = json['traceId']?.toString();
+        if (value == null) {
+          throw FormatException('McpCreateOwnServerResponse.traceId is required');
+        }
+        return value;
+      })()
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return <String, dynamic>{
+      'code': code,
+      'data': data,
+      'traceId': traceId,
+    };
+  }
+}
+
+class McpListOwnedServersResponse {
+  final int code;
+  final dynamic data;
+  final String traceId;
+
+  McpListOwnedServersResponse({
+    required this.code,
+    required this.data,
+    required this.traceId
+  });
+
+  factory McpListOwnedServersResponse.fromJson(Map<String, dynamic> json) {
+    return McpListOwnedServersResponse(
+      code: (() {
+        final value = json['code'];
+        if (value is! int) {
+          throw FormatException('McpListOwnedServersResponse.code is required');
+        }
+        return value;
+      })(),
+      data: (() {
+        final map = _sdkworkAsMap(json['data']);
+        if (map == null) {
+          throw FormatException('McpListOwnedServersResponse.data is required');
+        }
+        return map;
+      })(),
+      traceId: (() {
+        final value = json['traceId']?.toString();
+        if (value == null) {
+          throw FormatException('McpListOwnedServersResponse.traceId is required');
+        }
+        return value;
+      })()
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return <String, dynamic>{
+      'code': code,
+      'data': data,
+      'traceId': traceId,
+    };
+  }
+}
+
 class McpGetServerResponse {
   final int code;
   final dynamic data;
@@ -1839,6 +2156,98 @@ class McpGetServerResponse {
         final value = json['traceId']?.toString();
         if (value == null) {
           throw FormatException('McpGetServerResponse.traceId is required');
+        }
+        return value;
+      })()
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return <String, dynamic>{
+      'code': code,
+      'data': data,
+      'traceId': traceId,
+    };
+  }
+}
+
+class McpUpdateOwnServerResponse {
+  final int code;
+  final dynamic data;
+  final String traceId;
+
+  McpUpdateOwnServerResponse({
+    required this.code,
+    required this.data,
+    required this.traceId
+  });
+
+  factory McpUpdateOwnServerResponse.fromJson(Map<String, dynamic> json) {
+    return McpUpdateOwnServerResponse(
+      code: (() {
+        final value = json['code'];
+        if (value is! int) {
+          throw FormatException('McpUpdateOwnServerResponse.code is required');
+        }
+        return value;
+      })(),
+      data: (() {
+        final map = _sdkworkAsMap(json['data']);
+        if (map == null) {
+          throw FormatException('McpUpdateOwnServerResponse.data is required');
+        }
+        return map;
+      })(),
+      traceId: (() {
+        final value = json['traceId']?.toString();
+        if (value == null) {
+          throw FormatException('McpUpdateOwnServerResponse.traceId is required');
+        }
+        return value;
+      })()
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return <String, dynamic>{
+      'code': code,
+      'data': data,
+      'traceId': traceId,
+    };
+  }
+}
+
+class McpDeleteOwnServerResponse {
+  final int code;
+  final dynamic data;
+  final String traceId;
+
+  McpDeleteOwnServerResponse({
+    required this.code,
+    required this.data,
+    required this.traceId
+  });
+
+  factory McpDeleteOwnServerResponse.fromJson(Map<String, dynamic> json) {
+    return McpDeleteOwnServerResponse(
+      code: (() {
+        final value = json['code'];
+        if (value is! int) {
+          throw FormatException('McpDeleteOwnServerResponse.code is required');
+        }
+        return value;
+      })(),
+      data: (() {
+        final map = _sdkworkAsMap(json['data']);
+        if (map == null) {
+          throw FormatException('McpDeleteOwnServerResponse.data is required');
+        }
+        return map;
+      })(),
+      traceId: (() {
+        final value = json['traceId']?.toString();
+        if (value == null) {
+          throw FormatException('McpDeleteOwnServerResponse.traceId is required');
         }
         return value;
       })()
@@ -2023,6 +2432,98 @@ class McpListPromptsResponse {
         final value = json['traceId']?.toString();
         if (value == null) {
           throw FormatException('McpListPromptsResponse.traceId is required');
+        }
+        return value;
+      })()
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return <String, dynamic>{
+      'code': code,
+      'data': data,
+      'traceId': traceId,
+    };
+  }
+}
+
+class McpUpsertOwnConnectorResponse {
+  final int code;
+  final dynamic data;
+  final String traceId;
+
+  McpUpsertOwnConnectorResponse({
+    required this.code,
+    required this.data,
+    required this.traceId
+  });
+
+  factory McpUpsertOwnConnectorResponse.fromJson(Map<String, dynamic> json) {
+    return McpUpsertOwnConnectorResponse(
+      code: (() {
+        final value = json['code'];
+        if (value is! int) {
+          throw FormatException('McpUpsertOwnConnectorResponse.code is required');
+        }
+        return value;
+      })(),
+      data: (() {
+        final map = _sdkworkAsMap(json['data']);
+        if (map == null) {
+          throw FormatException('McpUpsertOwnConnectorResponse.data is required');
+        }
+        return map;
+      })(),
+      traceId: (() {
+        final value = json['traceId']?.toString();
+        if (value == null) {
+          throw FormatException('McpUpsertOwnConnectorResponse.traceId is required');
+        }
+        return value;
+      })()
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return <String, dynamic>{
+      'code': code,
+      'data': data,
+      'traceId': traceId,
+    };
+  }
+}
+
+class McpDeleteOwnConnectorResponse {
+  final int code;
+  final dynamic data;
+  final String traceId;
+
+  McpDeleteOwnConnectorResponse({
+    required this.code,
+    required this.data,
+    required this.traceId
+  });
+
+  factory McpDeleteOwnConnectorResponse.fromJson(Map<String, dynamic> json) {
+    return McpDeleteOwnConnectorResponse(
+      code: (() {
+        final value = json['code'];
+        if (value is! int) {
+          throw FormatException('McpDeleteOwnConnectorResponse.code is required');
+        }
+        return value;
+      })(),
+      data: (() {
+        final map = _sdkworkAsMap(json['data']);
+        if (map == null) {
+          throw FormatException('McpDeleteOwnConnectorResponse.data is required');
+        }
+        return map;
+      })(),
+      traceId: (() {
+        final value = json['traceId']?.toString();
+        if (value == null) {
+          throw FormatException('McpDeleteOwnConnectorResponse.traceId is required');
         }
         return value;
       })()

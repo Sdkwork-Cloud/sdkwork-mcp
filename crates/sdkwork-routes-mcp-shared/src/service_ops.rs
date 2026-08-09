@@ -117,6 +117,17 @@ pub async fn list_servers<R: McpRepository>(
     Ok(paginate_items(filter_servers(items, query), query))
 }
 
+pub async fn list_owned_servers<R: McpRepository>(
+    service: &McpService<R>,
+    tenant_id: u64,
+    owner_user_id: u64,
+    query: &SdkWorkListQuery,
+) -> ApiResult<SdkWorkPageData<McpServerRecord>> {
+    query.validate()?;
+    let items = service.list_owned_servers(tenant_id, owner_user_id).await?;
+    Ok(paginate_items(filter_servers(items, query), query))
+}
+
 pub async fn get_server<R: McpRepository>(
     service: &McpService<R>,
     tenant_id: u64,

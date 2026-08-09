@@ -25,7 +25,7 @@
           "mcp"
         ],
         "summary": "MCP mcpAdmin.listCategories",
-        "operationId": "mcpAdmin.list",
+        "operationId": "mcpAdmin.listCategories",
         "parameters": [
           {
             "name": "page",
@@ -136,6 +136,16 @@
               }
             }
           },
+          "403": {
+            "description": "Problem detail",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Problem detail",
             "content": {
@@ -159,14 +169,15 @@
         "x-sdkwork-resource": "mcpAdmin",
         "x-sdkwork-public": false,
         "x-sdkwork-api-surface": "backend-api",
-        "x-sdkwork-request-context": "WebRequestContext"
+        "x-sdkwork-request-context": "WebRequestContext",
+        "x-sdkwork-permission": "mcp.admin.marketplace.read"
       },
       "post": {
         "tags": [
           "mcp"
         ],
         "summary": "MCP mcpAdmin.upsertCategory",
-        "operationId": "mcpAdmin.create",
+        "operationId": "mcpAdmin.upsertCategory",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -179,7 +190,7 @@
           }
         },
         "responses": {
-          "201": {
+          "200": {
             "description": "OK",
             "content": {
               "application/json": {
@@ -232,6 +243,16 @@
               }
             }
           },
+          "403": {
+            "description": "Problem detail",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Problem detail",
             "content": {
@@ -255,7 +276,8 @@
         "x-sdkwork-resource": "mcpAdmin",
         "x-sdkwork-public": false,
         "x-sdkwork-api-surface": "backend-api",
-        "x-sdkwork-request-context": "WebRequestContext"
+        "x-sdkwork-request-context": "WebRequestContext",
+        "x-sdkwork-permission": "mcp.admin.category.manage"
       }
     },
     "/backend/v3/api/mcp/servers": {
@@ -264,7 +286,7 @@
           "mcp"
         ],
         "summary": "MCP mcpAdmin.listServers",
-        "operationId": "mcpAdmin.list",
+        "operationId": "mcpAdmin.listServers",
         "parameters": [
           {
             "name": "page",
@@ -375,6 +397,16 @@
               }
             }
           },
+          "403": {
+            "description": "Problem detail",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Problem detail",
             "content": {
@@ -398,14 +430,15 @@
         "x-sdkwork-resource": "mcpAdmin",
         "x-sdkwork-public": false,
         "x-sdkwork-api-surface": "backend-api",
-        "x-sdkwork-request-context": "WebRequestContext"
+        "x-sdkwork-request-context": "WebRequestContext",
+        "x-sdkwork-permission": "mcp.admin.marketplace.read"
       },
       "post": {
         "tags": [
           "mcp"
         ],
         "summary": "MCP mcpAdmin.createServer",
-        "operationId": "mcpAdmin.create",
+        "operationId": "mcpAdmin.createServer",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -418,7 +451,7 @@
           }
         },
         "responses": {
-          "201": {
+          "200": {
             "description": "OK",
             "content": {
               "application/json": {
@@ -471,6 +504,16 @@
               }
             }
           },
+          "403": {
+            "description": "Problem detail",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Problem detail",
             "content": {
@@ -494,7 +537,8 @@
         "x-sdkwork-resource": "mcpAdmin",
         "x-sdkwork-public": false,
         "x-sdkwork-api-surface": "backend-api",
-        "x-sdkwork-request-context": "WebRequestContext"
+        "x-sdkwork-request-context": "WebRequestContext",
+        "x-sdkwork-permission": "mcp.admin.server.manage"
       }
     },
     "/backend/v3/api/mcp/servers/{serverKey}": {
@@ -503,7 +547,7 @@
           "mcp"
         ],
         "summary": "MCP mcpAdmin.updateServer",
-        "operationId": "mcpAdmin.update",
+        "operationId": "mcpAdmin.updateServer",
         "parameters": [
           {
             "name": "serverKey",
@@ -578,6 +622,16 @@
               }
             }
           },
+          "403": {
+            "description": "Problem detail",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Problem detail",
             "content": {
@@ -601,14 +655,15 @@
         "x-sdkwork-resource": "mcpAdmin",
         "x-sdkwork-public": false,
         "x-sdkwork-api-surface": "backend-api",
-        "x-sdkwork-request-context": "WebRequestContext"
+        "x-sdkwork-request-context": "WebRequestContext",
+        "x-sdkwork-permission": "mcp.admin.server.manage"
       },
       "delete": {
         "tags": [
           "mcp"
         ],
         "summary": "MCP mcpAdmin.deleteServer",
-        "operationId": "mcpAdmin.delete",
+        "operationId": "mcpAdmin.deleteServer",
         "parameters": [
           {
             "name": "serverKey",
@@ -620,8 +675,38 @@
           }
         ],
         "responses": {
-          "204": {
-            "description": "OK"
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/SdkWorkApiResponse"
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "data"
+                      ],
+                      "properties": {
+                        "data": {
+                          "type": "object",
+                          "required": [
+                            "item"
+                          ],
+                          "properties": {
+                            "item": {
+                              "$ref": "#/components/schemas/McpServerRecord"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
           },
           "400": {
             "description": "Problem detail",
@@ -643,6 +728,16 @@
               }
             }
           },
+          "403": {
+            "description": "Problem detail",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Problem detail",
             "content": {
@@ -666,7 +761,8 @@
         "x-sdkwork-resource": "mcpAdmin",
         "x-sdkwork-public": false,
         "x-sdkwork-api-surface": "backend-api",
-        "x-sdkwork-request-context": "WebRequestContext"
+        "x-sdkwork-request-context": "WebRequestContext",
+        "x-sdkwork-permission": "mcp.admin.server.manage"
       }
     },
     "/backend/v3/api/mcp/servers/{serverId}/connectors": {
@@ -675,7 +771,7 @@
           "mcp"
         ],
         "summary": "MCP mcpAdmin.listConnectors",
-        "operationId": "mcpAdmin.list",
+        "operationId": "mcpAdmin.listConnectors",
         "parameters": [
           {
             "name": "serverId",
@@ -795,6 +891,16 @@
               }
             }
           },
+          "403": {
+            "description": "Problem detail",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Problem detail",
             "content": {
@@ -818,14 +924,15 @@
         "x-sdkwork-resource": "mcpAdmin",
         "x-sdkwork-public": false,
         "x-sdkwork-api-surface": "backend-api",
-        "x-sdkwork-request-context": "WebRequestContext"
+        "x-sdkwork-request-context": "WebRequestContext",
+        "x-sdkwork-permission": "mcp.admin.marketplace.read"
       },
       "post": {
         "tags": [
           "mcp"
         ],
         "summary": "MCP mcpAdmin.upsertConnector",
-        "operationId": "mcpAdmin.create",
+        "operationId": "mcpAdmin.upsertConnector",
         "parameters": [
           {
             "name": "serverId",
@@ -848,7 +955,7 @@
           }
         },
         "responses": {
-          "201": {
+          "200": {
             "description": "OK",
             "content": {
               "application/json": {
@@ -909,6 +1016,16 @@
               }
             }
           },
+          "403": {
+            "description": "Problem detail",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Problem detail",
             "content": {
@@ -932,7 +1049,8 @@
         "x-sdkwork-resource": "mcpAdmin",
         "x-sdkwork-public": false,
         "x-sdkwork-api-surface": "backend-api",
-        "x-sdkwork-request-context": "WebRequestContext"
+        "x-sdkwork-request-context": "WebRequestContext",
+        "x-sdkwork-permission": "mcp.admin.server.manage"
       }
     },
     "/backend/v3/api/mcp/servers/{serverId}/connectors/{connectorKey}": {
@@ -941,7 +1059,7 @@
           "mcp"
         ],
         "summary": "MCP mcpAdmin.deleteConnector",
-        "operationId": "mcpAdmin.delete",
+        "operationId": "mcpAdmin.deleteConnector",
         "parameters": [
           {
             "name": "serverId",
@@ -962,8 +1080,46 @@
           }
         ],
         "responses": {
-          "204": {
-            "description": "OK"
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/SdkWorkApiResponse"
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "data"
+                      ],
+                      "properties": {
+                        "data": {
+                          "type": "object",
+                          "additionalProperties": false,
+                          "required": [
+                            "items",
+                            "pageInfo"
+                          ],
+                          "properties": {
+                            "items": {
+                              "type": "array",
+                              "items": {
+                                "$ref": "#/components/schemas/McpConnectorRecord"
+                              }
+                            },
+                            "pageInfo": {
+                              "$ref": "#/components/schemas/PageInfo"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
           },
           "400": {
             "description": "Problem detail",
@@ -985,6 +1141,16 @@
               }
             }
           },
+          "403": {
+            "description": "Problem detail",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Problem detail",
             "content": {
@@ -1008,7 +1174,8 @@
         "x-sdkwork-resource": "mcpAdmin",
         "x-sdkwork-public": false,
         "x-sdkwork-api-surface": "backend-api",
-        "x-sdkwork-request-context": "WebRequestContext"
+        "x-sdkwork-request-context": "WebRequestContext",
+        "x-sdkwork-permission": "mcp.admin.server.manage"
       }
     },
     "/backend/v3/api/mcp/servers/{serverId}/tools": {
@@ -1017,7 +1184,7 @@
           "mcp"
         ],
         "summary": "MCP mcpAdmin.upsertTool",
-        "operationId": "mcpAdmin.create",
+        "operationId": "mcpAdmin.upsertTool",
         "parameters": [
           {
             "name": "serverId",
@@ -1040,7 +1207,7 @@
           }
         },
         "responses": {
-          "201": {
+          "200": {
             "description": "OK",
             "content": {
               "application/json": {
@@ -1101,6 +1268,16 @@
               }
             }
           },
+          "403": {
+            "description": "Problem detail",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Problem detail",
             "content": {
@@ -1124,7 +1301,8 @@
         "x-sdkwork-resource": "mcpAdmin",
         "x-sdkwork-public": false,
         "x-sdkwork-api-surface": "backend-api",
-        "x-sdkwork-request-context": "WebRequestContext"
+        "x-sdkwork-request-context": "WebRequestContext",
+        "x-sdkwork-permission": "mcp.admin.server.manage"
       }
     },
     "/backend/v3/api/mcp/servers/{serverId}/resources": {
@@ -1133,7 +1311,7 @@
           "mcp"
         ],
         "summary": "MCP mcpAdmin.upsertResource",
-        "operationId": "mcpAdmin.create",
+        "operationId": "mcpAdmin.upsertResource",
         "parameters": [
           {
             "name": "serverId",
@@ -1156,7 +1334,7 @@
           }
         },
         "responses": {
-          "201": {
+          "200": {
             "description": "OK",
             "content": {
               "application/json": {
@@ -1217,6 +1395,16 @@
               }
             }
           },
+          "403": {
+            "description": "Problem detail",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Problem detail",
             "content": {
@@ -1240,7 +1428,8 @@
         "x-sdkwork-resource": "mcpAdmin",
         "x-sdkwork-public": false,
         "x-sdkwork-api-surface": "backend-api",
-        "x-sdkwork-request-context": "WebRequestContext"
+        "x-sdkwork-request-context": "WebRequestContext",
+        "x-sdkwork-permission": "mcp.admin.server.manage"
       }
     },
     "/backend/v3/api/mcp/servers/{serverId}/prompts": {
@@ -1249,7 +1438,7 @@
           "mcp"
         ],
         "summary": "MCP mcpAdmin.upsertPrompt",
-        "operationId": "mcpAdmin.create",
+        "operationId": "mcpAdmin.upsertPrompt",
         "parameters": [
           {
             "name": "serverId",
@@ -1272,7 +1461,7 @@
           }
         },
         "responses": {
-          "201": {
+          "200": {
             "description": "OK",
             "content": {
               "application/json": {
@@ -1333,6 +1522,16 @@
               }
             }
           },
+          "403": {
+            "description": "Problem detail",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Problem detail",
             "content": {
@@ -1356,7 +1555,8 @@
         "x-sdkwork-resource": "mcpAdmin",
         "x-sdkwork-public": false,
         "x-sdkwork-api-surface": "backend-api",
-        "x-sdkwork-request-context": "WebRequestContext"
+        "x-sdkwork-request-context": "WebRequestContext",
+        "x-sdkwork-permission": "mcp.admin.server.manage"
       }
     },
     "/backend/v3/api/mcp/invocations": {
@@ -1365,7 +1565,7 @@
           "mcp"
         ],
         "summary": "MCP mcpAdmin.listInvocations",
-        "operationId": "mcpAdmin.list",
+        "operationId": "mcpAdmin.listInvocations",
         "parameters": [
           {
             "name": "page",
@@ -1485,6 +1685,16 @@
               }
             }
           },
+          "403": {
+            "description": "Problem detail",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Problem detail",
             "content": {
@@ -1508,14 +1718,15 @@
         "x-sdkwork-resource": "mcpAdmin",
         "x-sdkwork-public": false,
         "x-sdkwork-api-surface": "backend-api",
-        "x-sdkwork-request-context": "WebRequestContext"
+        "x-sdkwork-request-context": "WebRequestContext",
+        "x-sdkwork-permission": "mcp.admin.invocation.read"
       },
       "post": {
         "tags": [
           "mcp"
         ],
         "summary": "MCP mcpAdmin.appendInvocation",
-        "operationId": "mcpAdmin.create",
+        "operationId": "mcpAdmin.appendInvocation",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -1528,7 +1739,7 @@
           }
         },
         "responses": {
-          "201": {
+          "200": {
             "description": "OK",
             "content": {
               "application/json": {
@@ -1581,6 +1792,16 @@
               }
             }
           },
+          "403": {
+            "description": "Problem detail",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Problem detail",
             "content": {
@@ -1604,7 +1825,8 @@
         "x-sdkwork-resource": "mcpAdmin",
         "x-sdkwork-public": false,
         "x-sdkwork-api-surface": "backend-api",
-        "x-sdkwork-request-context": "WebRequestContext"
+        "x-sdkwork-request-context": "WebRequestContext",
+        "x-sdkwork-permission": "mcp.admin.invocation.read"
       }
     }
   },
@@ -1790,6 +2012,14 @@
             "format": "uuid",
             "description": "Server-owned request correlation id."
           },
+          "i18nKey": {
+            "type": "string",
+            "description": "Optional stable localization key such as errors.result.40001."
+          },
+          "locale": {
+            "type": "string",
+            "description": "Optional effective BCP 47 locale used by framework message mapping."
+          },
           "errors": {
             "type": "array",
             "items": {
@@ -1817,6 +2047,28 @@
             "format": "int32",
             "minimum": 40011,
             "maximum": 40099
+          },
+          "i18nKey": {
+            "type": "string"
+          },
+          "params": {
+            "type": "object",
+            "additionalProperties": {
+              "oneOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "boolean"
+                }
+              ]
+            }
           }
         }
       },
@@ -2434,6 +2686,118 @@
             "type": "string"
           },
           "lifecycle_status": {
+            "type": "string"
+          }
+        }
+      },
+      "CreateOwnMcpServerCommand": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": [
+          "server_key",
+          "name",
+          "transport"
+        ],
+        "properties": {
+          "server_key": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "transport": {
+            "type": "string"
+          },
+          "category_id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "category_code": {
+            "type": "string"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "icon_ref": {
+            "type": "string",
+            "pattern": "^drive://spaces/[^/]+/nodes/[^/]+$"
+          }
+        }
+      },
+      "UpdateOwnMcpServerCommand": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "transport": {
+            "type": "string"
+          },
+          "category_id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "category_code": {
+            "type": "string"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "icon_ref": {
+            "type": "string",
+            "pattern": "^drive://spaces/[^/]+/nodes/[^/]+$"
+          }
+        }
+      },
+      "UpsertOwnMcpConnectorCommand": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": [
+          "connector_key",
+          "transport"
+        ],
+        "properties": {
+          "connector_key": {
+            "type": "string"
+          },
+          "transport": {
+            "type": "string"
+          },
+          "endpoint_url": {
+            "type": "string"
+          },
+          "command_ref": {
+            "type": "string"
+          },
+          "args_json": {
+            "type": "string"
+          },
+          "env_schema_json": {
+            "type": "string"
+          },
+          "auth_type": {
+            "type": "string"
+          },
+          "secret_ref": {
+            "type": "string"
+          },
+          "timeout_ms": {
+            "type": "integer"
+          },
+          "retry_policy_json": {
             "type": "string"
           }
         }

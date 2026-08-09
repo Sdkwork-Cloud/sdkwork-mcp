@@ -38,7 +38,7 @@ pub use http_route_manifest::backend_route_manifest;
 pub use ports::McpBackendRequestContext;
 pub use web_bootstrap::{
     mcp_backend_public_path_prefixes, wrap_router_with_web_framework,
-    wrap_router_with_web_framework_from_env,
+    wrap_router_with_web_framework_from_env, McpBackendContextInjector,
 };
 
 #[derive(Clone)]

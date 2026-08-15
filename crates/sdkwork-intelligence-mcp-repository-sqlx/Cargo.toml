@@ -8,7 +8,7 @@ license.workspace = true
 async-trait.workspace = true
 chrono = { version = "0.4", features = ["serde"] }
 sdkwork-id-core.workspace = true
-sdkwork-intelligence-mcp-service = { path = "../sdkwork-intelligence-mcp-service" }
+sdkwork-intelligence-mcp-service = { workspace = true }
 sdkwork-mcp-contract.workspace = true
 sdkwork-utils-rust.workspace = true
 serde_json.workspace = true

@@ -16,9 +16,9 @@ sdkwork-web-bootstrap.workspace = true
 sdkwork-web-core.workspace = true
 sqlx.workspace = true
 sdkwork-database-sqlx.workspace = true
-sdkwork-intelligence-mcp-repository-sqlx = { path = "../sdkwork-intelligence-mcp-repository-sqlx" }
-sdkwork-intelligence-mcp-service = { path = "../sdkwork-intelligence-mcp-service" }
-sdkwork-mcp-database-host = { path = "../sdkwork-mcp-database-host" }
-sdkwork_routes_mcp_shared = { package = "sdkwork-routes-mcp-shared", path = "../sdkwork-routes-mcp-shared" }
-sdkwork-routes-mcp-app-api = { path = "../sdkwork-routes-mcp-app-api" }
-sdkwork-routes-mcp-backend-api = { path = "../sdkwork-routes-mcp-backend-api" }
+sdkwork-intelligence-mcp-repository-sqlx = { workspace = true }
+sdkwork-intelligence-mcp-service = { workspace = true }
+sdkwork_mcp_database_host.workspace = true
+sdkwork-routes-mcp-shared = { workspace = true, package = "sdkwork-routes-mcp-shared" }
+sdkwork_routes_mcp_app_api.workspace = true
+sdkwork_routes_mcp_backend_api.workspace = true

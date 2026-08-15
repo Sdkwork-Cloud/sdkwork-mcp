@@ -19,6 +19,14 @@ version = "0.1.0"
 license = "AGPL-3.0-or-later"
 
 [workspace.dependencies]
+sdkwork_api_mcp_assembly = { path = "crates/sdkwork-api-mcp-assembly", package = "sdkwork-api-mcp-assembly" }
+
+sdkwork_routes_mcp_backend_api = { path = "crates/sdkwork-routes-mcp-backend-api", package = "sdkwork-routes-mcp-backend-api" }
+
+sdkwork_routes_mcp_app_api = { path = "crates/sdkwork-routes-mcp-app-api", package = "sdkwork-routes-mcp-app-api" }
+
+sdkwork_mcp_database_host = { path = "crates/sdkwork-mcp-database-host", package = "sdkwork-mcp-database-host" }
+
 sdkwork-web-bootstrap = { path = "../sdkwork-web-framework/crates/sdkwork-web-bootstrap" }
 async-trait = "0.1"
 axum = { version = "0.8", features = ["json"] }

@@ -10,8 +10,8 @@ path = "src/lib.rs"
 [dependencies]
 axum.workspace = true
 sdkwork-iam-web-adapter.workspace = true
-sdkwork-intelligence-mcp-service = { path = "../sdkwork-intelligence-mcp-service" }
-sdkwork-routes-mcp-shared = { path = "../sdkwork-routes-mcp-shared" }
+sdkwork-intelligence-mcp-service = { workspace = true }
+sdkwork-routes-mcp-shared = { workspace = true }
 sdkwork-mcp-contract.workspace = true
 sdkwork-web-axum.workspace = true
 sdkwork-web-core.workspace = true

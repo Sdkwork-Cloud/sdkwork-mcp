@@ -6,7 +6,7 @@ license.workspace = true
 
 [dependencies]
 axum.workspace = true
-sdkwork-intelligence-mcp-service = { path = "../sdkwork-intelligence-mcp-service" }
+sdkwork-intelligence-mcp-service = { workspace = true }
 sdkwork-mcp-contract.workspace = true
 sdkwork-utils-rust.workspace = true
 sdkwork-web-bootstrap = { workspace = true }

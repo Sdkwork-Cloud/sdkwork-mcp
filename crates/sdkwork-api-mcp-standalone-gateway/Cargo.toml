@@ -12,7 +12,7 @@ name = "sdkwork-api-mcp-standalone-gateway"
 path = "src/bin/app_main.rs"
 
 [dependencies]
-sdkwork_api_mcp_assembly = { package = "sdkwork-api-mcp-assembly", path = "../sdkwork-api-mcp-assembly" }
+sdkwork_api_mcp_assembly.workspace = true
 axum.workspace = true
 tokio.workspace = true
 tracing.workspace = true

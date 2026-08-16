@@ -13,9 +13,7 @@ use sdkwork_intelligence_mcp_repository_sqlx::SqlxMcpRepository;
 use sdkwork_intelligence_mcp_service::McpService;
 use sdkwork_mcp_database_host::bootstrap_mcp_database;
 use sdkwork_routes_mcp_app_api::DbReadinessCheck;
-use sdkwork_web_bootstrap::{
-    assemble_multi_surface_router, ApiAssemblyContribution, ServiceRouterConfig,
-};
+use sdkwork_web_bootstrap::ApiAssemblyContribution;
 use sdkwork_web_core::HttpRouteManifest;
 use sqlx::PgPool;
 
@@ -78,21 +76,17 @@ fn combined_route_manifest() -> HttpRouteManifest {
     HttpRouteManifest::from_owned_routes(routes)
 }
 
-async fn assemble_api_router_from_runtime(
-    runtime: McpRuntime,
-    mount_infra: bool,
-) -> Result<ApiAssembly, String> {
+async fn assemble_api_router_from_runtime(runtime: McpRuntime) -> Result<ApiAssembly, String> {
     let service = runtime.service.clone();
     let tenant_id = runtime.default_tenant_id;
     let pool = runtime.pool.clone();
 
-    let app_router = sdkwork_routes_mcp_app_api::business_router(
-        sdkwork_routes_mcp_app_api::AppState {
+    let app_router =
+        sdkwork_routes_mcp_app_api::business_router(sdkwork_routes_mcp_app_api::AppState {
             service: service.clone(),
             default_tenant_id: tenant_id,
             readiness: None,
-        },
-    );
+        });
     let backend_router = sdkwork_routes_mcp_backend_api::business_router(
         sdkwork_routes_mcp_backend_api::BackendState {
             service,
@@ -100,15 +94,7 @@ async fn assemble_api_router_from_runtime(
             readiness: None,
         },
     );
-    let router = if mount_infra {
-        assemble_multi_surface_router(
-            [app_router, backend_router],
-            ServiceRouterConfig::default()
-                .with_readiness_check(Arc::new(DbReadinessCheck::new(pool.clone()))),
-        )
-    } else {
-        Router::new().merge(app_router).merge(backend_router)
-    };
+    let router = Router::new().merge(app_router).merge(backend_router);
     ApiAssemblyContribution::from_manifest(
         "sdkwork-mcp",
         "SDKWork MCP API",
@@ -124,14 +110,21 @@ async fn assemble_api_router_from_runtime(
 
 pub async fn assemble_api_router() -> Result<ApiAssembly, String> {
     let runtime = McpRuntime::bootstrap_from_env().await?;
-    assemble_api_router_from_runtime(runtime, true).await
+    assemble_api_router_from_runtime(runtime).await
 }
 
 /// Assemble the MCP contribution against a caller-provided database pool so the
 /// platform cloud gateway can share its process-wide PostgreSQL pool.
 pub async fn assemble_api_router_with_pool(pool: DatabasePool) -> Result<ApiAssembly, String> {
     let runtime = McpRuntime::bootstrap_from_database(pool).await?;
-    assemble_api_router_from_runtime(runtime, false).await
+    assemble_api_router_from_runtime(runtime).await
+}
+
+/// Runs the MCP-owned database lifecycle without constructing HTTP routes.
+pub async fn bootstrap_database_from_env() -> Result<(), String> {
+    sdkwork_mcp_database_host::bootstrap_mcp_database_from_env()
+        .await
+        .map(|_| ())
 }
 
 /// Builds the MCP App API as a composing-owner contribution. The returned
@@ -144,13 +137,12 @@ pub async fn assemble_app_api_contribution() -> Result<ApiAssemblyContribution, 
     let pool = runtime.pool.clone();
 
     let route_manifest = sdkwork_routes_mcp_app_api::app_route_manifest();
-    let router = sdkwork_routes_mcp_app_api::business_router(
-        sdkwork_routes_mcp_app_api::AppState {
+    let router =
+        sdkwork_routes_mcp_app_api::business_router(sdkwork_routes_mcp_app_api::AppState {
             service,
             default_tenant_id: tenant_id,
             readiness: None,
-        },
-    );
+        });
     ApiAssemblyContribution::from_manifest(
         "sdkwork-mcp",
         "SDKWork MCP App API",
@@ -181,7 +173,9 @@ pub async fn assemble_backend_api_contribution() -> Result<ApiAssemblyContributi
         "SDKWork MCP Backend API",
         router,
         route_manifest,
-        vec![Arc::new(sdkwork_routes_mcp_backend_api::McpBackendContextInjector)],
+        vec![Arc::new(
+            sdkwork_routes_mcp_backend_api::McpBackendContextInjector,
+        )],
         Arc::new(DbReadinessCheck::new(pool)),
     )
 }

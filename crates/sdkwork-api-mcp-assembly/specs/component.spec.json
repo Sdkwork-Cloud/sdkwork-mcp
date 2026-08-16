@@ -45,6 +45,35 @@
     "publicExports": [
       "."
     ],
+    "providedPorts": [
+      {
+        "name": "mcpApiAssembly",
+        "export": ".",
+        "target": "sdkwork_api_mcp_assembly::assemble_api_router"
+      },
+      {
+        "name": "mcpApiAssemblyWithPool",
+        "export": ".",
+        "target": "sdkwork_api_mcp_assembly::assemble_api_router_with_pool"
+      },
+      {
+        "name": "mcpAppApiContribution",
+        "export": ".",
+        "target": "sdkwork_api_mcp_assembly::assemble_app_api_contribution"
+      },
+      {
+        "name": "mcpDatabaseLifecycleFromEnv",
+        "export": ".",
+        "target": "sdkwork_api_mcp_assembly::bootstrap_database_from_env"
+      }
+    ],
+    "requiredPorts": [
+      {
+        "name": "mcpDatabaseHost",
+        "export": ".",
+        "target": "sdkwork_mcp_database_host::bootstrap_mcp_database"
+      }
+    ],
     "runtimeEntrypoints": [],
     "routeManifest": "assembly-manifest.json",
     "sdkClients": [],

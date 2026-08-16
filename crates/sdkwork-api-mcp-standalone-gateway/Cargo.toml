@@ -13,8 +13,9 @@ path = "src/bin/app_main.rs"
 
 [dependencies]
 sdkwork_api_mcp_assembly.workspace = true
+sdkwork-iam-web-adapter.workspace = true
+sdkwork-web-bootstrap.workspace = true
 axum.workspace = true
 tokio.workspace = true
 tracing.workspace = true
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
-

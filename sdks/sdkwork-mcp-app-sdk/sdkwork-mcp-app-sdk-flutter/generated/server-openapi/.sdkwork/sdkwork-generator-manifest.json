@@ -12,7 +12,7 @@
   "generatedFiles": [
     {
       "path": "bin/publish-core.mjs",
-      "sha256": "98ad0918a78bfbe22bf8f12fec709b0bed545b9e01edd40f5e4abf31a23378a5"
+      "sha256": "a47e95119bf3eafcbcb2102f7024c147f967924e4e3f343d1a29effb4b6765df"
     },
     {
       "path": "bin/publish.ps1",
@@ -68,7 +68,7 @@
     },
     {
       "path": "pubspec.yaml",
-      "sha256": "9015e99f31da8e92e92abca8dd489db7a5da7271a67a480d3437c16af214e99b"
+      "sha256": "3c5614c68825023c7e32cc0e7df6bb69c8e084fb76df3504b4171abb70d6a82a"
     },
     {
       "path": "README.md",

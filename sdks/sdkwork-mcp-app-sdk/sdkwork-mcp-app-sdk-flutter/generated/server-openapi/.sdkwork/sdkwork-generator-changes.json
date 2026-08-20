@@ -9,7 +9,7 @@
     "protocol": "http",
     "packageName": "sdkwork-mcp-app-sdk-generated-flutter"
   },
-  "changeFingerprint": "5f1c57f333de27bfeb61871e512922ddaaeeb089de24a20e2185243f2ffca9d9",
+  "changeFingerprint": "50e34477e82f098b26c2bc7d40300ba88fdb1d0f717f7c79eff09ac13363f704",
   "changes": {
     "createdGeneratedFiles": [],
     "updatedGeneratedFiles": [
@@ -38,7 +38,9 @@
     "preservedScaffoldFiles": [
       "custom/README.md"
     ],
-    "backedUpFiles": []
+    "backedUpFiles": [
+      "bin/publish-core.mjs"
+    ]
   },
   "impact": {
     "schemaVersion": 1,
@@ -83,12 +85,14 @@
   },
   "executionDecision": {
     "schemaVersion": 1,
-    "riskLevel": "medium",
+    "riskLevel": "high",
     "nextAction": "verify",
     "requiresManualReview": false,
     "applyRequiresExpectedFingerprint": false,
     "summary": "Changes have been applied. Run the required verification plan now.",
     "reasons": [
+      "backed-up-generated-files",
+      "manual-review-required",
       "verification-required"
     ]
   },

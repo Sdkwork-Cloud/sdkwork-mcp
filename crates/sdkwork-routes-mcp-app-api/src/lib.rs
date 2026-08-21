@@ -163,19 +163,20 @@ where
 }
 
 fn resolve_request_tenant_id(
+    ctx: &WebRequestContext,
     context: Option<&Extension<McpAppRequestContext>>,
-    headers: &HeaderMap,
     default_tenant_id: u64,
 ) -> u64 {
-    context
-        .map(|extension| extension.0.tenant_id)
-        .unwrap_or_else(|| resolve_tenant_id(headers, default_tenant_id))
+    if let Some(extension) = context {
+        return extension.0.tenant_id;
+    }
+    sdkwork_routes_mcp_shared::resolve_tenant_id_from_context(ctx, default_tenant_id)
 }
 
 async fn list_categories_handler<R>(
     ctx: WebRequestContext,
     State(state): State<AppState<R>>,
-    headers: HeaderMap,
+    _headers: HeaderMap,
     Query(query): Query<SdkWorkListQuery>,
     context: Option<Extension<McpAppRequestContext>>,
 ) -> Response
@@ -186,7 +187,7 @@ where
         &ctx,
         async {
             let tenant_id =
-                resolve_request_tenant_id(context.as_ref(), &headers, state.default_tenant_id);
+                resolve_request_tenant_id(&ctx, context.as_ref(), state.default_tenant_id);
             ok_json(list_categories(state.service.as_ref(), tenant_id, &query).await?)
         }
         .await,
@@ -196,7 +197,7 @@ where
 async fn list_servers_handler<R>(
     ctx: WebRequestContext,
     State(state): State<AppState<R>>,
-    headers: HeaderMap,
+    _headers: HeaderMap,
     Query(query): Query<SdkWorkListQuery>,
     context: Option<Extension<McpAppRequestContext>>,
 ) -> Response
@@ -207,7 +208,7 @@ where
         &ctx,
         async {
             let tenant_id =
-                resolve_request_tenant_id(context.as_ref(), &headers, state.default_tenant_id);
+                resolve_request_tenant_id(&ctx, context.as_ref(), state.default_tenant_id);
             ok_json(list_servers(state.service.as_ref(), tenant_id, &query).await?)
         }
         .await,
@@ -217,7 +218,7 @@ where
 async fn get_server_handler<R>(
     ctx: WebRequestContext,
     State(state): State<AppState<R>>,
-    headers: HeaderMap,
+    _headers: HeaderMap,
     Path(server_key): Path<String>,
     context: Option<Extension<McpAppRequestContext>>,
 ) -> Response
@@ -228,7 +229,7 @@ where
         &ctx,
         async {
             let tenant_id =
-                resolve_request_tenant_id(context.as_ref(), &headers, state.default_tenant_id);
+                resolve_request_tenant_id(&ctx, context.as_ref(), state.default_tenant_id);
             ok_json(get_server(state.service.as_ref(), tenant_id, server_key.as_str()).await?)
         }
         .await,
@@ -238,7 +239,7 @@ where
 async fn list_tools_handler<R>(
     ctx: WebRequestContext,
     State(state): State<AppState<R>>,
-    headers: HeaderMap,
+    _headers: HeaderMap,
     Path(server_id): Path<u64>,
     Query(query): Query<SdkWorkListQuery>,
     context: Option<Extension<McpAppRequestContext>>,
@@ -250,7 +251,7 @@ where
         &ctx,
         async {
             let tenant_id =
-                resolve_request_tenant_id(context.as_ref(), &headers, state.default_tenant_id);
+                resolve_request_tenant_id(&ctx, context.as_ref(), state.default_tenant_id);
             ok_json(list_tools(state.service.as_ref(), tenant_id, server_id, &query).await?)
         }
         .await,
@@ -260,7 +261,7 @@ where
 async fn get_tool_handler<R>(
     ctx: WebRequestContext,
     State(state): State<AppState<R>>,
-    headers: HeaderMap,
+    _headers: HeaderMap,
     Path((server_id, tool_key)): Path<(u64, String)>,
     context: Option<Extension<McpAppRequestContext>>,
 ) -> Response
@@ -271,7 +272,7 @@ where
         &ctx,
         async {
             let tenant_id =
-                resolve_request_tenant_id(context.as_ref(), &headers, state.default_tenant_id);
+                resolve_request_tenant_id(&ctx, context.as_ref(), state.default_tenant_id);
             ok_json(
                 get_tool(
                     state.service.as_ref(),
@@ -289,7 +290,7 @@ where
 async fn list_resources_handler<R>(
     ctx: WebRequestContext,
     State(state): State<AppState<R>>,
-    headers: HeaderMap,
+    _headers: HeaderMap,
     Path(server_id): Path<u64>,
     Query(query): Query<SdkWorkListQuery>,
     context: Option<Extension<McpAppRequestContext>>,
@@ -301,7 +302,7 @@ where
         &ctx,
         async {
             let tenant_id =
-                resolve_request_tenant_id(context.as_ref(), &headers, state.default_tenant_id);
+                resolve_request_tenant_id(&ctx, context.as_ref(), state.default_tenant_id);
             ok_json(list_resources(state.service.as_ref(), tenant_id, server_id, &query).await?)
         }
         .await,
@@ -311,7 +312,7 @@ where
 async fn list_prompts_handler<R>(
     ctx: WebRequestContext,
     State(state): State<AppState<R>>,
-    headers: HeaderMap,
+    _headers: HeaderMap,
     Path(server_id): Path<u64>,
     Query(query): Query<SdkWorkListQuery>,
     context: Option<Extension<McpAppRequestContext>>,
@@ -323,7 +324,7 @@ where
         &ctx,
         async {
             let tenant_id =
-                resolve_request_tenant_id(context.as_ref(), &headers, state.default_tenant_id);
+                resolve_request_tenant_id(&ctx, context.as_ref(), state.default_tenant_id);
             ok_json(list_prompts(state.service.as_ref(), tenant_id, server_id, &query).await?)
         }
         .await,
@@ -333,7 +334,7 @@ where
 async fn list_invocations_handler<R>(
     ctx: WebRequestContext,
     State(state): State<AppState<R>>,
-    headers: HeaderMap,
+    _headers: HeaderMap,
     Query(query): Query<McpInvocationListQuery>,
     context: Option<Extension<McpAppRequestContext>>,
 ) -> Response
@@ -344,7 +345,7 @@ where
         &ctx,
         async {
             let tenant_id =
-                resolve_request_tenant_id(context.as_ref(), &headers, state.default_tenant_id);
+                resolve_request_tenant_id(&ctx, context.as_ref(), state.default_tenant_id);
             ok_json(list_invocations(state.service.as_ref(), tenant_id, &query).await?)
         }
         .await,
@@ -383,7 +384,7 @@ fn ensure_owned_server(
 async fn list_owned_servers_handler<R>(
     ctx: WebRequestContext,
     State(state): State<AppState<R>>,
-    headers: HeaderMap,
+    _headers: HeaderMap,
     Query(query): Query<SdkWorkListQuery>,
     context: Option<Extension<McpAppRequestContext>>,
 ) -> Response
@@ -395,7 +396,7 @@ where
         async {
             let actor_id = require_actor_id(context.as_ref())?;
             let tenant_id =
-                resolve_request_tenant_id(context.as_ref(), &headers, state.default_tenant_id);
+                resolve_request_tenant_id(&ctx, context.as_ref(), state.default_tenant_id);
             ok_json(
                 list_owned_servers(state.service.as_ref(), tenant_id, actor_id, &query).await?,
             )
@@ -407,7 +408,7 @@ where
 async fn create_own_server_handler<R>(
     ctx: WebRequestContext,
     State(state): State<AppState<R>>,
-    headers: HeaderMap,
+    _headers: HeaderMap,
     context: Option<Extension<McpAppRequestContext>>,
     Json(body): Json<CreateOwnServerRequest>,
 ) -> Response
@@ -420,8 +421,8 @@ where
             let actor_id = require_actor_id(context.as_ref())?;
             let write_ctx = EntityWriteContext {
                 tenant_id: resolve_request_tenant_id(
+                    &ctx,
                     context.as_ref(),
-                    &headers,
                     state.default_tenant_id,
                 ),
                 operator_id: actor_id,
@@ -448,7 +449,7 @@ where
 async fn update_own_server_handler<R>(
     ctx: WebRequestContext,
     State(state): State<AppState<R>>,
-    headers: HeaderMap,
+    _headers: HeaderMap,
     Path(server_key): Path<String>,
     context: Option<Extension<McpAppRequestContext>>,
     Json(body): Json<UpdateOwnServerRequest>,
@@ -460,7 +461,7 @@ where
         &ctx,
         async {
             let tenant_id =
-                resolve_request_tenant_id(context.as_ref(), &headers, state.default_tenant_id);
+                resolve_request_tenant_id(&ctx, context.as_ref(), state.default_tenant_id);
             let mut record = get_server(state.service.as_ref(), tenant_id, server_key.as_str())
                 .await?
                 .item;
@@ -495,7 +496,7 @@ where
 async fn delete_own_server_handler<R>(
     ctx: WebRequestContext,
     State(state): State<AppState<R>>,
-    headers: HeaderMap,
+    _headers: HeaderMap,
     Path(server_key): Path<String>,
     context: Option<Extension<McpAppRequestContext>>,
 ) -> Response
@@ -506,7 +507,7 @@ where
         &ctx,
         async {
             let tenant_id =
-                resolve_request_tenant_id(context.as_ref(), &headers, state.default_tenant_id);
+                resolve_request_tenant_id(&ctx, context.as_ref(), state.default_tenant_id);
             let record = get_server(state.service.as_ref(), tenant_id, server_key.as_str())
                 .await?
                 .item;
@@ -520,7 +521,7 @@ where
 async fn upsert_own_connector_handler<R>(
     ctx: WebRequestContext,
     State(state): State<AppState<R>>,
-    headers: HeaderMap,
+    _headers: HeaderMap,
     Path(server_id): Path<u64>,
     context: Option<Extension<McpAppRequestContext>>,
     Json(body): Json<UpsertOwnConnectorRequest>,
@@ -532,7 +533,7 @@ where
         &ctx,
         async {
             let tenant_id =
-                resolve_request_tenant_id(context.as_ref(), &headers, state.default_tenant_id);
+                resolve_request_tenant_id(&ctx, context.as_ref(), state.default_tenant_id);
             let server = state
                 .service
                 .get_server_by_id(tenant_id, server_id)
@@ -569,7 +570,7 @@ where
 async fn delete_own_connector_handler<R>(
     ctx: WebRequestContext,
     State(state): State<AppState<R>>,
-    headers: HeaderMap,
+    _headers: HeaderMap,
     Path((server_id, connector_key)): Path<(u64, String)>,
     context: Option<Extension<McpAppRequestContext>>,
 ) -> Response
@@ -580,7 +581,7 @@ where
         &ctx,
         async {
             let tenant_id =
-                resolve_request_tenant_id(context.as_ref(), &headers, state.default_tenant_id);
+                resolve_request_tenant_id(&ctx, context.as_ref(), state.default_tenant_id);
             let server = state
                 .service
                 .get_server_by_id(tenant_id, server_id)

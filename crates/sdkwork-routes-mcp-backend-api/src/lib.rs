@@ -219,19 +219,20 @@ where
 }
 
 fn resolve_request_tenant_id(
+    ctx: &WebRequestContext,
     context: Option<&Extension<McpBackendRequestContext>>,
-    headers: &HeaderMap,
     default_tenant_id: u64,
 ) -> u64 {
-    context
-        .map(|extension| extension.0.tenant_id)
-        .unwrap_or_else(|| resolve_tenant_id(headers, default_tenant_id))
+    if let Some(extension) = context {
+        return extension.0.tenant_id;
+    }
+    sdkwork_routes_mcp_shared::resolve_tenant_id_from_context(ctx, default_tenant_id)
 }
 
 async fn list_servers_handler<R>(
     ctx: WebRequestContext,
     State(state): State<BackendState<R>>,
-    headers: HeaderMap,
+    _headers: HeaderMap,
     Query(query): Query<SdkWorkListQuery>,
     context: Option<Extension<McpBackendRequestContext>>,
 ) -> Response
@@ -242,7 +243,7 @@ where
         &ctx,
         async {
             let tenant_id =
-                resolve_request_tenant_id(context.as_ref(), &headers, state.default_tenant_id);
+                resolve_request_tenant_id(&ctx, context.as_ref(), state.default_tenant_id);
             ok_json(list_servers(state.service.as_ref(), tenant_id, &query).await?)
         }
         .await,
@@ -252,7 +253,7 @@ where
 async fn create_server_handler<R>(
     ctx: WebRequestContext,
     State(state): State<BackendState<R>>,
-    headers: HeaderMap,
+    _headers: HeaderMap,
     context: Option<Extension<McpBackendRequestContext>>,
     Json(body): Json<CreateServerRequest>,
 ) -> Response
@@ -263,7 +264,7 @@ where
         &ctx,
         async {
             let write_ctx =
-                resolve_write_context(context.as_ref(), &headers, state.default_tenant_id);
+                resolve_write_context(&ctx, context.as_ref(), state.default_tenant_id);
             let owner_user_id = context
                 .as_ref()
                 .and_then(|value| value.0.operator_id)
@@ -290,7 +291,7 @@ where
 async fn update_server_handler<R>(
     ctx: WebRequestContext,
     State(state): State<BackendState<R>>,
-    headers: HeaderMap,
+    _headers: HeaderMap,
     Path(server_key): Path<String>,
     context: Option<Extension<McpBackendRequestContext>>,
     Json(body): Json<UpdateServerRequest>,
@@ -302,7 +303,7 @@ where
         &ctx,
         async {
             let tenant_id =
-                resolve_request_tenant_id(context.as_ref(), &headers, state.default_tenant_id);
+                resolve_request_tenant_id(&ctx, context.as_ref(), state.default_tenant_id);
             let mut record = get_server(state.service.as_ref(), tenant_id, server_key.as_str())
                 .await?
                 .item;
@@ -343,7 +344,7 @@ where
 async fn list_categories_handler<R>(
     ctx: WebRequestContext,
     State(state): State<BackendState<R>>,
-    headers: HeaderMap,
+    _headers: HeaderMap,
     Query(query): Query<SdkWorkListQuery>,
     context: Option<Extension<McpBackendRequestContext>>,
 ) -> Response
@@ -354,7 +355,7 @@ where
         &ctx,
         async {
             let tenant_id =
-                resolve_request_tenant_id(context.as_ref(), &headers, state.default_tenant_id);
+                resolve_request_tenant_id(&ctx, context.as_ref(), state.default_tenant_id);
             ok_json(list_categories(state.service.as_ref(), tenant_id, &query).await?)
         }
         .await,
@@ -362,12 +363,12 @@ where
 }
 
 fn resolve_write_context(
+    ctx: &WebRequestContext,
     context: Option<&Extension<McpBackendRequestContext>>,
-    headers: &HeaderMap,
     default_tenant_id: u64,
 ) -> EntityWriteContext {
     EntityWriteContext {
-        tenant_id: resolve_request_tenant_id(context, headers, default_tenant_id),
+        tenant_id: resolve_request_tenant_id(ctx, context, default_tenant_id),
         operator_id: context.and_then(|value| value.0.operator_id).unwrap_or(0),
     }
 }
@@ -375,7 +376,7 @@ fn resolve_write_context(
 async fn upsert_category_handler<R>(
     ctx: WebRequestContext,
     State(state): State<BackendState<R>>,
-    headers: HeaderMap,
+    _headers: HeaderMap,
     context: Option<Extension<McpBackendRequestContext>>,
     Json(body): Json<UpsertCategoryRequest>,
 ) -> Response
@@ -386,7 +387,7 @@ where
         &ctx,
         async {
             let write_ctx =
-                resolve_write_context(context.as_ref(), &headers, state.default_tenant_id);
+                resolve_write_context(&ctx, context.as_ref(), state.default_tenant_id);
             let record = category_record(
                 write_ctx,
                 body.category_code,
@@ -405,7 +406,7 @@ where
 async fn delete_server_handler<R>(
     ctx: WebRequestContext,
     State(state): State<BackendState<R>>,
-    headers: HeaderMap,
+    _headers: HeaderMap,
     Path(server_key): Path<String>,
     context: Option<Extension<McpBackendRequestContext>>,
 ) -> Response
@@ -416,7 +417,7 @@ where
         &ctx,
         async {
             let tenant_id =
-                resolve_request_tenant_id(context.as_ref(), &headers, state.default_tenant_id);
+                resolve_request_tenant_id(&ctx, context.as_ref(), state.default_tenant_id);
             ok_json(delete_server(state.service.as_ref(), tenant_id, server_key.as_str()).await?)
         }
         .await,
@@ -426,7 +427,7 @@ where
 async fn list_connectors_handler<R>(
     ctx: WebRequestContext,
     State(state): State<BackendState<R>>,
-    headers: HeaderMap,
+    _headers: HeaderMap,
     Path(server_id): Path<u64>,
     Query(query): Query<SdkWorkListQuery>,
     context: Option<Extension<McpBackendRequestContext>>,
@@ -438,7 +439,7 @@ where
         &ctx,
         async {
             let tenant_id =
-                resolve_request_tenant_id(context.as_ref(), &headers, state.default_tenant_id);
+                resolve_request_tenant_id(&ctx, context.as_ref(), state.default_tenant_id);
             ok_json(list_connectors(state.service.as_ref(), tenant_id, server_id, &query).await?)
         }
         .await,
@@ -448,7 +449,7 @@ where
 async fn upsert_connector_handler<R>(
     ctx: WebRequestContext,
     State(state): State<BackendState<R>>,
-    headers: HeaderMap,
+    _headers: HeaderMap,
     Path(server_id): Path<u64>,
     context: Option<Extension<McpBackendRequestContext>>,
     Json(body): Json<UpsertConnectorRequest>,
@@ -460,7 +461,7 @@ where
         &ctx,
         async {
             let write_ctx =
-                resolve_write_context(context.as_ref(), &headers, state.default_tenant_id);
+                resolve_write_context(&ctx, context.as_ref(), state.default_tenant_id);
             let record = connector_record(
                 write_ctx,
                 server_id,
@@ -486,7 +487,7 @@ where
 async fn delete_connector_handler<R>(
     ctx: WebRequestContext,
     State(state): State<BackendState<R>>,
-    headers: HeaderMap,
+    _headers: HeaderMap,
     Path((server_id, connector_key)): Path<(u64, String)>,
     context: Option<Extension<McpBackendRequestContext>>,
 ) -> Response
@@ -497,7 +498,7 @@ where
         &ctx,
         async {
             let tenant_id =
-                resolve_request_tenant_id(context.as_ref(), &headers, state.default_tenant_id);
+                resolve_request_tenant_id(&ctx, context.as_ref(), state.default_tenant_id);
             ok_json(
                 delete_connector(
                     state.service.as_ref(),
@@ -515,7 +516,7 @@ where
 async fn upsert_tool_handler<R>(
     ctx: WebRequestContext,
     State(state): State<BackendState<R>>,
-    headers: HeaderMap,
+    _headers: HeaderMap,
     Path(server_id): Path<u64>,
     context: Option<Extension<McpBackendRequestContext>>,
     Json(body): Json<UpsertToolRequest>,
@@ -527,7 +528,7 @@ where
         &ctx,
         async {
             let write_ctx =
-                resolve_write_context(context.as_ref(), &headers, state.default_tenant_id);
+                resolve_write_context(&ctx, context.as_ref(), state.default_tenant_id);
             let record = tool_record(
                 write_ctx,
                 server_id,
@@ -551,7 +552,7 @@ where
 async fn upsert_resource_handler<R>(
     ctx: WebRequestContext,
     State(state): State<BackendState<R>>,
-    headers: HeaderMap,
+    _headers: HeaderMap,
     Path(server_id): Path<u64>,
     context: Option<Extension<McpBackendRequestContext>>,
     Json(body): Json<UpsertResourceRequest>,
@@ -563,7 +564,7 @@ where
         &ctx,
         async {
             let write_ctx =
-                resolve_write_context(context.as_ref(), &headers, state.default_tenant_id);
+                resolve_write_context(&ctx, context.as_ref(), state.default_tenant_id);
             let record = resource_record(
                 write_ctx,
                 server_id,
@@ -584,7 +585,7 @@ where
 async fn upsert_prompt_handler<R>(
     ctx: WebRequestContext,
     State(state): State<BackendState<R>>,
-    headers: HeaderMap,
+    _headers: HeaderMap,
     Path(server_id): Path<u64>,
     context: Option<Extension<McpBackendRequestContext>>,
     Json(body): Json<UpsertPromptRequest>,
@@ -596,7 +597,7 @@ where
         &ctx,
         async {
             let write_ctx =
-                resolve_write_context(context.as_ref(), &headers, state.default_tenant_id);
+                resolve_write_context(&ctx, context.as_ref(), state.default_tenant_id);
             let record = prompt_record(
                 write_ctx,
                 server_id,
@@ -617,7 +618,7 @@ where
 async fn list_invocations_handler<R>(
     ctx: WebRequestContext,
     State(state): State<BackendState<R>>,
-    headers: HeaderMap,
+    _headers: HeaderMap,
     Query(query): Query<McpInvocationListQuery>,
     context: Option<Extension<McpBackendRequestContext>>,
 ) -> Response
@@ -628,7 +629,7 @@ where
         &ctx,
         async {
             let tenant_id =
-                resolve_request_tenant_id(context.as_ref(), &headers, state.default_tenant_id);
+                resolve_request_tenant_id(&ctx, context.as_ref(), state.default_tenant_id);
             ok_json(list_invocations(state.service.as_ref(), tenant_id, &query).await?)
         }
         .await,
@@ -638,7 +639,7 @@ where
 async fn append_invocation_handler<R>(
     ctx: WebRequestContext,
     State(state): State<BackendState<R>>,
-    headers: HeaderMap,
+    _headers: HeaderMap,
     context: Option<Extension<McpBackendRequestContext>>,
     Json(body): Json<AppendInvocationRequest>,
 ) -> Response
@@ -649,7 +650,7 @@ where
         &ctx,
         async {
             let write_ctx =
-                resolve_write_context(context.as_ref(), &headers, state.default_tenant_id);
+                resolve_write_context(&ctx, context.as_ref(), state.default_tenant_id);
             let user_id = context
                 .as_ref()
                 .and_then(|value| value.0.operator_id)

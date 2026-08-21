@@ -8,7 +8,9 @@ mod response;
 mod service_ops;
 
 pub use health::{healthz_with_state, livez, readyz_with_state, DbReadinessCheck};
-pub use http::{resolve_tenant_id, SharedMcpService, TENANT_HEADER};
+pub use http::{
+    resolve_tenant_id, resolve_tenant_id_from_context, SharedMcpService, TENANT_HEADER,
+};
 pub use list_query::{McpInvocationListQuery, SdkWorkListQuery};
 pub use response::{
     finish_api_json, item_data, ok_json, page_data, paginate_items, ApiProblem, ApiResult,

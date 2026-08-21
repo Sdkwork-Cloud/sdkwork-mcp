@@ -55,7 +55,10 @@ function createAuthenticatedClientConfig(
   baseUrl: string,
   tokenManager: AuthTokenManager,
 ) {
-  // Match skills-pc-core / BirdCoder: dual-token only — no x-sdkwork-tenant-id.
+  // Match skills-pc-core / BirdCoder: dual-token only — never project
+  // `x-sdkwork-tenant-id` (API_SPEC §10.2 / surface classification 40001).
+  // Tenant scope is derived from the verified dual-token session.
+  void configTenantIdUnused;
   return {
     baseUrl,
     authMode: 'dual-token' as const,
@@ -64,7 +67,13 @@ function createAuthenticatedClientConfig(
   };
 }
 
+// Keep deprecated tenantId off the wire even if a host still passes it.
+const configTenantIdUnused = undefined as string | undefined;
+
 export function createMCPClients(config: MCPClientConfig = {}): MCPClients {
+  // Intentionally ignore config.tenantId — dual-token surfaces must not send
+  // identity projection headers.
+  void config.tenantId;
   const tokenManager = config.tokenManager ?? createMCPTokenManager();
 
   const app = createAppSdkClient(

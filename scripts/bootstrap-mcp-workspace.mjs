@@ -79,7 +79,7 @@ const requiredDirs = [
   '.sdkwork/README.md',
   '.sdkwork/skills/README.md',
   '.sdkwork/plugins/README.md',
-  'configs/topology',
+  'etc/topology',
   'deployments/docker',
 ];
 
@@ -399,16 +399,19 @@ if (fs.existsSync(path.join(legacySkillsSourceRoot, 'specs/topology.spec.json'))
 
 // Topology profile env files
 for (const profile of [
-  'standalone.unified-process.development',
-  'standalone.unified-process.production',
-  'standalone.split-services.development',
-  'cloud.split-services.development',
-  'cloud.split-services.production',
+  'standalone.development',
+  'standalone.test',
+  'standalone.staging',
+  'standalone.production',
+  'cloud.development',
+  'cloud.test',
+  'cloud.staging',
+  'cloud.production',
 ]) {
-  const src = path.join(legacySkillsSourceRoot, `configs/topology/${profile}.env`);
+  const src = path.join(legacySkillsSourceRoot, `etc/topology/${profile}.env`);
   if (fs.existsSync(src)) {
     writeIfMissing(
-      `configs/topology/${profile}.env`,
+      `etc/topology/${profile}.env`,
       fs
         .readFileSync(src, 'utf8')
         .replaceAll('SDKWORK_SKILLS', 'SDKWORK_MCP')

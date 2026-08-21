@@ -95,13 +95,13 @@ export function createSdkworkMCPPcSdkClientsWithTokenManager(
   config: SdkworkMCPPcRuntimeConfig,
   tokenManager: ReturnType<typeof createSdkworkMCPPcSessionTokenManager>,
 ): SdkworkMCPPcSdkClientInventory {
-  const tenantHeader = config.defaultTenantId;
+  // Dual-token App/Backend clients must not send identity projection headers
+  // such as `x-sdkwork-tenant-id` (IAM TECH-03 / surface classification).
+  // Tenant scope is derived from the verified dual-token session — same as
+  // skills-pc / webserver-embedded `createMCPClients`.
   const authenticatedConfig = (baseUrl: string) => ({
     authMode: 'dual-token' as const,
     baseUrl: normalizeGeneratedSdkBaseUrl(baseUrl, APP_API_PREFIX),
-    headers: {
-      'x-sdkwork-tenant-id': tenantHeader,
-    },
     platform: 'pc' as const,
     tokenManager,
   });

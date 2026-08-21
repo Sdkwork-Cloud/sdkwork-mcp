@@ -75,6 +75,12 @@ export function MyMcpServersPage() {
                   <Badge tone={healthTone(server.health_status)}>
                     {formatMcpHealth(server.health_status)}
                   </Badge>
+                  <Link
+                    to={`/console/mcp/edit/${encodeURIComponent(server.server_key)}`}
+                    className="rounded-lg px-3 py-1.5 text-sm font-medium text-slate-700 ring-1 ring-slate-200 hover:bg-slate-50"
+                  >
+                    Edit
+                  </Link>
                   <button
                     type="button"
                     onClick={() => onDelete(server.server_key)}

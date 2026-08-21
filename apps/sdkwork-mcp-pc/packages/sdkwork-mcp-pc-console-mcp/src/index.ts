@@ -1,1 +1,1 @@
-export { MyMcpServersPage, RegisterMcpServerPage } from './pages';
+export { EditMcpServerPage, MyMcpServersPage, RegisterMcpServerPage } from './pages';

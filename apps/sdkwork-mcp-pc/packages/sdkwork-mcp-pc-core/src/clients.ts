@@ -5,7 +5,6 @@ import {
   createClient as createBackendSdkClient,
   type SdkworkBackendClient,
 } from '@sdkwork/mcp-backend-sdk';
-import { isBlank, trim } from '@sdkwork/utils';
 import { normalizeApiBaseUrl, readRuntimeEnv } from '@sdkwork/mcp-pc-commons/runtime';
 
 import { createMCPTokenManager } from './session';
@@ -14,6 +13,11 @@ export type MCPClientConfig = {
   appApiBaseUrl?: string;
   backendApiBaseUrl?: string;
   driveAppApiBaseUrl?: string;
+  /**
+   * @deprecated Dual-token App/Backend clients must not send identity projection
+   * headers such as `x-sdkwork-tenant-id` (IAM TECH-03 / surface classification).
+   * Tenant scope is derived from the verified dual-token session.
+   */
   tenantId?: string;
   tokenManager?: AuthTokenManager;
 };
@@ -47,23 +51,15 @@ function resolveDriveAppApiBaseUrl(config?: MCPClientConfig): string {
   );
 }
 
-function resolveTenantHeader(config?: MCPClientConfig): string {
-  const tenantId = trim(config?.tenantId ?? readRuntimeEnv('VITE_SDKWORK_MCP_TENANT_ID') ?? '100001');
-  return isBlank(tenantId) ? '100001' : tenantId;
-}
-
 function createAuthenticatedClientConfig(
-  config: MCPClientConfig,
   baseUrl: string,
   tokenManager: AuthTokenManager,
 ) {
+  // Match skills-pc-core / BirdCoder: dual-token only — no x-sdkwork-tenant-id.
   return {
     baseUrl,
     authMode: 'dual-token' as const,
     platform: 'pc' as const,
-    headers: {
-      'x-sdkwork-tenant-id': resolveTenantHeader(config),
-    },
     tokenManager,
   };
 }
@@ -72,17 +68,17 @@ export function createMCPClients(config: MCPClientConfig = {}): MCPClients {
   const tokenManager = config.tokenManager ?? createMCPTokenManager();
 
   const app = createAppSdkClient(
-    createAuthenticatedClientConfig(config, resolveAppApiBaseUrl(config), tokenManager),
+    createAuthenticatedClientConfig(resolveAppApiBaseUrl(config), tokenManager),
   );
   app.setTokenManager(tokenManager);
 
   const backend = createBackendSdkClient(
-    createAuthenticatedClientConfig(config, resolveBackendApiBaseUrl(config), tokenManager),
+    createAuthenticatedClientConfig(resolveBackendApiBaseUrl(config), tokenManager),
   );
   backend.setTokenManager(tokenManager);
 
   const drive = createDriveSdkClient(
-    createAuthenticatedClientConfig(config, resolveDriveAppApiBaseUrl(config), tokenManager),
+    createAuthenticatedClientConfig(resolveDriveAppApiBaseUrl(config), tokenManager),
   );
   drive.setTokenManager(tokenManager);
 
